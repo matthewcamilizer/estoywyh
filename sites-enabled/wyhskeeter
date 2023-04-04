@@ -1,0 +1,61 @@
+server { 
+	listen 80;
+        ## server_name ;
+	return 301 https://$server_name$request_uri;
+	
+}
+
+server{
+	listen 443 ssl;
+        ## server_name ;
+	ssl_certificate /home/wyh/wyhsite/server.crt;
+	ssl_certificate_key /home/wyh/wyhsite/server.key;	
+
+        error_page 403 /cnm.html;
+        location = /cnm.html {
+                internal;
+                root /home/wyh/wyhsite;
+        }
+
+     	location /static { 
+                
+		alias "/home/wyh/wyhsite/1.3-estoywyh/estoywyh/static";
+                add_header Cache-Control "no-cache, no-store, must-revalidate";
+                expires -1;	
+	}
+
+        
+	location / {
+                if ($http_user_agent ~* (python)) {
+                    rewrite ^(.*)$ /stupid last;
+                }
+                if ($request_uri ~* "\.js$") {
+                    return 403;
+                }
+                if ($http_user_agent !~* "(A6010|V2055A)") {
+                    return 403;
+                }                
+    		proxy_pass http://127.0.0.1:8000;
+     		include /etc/nginx/proxy_params;
+		proxy_redirect off;
+	}
+
+
+        location /zzyteamo {
+               alias "/home/wyh/wyhsite/1.3-estoywyh/estoywyh/static";
+               add_header Cache-Control "no-cache, no-store, must-revalidate";
+               expires -1;
+        }
+
+        location /stupid {
+               return 200 "Fuck You!";
+        }
+
+}
+
+
+
+
+
+
+
