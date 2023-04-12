@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Tiësto, Ava Max - The Motto</title>
+  <style>
+    .lyrics {
+      color: rgba(180, 179, 180, 0.678);
+      position: absolute;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+    .lyrics:hover{
+      color: blueviolet;
+    }
+
+    .highlight {
+      font-size: 50px;
+      width: 100%;
+    }
+    .lyct{
+      position: relative;
+      width: 100%;
+      min-height: 2em;
+      cursor: pointer;
+    }
+    .lyct:active{
+      transform: scale(0.9);
+    }
+    .support{
+      position: relative;
+      width: 100%;
+      min-height: 2em;
+    }
+
+    .shinely{
+      color: rgb(86, 88, 221);
+      font-size: 50px;
+      position: absolute;
+      overflow: hidden;
+      white-space: nowrap;
+      opacity: 0;
+      animation: shine var(--animation-duration, 0s) linear infinite;
+    }
+    @keyframes shine
+    {
+      0%
+      {
+        width: 0;
+        opacity: 1;
+      }
+      50%, 100%
+      {
+        width: inherit;
+        opacity: 1;
+      }
+    } 
+
+
+    .played {
+      color: rgb(32, 62, 145);
+      font-size: 25px;
+    }
+    #lyrics {
+      position: absolute;
+      font-size: 25px;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      white-space: nowrap;
+      overflow-x: hidden;
+    }  
+
+    .container {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      object-fit: contain;
+    }
+
+  </style>
+</head>
+<script src="the motto.js"></script>
+<body>
+  <audio src="music-7.mp3" controls loop autoplay></audio>
+  <div class="container">
+    <video src="music-7.mp4" autoplay muted loop id="vvdd"></video>
+    <div id="lyrics"></div>
+  </div>
+  <script>
+    const audio = document.querySelector('audio');
+    const lyricContainer = document.getElementById('lyrics');
+
+    // check if scroll or create .empty
+    const hasScrolled  = new Array(lyrics.length).fill(false);
+    const created  = new Array(lyrics.length).fill(false);
+    audio.addEventListener('timeupdate', () => {
+      const currentTime = audio.currentTime;
+      let foundCurrentLyric = false;
+      let currentLyricIndex = 0;
+        for (let i = 0; i < lyrics.length; i++) {
+          if (currentTime >= lyrics[i].start && currentTime <= lyrics[i].end) {
+            currentLyricIndex = i;
+            foundCurrentLyric = true;
+            const animationDuration = lyrics[i].end - lyrics[i].start;
+            document.body.style.setProperty('--animation-duration', animationDuration + 's');
+          }
+        }
+
+        for (let j = 0; j < lyrics.length; j++){
+        const lyricElem = document.getElementById(`lyric-${j}`);
+        const lyct = document.getElementById(`lyct-${j}`);
+        const shine = document.getElementById(`shinely-${j}`);  
+        if (j === currentLyricIndex && foundCurrentLyric) {
+            lyricElem.classList.add('highlight');
+            lyricElem.classList.remove('played');
+            lyct.classList.add('cu');
+            lyct.classList.remove('played');
+            lyricElem.setAttribute('data-text', lyricElem.textContent);
+            shine.classList.add('shinely');
+
+            let anishine = document.querySelector(".shinely");
+
+            audio.addEventListener("pause", ()=>{
+              anishine.style.animationPlayState = "paused";
+              console.log("css paused!");
+            });
+            audio.addEventListener("play", ()=> {
+              anishine.style.animationPlayState = "running";
+              console.log("css running!");
+            });
+
+
+            let duration = lyrics[j].end - lyrics[j].start;
+            let currentTime = audio.currentTime - lyrics[j].start;
+            let percentage = currentTime / duration;
+            shine.scrollLeft = (lyricElem.scrollWidth - lyricElem.clientWidth) * percentage;
+            lyricElem.scrollLeft = (lyricElem.scrollWidth - lyricElem.clientWidth) * percentage;
+
+            let CurrentLyric = document.querySelector('.cu');
+            let lyel = document.querySelector('.lyct');
+            let VisibleLyricAboveQuality = Math.floor(CurrentLyric.offsetTop / lyel.offsetHeight);
+
+            //the quality of visible lyrics
+            let ScollThreshold = Math.floor((lyricContainer.offsetHeight / 2 - CurrentLyric.offsetHeight) / lyel.offsetHeight);
+
+            if (VisibleLyricAboveQuality >= ScollThreshold && !hasScrolled[j]){
+              lyricContainer.scrollTop += CurrentLyric.offsetHeight;
+              hasScrolled[j] = true;
+            console.log(" hasScrolled[j]: ", hasScrolled[j]);
+            console.log("scroll!");
+            }
+            console.log("VisibleLyricAboveQuality: ", VisibleLyricAboveQuality);
+            console.log("ScollThreshold: ", ScollThreshold);
+            console.log("lyricContainer.scrollTop: ", lyricContainer.scrollTop);
+            
+           // If we've scrolled to the bottom and there are still more lyrics, create a new empty div
+           if (lyricContainer.scrollTop >= lyricContainer.scrollHeight - lyricContainer.offsetHeight && j < lyrics.length - 2 
+            && !created[j]) {
+              const emptyLyricElem = document.createElement('div');
+              emptyLyricElem.classList.add('empty');
+              lyricContainer.appendChild(emptyLyricElem);
+              var emp = `.empty{
+                position: relative;
+                width: 100%;
+                min-height: 2em;
+              }`;
+              var style = document.createElement("style");
+              style.appendChild(document.createTextNode(emp));
+              document.head.appendChild(style);
+              created[j] = true;
+            } 
+          }
+        if (j < currentLyricIndex) {
+              hasScrolled[j] = false;
+            shine.classList.remove('shinely');
+            lyricElem.classList.add('played');
+            lyricElem.classList.remove('highlight');
+            lyct.classList.add('played');
+            lyct.classList.remove('cu');
+          }
+        if (j > currentLyricIndex) {
+            shine.classList.remove('shinely');
+            lyricElem.classList.remove('played');
+            lyricElem.classList.remove('highlight');
+            lyct.classList.remove('played');
+            lyct.classList.remove('cu');
+          }
+        }
+      });
+
+
+
+    for (let i = 0; i < lyrics.length; i++) {
+      let subly = `<div class=lyct id="lyct-${i}">
+          <div class=lyrics id="lyric-${i}">${lyrics[i].text}</div>
+          <div id="shinely-${i}">${lyrics[i].text}</div>
+        </div>`;
+      lyricContainer.insertAdjacentHTML("beforeend", subly);
+    }
+
+    for (let i = 0; i < lyrics.length; i++) {
+      let dylyric = document.querySelector(`#lyct-${i}`);
+      dylyric.addEventListener("click", ()=>{
+        audio.currentTime = lyrics[i].start;
+      });
+    };
+
+
+  </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
