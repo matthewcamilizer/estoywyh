@@ -92,9 +92,6 @@ window.addEventListener("hashchange", () => {
   } else { // no hash present, so load default musicIndex
     loadMusic(musicIndex);
   }
-  if (!isActive) {
-    activateBox();
-  }
   resetTimeout();
   progressBar.style.width = 0;
   playPauseBtn.querySelector("i").innerText = "play_arrow";
@@ -611,8 +608,8 @@ function playMusic(){
   showCase.textContent = "正在播放...";
 }
 // Jan 6th
+const isMusicPlay = wrapper.classList.contains("paused");
 musicImg.addEventListener("click", ()=>{
-  const isMusicPlay = wrapper.classList.contains("paused");
   //if isPlayMusic is true then call pauseMusic else call playMusic
   isMusicPlay ? pauseMusic() : playMusic();
   playingSong();
@@ -1532,7 +1529,6 @@ function prevMusic(){
 
 // play or pause button event
 playPauseBtn.addEventListener("click", ()=>{
-  const isMusicPlay = wrapper.classList.contains("paused");
   //if isPlayMusic is true then call pauseMusic else call playMusic
   isMusicPlay ? pauseMusic() : playMusic();
   playingSong();
@@ -1817,6 +1813,7 @@ function clicked(element){
   musicImg.classList.remove('rotate');
   void musicImg.offsetWidth;
   musicImg.classList.add('rotate');
+  mainAudio.currentTime = 0;
   playMusic();
   playingSong();
 }
@@ -1849,5 +1846,4 @@ function random_webkit_color() {
 opVolume.addEventListener("click", ()=>{
   volumeProgress.classList.toggle("showw");
 });
-
 
