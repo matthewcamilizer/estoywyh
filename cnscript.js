@@ -1847,3 +1847,18 @@ opVolume.addEventListener("click", ()=>{
   volumeProgress.classList.toggle("showw");
 });
 
+
+let isDragging = false;
+progressArea.addEventListener('touchstart', () => {
+  isDragging = true;
+});
+progressArea.addEventListener('touchend', () => {
+  isDragging = false;
+});
+progressArea.addEventListener('touchmove', (e) => {
+  if (isDragging) {
+    const xPos = e.touches[0].clientX - progressArea.getBoundingClientRect().left;
+    const percent = xPos / progressArea.offsetWidth;
+    progressBar.style.width = `${percent * 100}%`;
+  }
+});
