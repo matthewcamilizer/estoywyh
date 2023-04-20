@@ -92,7 +92,6 @@ window.addEventListener("hashchange", () => {
   } else { // no hash present, so load default musicIndex
     loadMusic(musicIndex);
   }
-  resetTimeout();
   progressBar.style.width = 0;
   playPauseBtn.querySelector("i").innerText = "play_arrow";
   wrapper.classList.remove("paused");
@@ -442,7 +441,9 @@ function loadMusic(indexNumb) {
   for (let i = 0; i < lyrics.length; i++) {
     let dylyric = document.querySelector(`#lyct-${i}`);
     dylyric.addEventListener("click", ()=>{
-      mainAudio.currentTime = lyrics[i].start;
+      if(dylyric.classList.contains('cu')){if(wrapper.classList.contains('paused')){pauseMusic();}
+      else {playMusic();}}
+      else{mainAudio.currentTime = lyrics[i].start;}
     });
   }
 
@@ -608,8 +609,9 @@ function playMusic(){
   showCase.textContent = "正在播放...";
 }
 // Jan 6th
-const isMusicPlay = wrapper.classList.contains("paused");
+
 musicImg.addEventListener("click", ()=>{
+  const isMusicPlay = wrapper.classList.contains("paused");
   //if isPlayMusic is true then call pauseMusic else call playMusic
   isMusicPlay ? pauseMusic() : playMusic();
   playingSong();
@@ -1529,6 +1531,7 @@ function prevMusic(){
 
 // play or pause button event
 playPauseBtn.addEventListener("click", ()=>{
+  const isMusicPlay = wrapper.classList.contains("paused");
   //if isPlayMusic is true then call pauseMusic else call playMusic
   isMusicPlay ? pauseMusic() : playMusic();
   playingSong();
@@ -1536,6 +1539,7 @@ playPauseBtn.addEventListener("click", ()=>{
 
 //prev music button event
 prevBtn.addEventListener("click", ()=>{
+  const isMusicPlay = wrapper.classList.contains("paused");
   if(mainAudio.currentTime > 5){
     mainAudio.currentTime = 0; //setting audio current time to 0
       isMusicPlay ? pauseMusic() : playMusic();
@@ -1636,6 +1640,7 @@ mainAudio.addEventListener("timeupdate", (e)=>{
 
 // update playing song currentTime on according to the progress bar width
 progressArea.addEventListener("click", (e)=>{
+  const isMusicPlay = wrapper.classList.contains("paused");
   let progressWidth = progressArea.clientWidth; //getting width of progress bar
   let clickedOffsetX = e.offsetX; //getting offset x value
   let songDuration = mainAudio.duration; //getting song total duration
