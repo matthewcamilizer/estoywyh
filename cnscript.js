@@ -39,11 +39,18 @@ progressArea = wrapper.querySelector(".progress-area"),
 progressBar = progressArea.querySelector(".progress-bar"),
 musicList = wrapper.querySelector(".music-list"),
 moreMusicBtn = wrapper.querySelector("#more-music"),
+lyContainer = wrapper.querySelector('.lycontainer');
 closemoreMusic = musicList.querySelector("#close"),
+closeLyric = lyContainer.querySelector("#closelyric"),
 now_playing = musicList.querySelector('.now-playing');
 //dynamic title while playing
 dynamicTitle = document.querySelector("title")
 dynamicIcon = document.getElementById("ddicon");
+
+lyricContainer = document.querySelector("#lyrics");
+boardLyric = document.querySelector("#b");
+boardGenre = document.querySelector("#c");
+
 
 let musicIndex = Math.floor((Math.random() * allMusic.length) + 1);
 isMusicPaused = true;
@@ -53,158 +60,7 @@ isMusicPaused = true;
 
   //hover compliation
   //main player hover opacity:0.2 for every devices
-let timeoutId;
-let isActive = false;
 
-function activateBox() {
-  wrapper.classList.remove('inactive');
-  isActive = true;
-}
-function deactivateBox() {
-  wrapper.classList.add('inactive');
-  isActive = false;
-}
-function resetTimeout() {
-  clearTimeout(timeoutId);
-  timeoutId = setTimeout(() => {
-    deactivateBox();
-  }, 7500);
-}
-wrapper.addEventListener('touchstart', () => {
-  activateBox();
-  resetTimeout();
-});
-wrapper.addEventListener('touchmove', () => {
-  if (!isActive) {
-    activateBox();
-  }
-  resetTimeout();
-});
-wrapper.addEventListener('touchend', () => {
-  resetTimeout();
-});
-resetTimeout();
-
-
-//volumebar disappear for every devices
-let VolumetimeoutId;
-let volumeActive = false;
-function activateVolume() {
-    volumeProgress.classList.add("showw");
-    voloumeActive = true;
-    resetVolumeTimeout()
-}
-
-function deactivateVolume() {
-  volumeProgress.classList.remove("showw");
-  voloumeActive = false;
-  resetVolumeTimeout()
-}
-
-function resetVolumeTimeout() {
-  clearTimeout(VolumetimeoutId);
-  VolumetimeoutId = setTimeout(() => {
-    deactivateVolume();
-  }, 5000);
-}
-
-volumeProgress.addEventListener('touchstart', () => {
-  activateVolume();
-  resetVolumeTimeout();
-});
-
-volumeProgress.addEventListener('touchmove', () => {
-  if (!volumeActive) {
-    activateVolume();
-  }
-  resetVolumeTimeout();
-});
-
-volumeProgress.addEventListener('touchend', () => {
-  resetVolumeTimeout();
-});
-
-resetVolumeTimeout();
-
-
-//Option fly away for every devices
-let OptiontimeoutId, OptionActive = false;
-function activateOption() {
-  areaOption.classList.add("show");
-  OptionActive = true;
-  resetOptionTimeout()
-}
-
-function deactivateOption() {
-  areaOption.classList.remove("show");
-  OptionActive = false;
-  resetOptionTimeout()
-}
-
-function resetOptionTimeout() {
-clearTimeout(OptiontimeoutId);
-OptiontimeoutId = setTimeout(() => {
-  deactivateOption();
-}, 10000);
-}
-
-areaOption.addEventListener('touchstart', () => {
-activateOption();
-resetOptionTimeout();
-});
-
-areaOption.addEventListener('touchmove', () => {
-if (!OptionActive) {
-  activateOption();
-}
-resetOptionTimeout();
-});
-
-areaOption.addEventListener('touchend', () => {
-resetOptionTimeout();
-});
-
-resetOptionTimeout();
-
-
-//Musiclist down for every devices
-let ListtimeoutId, ListActive = false;
-function activateList() {
-  musicList.classList.add("show");
-  ListActive = true;
-  resetListTimeout()
-}
-
-function deactivateList() {
-musicList.classList.remove("show");
-ListActive = false;
-resetListTimeout()
-}
-
-function resetListTimeout() {
-clearTimeout(ListtimeoutId);
-ListtimeoutId = setTimeout(() => {
-  deactivateList();
-}, 15000);
-}
-
-musicList.addEventListener('touchstart', () => {
-activateList();
-resetListTimeout();
-});
-
-musicList.addEventListener('touchmove', () => {
-if (!ListActive) {
-  activateList();
-}
-resetListTimeout();
-});
-
-musicList.addEventListener('touchend', () => {
-resetListTimeout();
-});
-
-resetListTimeout();
 
 
 
@@ -480,9 +336,140 @@ resetDlgenre.addEventListener("click",()=>{
   }
 })
 
+let lyricSource = document.createElement("script");
 function loadMusic(indexNumb) {
   mainAudio.src = `static/sla/songs/${allMusic[indexNumb - 1].src}.mp3`;
   mainAudio.currentTime = timeStamp;
+
+  lyricSource.src = `static/sla/lyrics/${allMusic[indexNumb - 1].src}.js`;
+  document.head.appendChild(lyricSource);
+  lyricSource.addEventListener("load", ()=>{
+  //lyrics
+
+  // check if scroll or create .empty
+  const hasScrolled  = new Array(lyrics.length).fill(false);
+  const created  = new Array(lyrics.length).fill(false);
+  mainAudio.addEventListener('timeupdate', () => {
+    const currentTime = mainAudio.currentTime;
+    let foundCurrentLyric = false;
+    let currentLyricIndex = 0;
+      for (let i = 0; i < lyrics.length; i++) {
+        if (currentTime >= lyrics[i].start && currentTime <= lyrics[i].end) {
+          currentLyricIndex = i;
+          foundCurrentLyric = true;
+          const animationDuration = lyrics[i].end - lyrics[i].start + 0.2;
+          document.body.style.setProperty('--animation-duration', animationDuration + 's');
+        }
+      }
+
+    for (let j = 0; j < lyrics.length; j++){
+    const lyricElem = document.getElementById(`lyric-${j}`);
+    const lyct = document.getElementById(`lyct-${j}`);
+    const shine = document.getElementById(`shinely-${j}`);  
+    if (j === currentLyricIndex && foundCurrentLyric) {
+        lyricElem.classList.add('highlight');
+        lyricElem.classList.remove('played');
+        lyct.classList.add('cu');
+        lyct.classList.remove('played');
+        lyricElem.setAttribute('data-text', lyricElem.textContent);
+        shine.classList.add('shinely');
+
+        let anishine = document.querySelector(".shinely");
+        mainAudio.addEventListener("pause", ()=>{
+          anishine.style.animationPlayState = "paused";
+        });
+        mainAudio.addEventListener("play", ()=> {
+          anishine.style.animationPlayState = "running";
+        });
+
+        let duration = lyrics[j].end - lyrics[j].start;
+        let currentTime = mainAudio.currentTime - lyrics[j].start;
+        let percentage = currentTime / duration;
+        shine.scrollLeft = (lyricElem.scrollWidth - lyricElem.clientWidth) * percentage;
+        lyricElem.scrollLeft = (lyricElem.scrollWidth - lyricElem.clientWidth) * percentage;
+
+        let CurrentLyric = document.querySelector('.cu');
+        let lyel = document.querySelector('.lyct');
+        let VisibleLyricAboveQuality = Math.floor(CurrentLyric.offsetTop / lyel.offsetHeight);
+
+        //the quality of visible lyrics
+        let ScollThreshold = Math.floor((lyricContainer.offsetHeight / 2 - CurrentLyric.offsetHeight) / lyel.offsetHeight);
+
+        if (VisibleLyricAboveQuality >= ScollThreshold && !hasScrolled[j]){
+          lyricContainer.scrollTop += CurrentLyric.offsetHeight;
+          hasScrolled[j] = true;
+        }
+       // If we've scrolled to the bottom and there are still more lyrics, create a new empty div
+       if (lyricContainer.scrollTop >= lyricContainer.scrollHeight - lyricContainer.offsetHeight && j < lyrics.length - 2 
+        && !created[j]) {
+          const emptyLyricElem = document.createElement('div');
+          emptyLyricElem.classList.add('empty');
+          lyricContainer.appendChild(emptyLyricElem);
+          var emp = `.empty{
+            position: relative;
+            width: 100%;
+            min-height: 2em;
+          }`;
+          var style = document.createElement("style");
+          style.appendChild(document.createTextNode(emp));
+          document.head.appendChild(style);
+          created[j] = true;
+        } 
+      }
+    if (j < currentLyricIndex) {
+          hasScrolled[j] = false;
+        shine.classList.remove('shinely');
+        lyricElem.classList.add('played');
+        lyricElem.classList.remove('highlight');
+        lyct.classList.add('played');
+        lyct.classList.remove('cu');
+      }
+    if (j > currentLyricIndex) {
+        shine.classList.remove('shinely');
+        lyricElem.classList.remove('played');
+        lyricElem.classList.remove('highlight');
+        lyct.classList.remove('played');
+        lyct.classList.remove('cu');
+      }
+    }
+  });
+
+  for (let i = 0; i < lyrics.length; i++) {
+    let subly = `<div class=lyct id="lyct-${i}">
+        <div class=lyrics id="lyric-${i}">${lyrics[i].text}</div>
+        <div id="shinely-${i}">${lyrics[i].text}</div>
+      </div>`;
+    lyricContainer.insertAdjacentHTML("beforeend", subly);
+  }
+
+  for (let i = 0; i < lyrics.length; i++) {
+    let dylyric = document.querySelector(`#lyct-${i}`);
+    dylyric.addEventListener("click", ()=>{
+      mainAudio.currentTime = lyrics[i].start;
+    });
+  }
+
+  mainAudio.addEventListener("ended", ()=>{
+    for(let j=0;j<lyrics.length;j++){
+      const lyricElem = document.getElementById(`lyric-${j}`);
+      const lyct = document.getElementById(`lyct-${j}`);
+      lyricElem.classList.remove('played');
+      lyct.classList.remove('played');
+    }
+
+  let empty = document.querySelectorAll(".empty");for(let i=0;i<empty.length;i++){lyricContainer.removeChild(empty[i]);}
+
+  let ScrollInterval;
+  ScrollInterval = setInterval(function(){
+    lyricContainer.scrollTop -= 50;
+    if (lyricContainer.scrollTop === 0){clearInterval(ScrollInterval);}
+  }, 40); 
+  })
+})
+
+
+
+
   jsmediatags.read(mainAudio.src, {
     onSuccess: function(tag) {
       // Set the metadata fields in your music player using the tag information
@@ -503,10 +490,23 @@ function loadMusic(indexNumb) {
       }
     },
     onError: function(error) {
-      console.log(error);
+      if(error){throw(error);}
     }
   });
 
+
+
+  boardGenre.addEventListener("click",()=>{
+    musicGenre.classList.toggle("show");
+  });
+
+  boardLyric.addEventListener("click",()=>{
+    lyContainer.classList.add("show");
+  });
+
+  closeLyric.addEventListener("click",()=>{
+    lyContainer.classList.remove("show");
+  });
 
   dynamicIcon.setAttribute("href", `static/sla/images/${allMusic[indexNumb - 1].src}.ico`);
   now_playing.textContent = (indexNumb) + " / " + allMusic.length;
@@ -548,9 +548,6 @@ function loadMusic(indexNumb) {
   else{setCanvas.src = "";
   random_bg_color();
   }
-   
-  console.log("mainAudio.currentTime: ", mainAudio.currentTime);
-  console.log("timeStamp: ", timeStamp);
   //dynamic URL while playing
   history.pushState('', '', `#${allMusic[indexNumb - 1].hash}`);
 }
@@ -1781,7 +1778,7 @@ for (let i = 0; i < allMusic.length; i++) {
 
     },
     onError: function(error) {
-      console.log(error);
+      
     }
   });
 
@@ -1852,3 +1849,5 @@ function random_webkit_color() {
 opVolume.addEventListener("click", ()=>{
   volumeProgress.classList.toggle("showw");
 });
+
+
