@@ -60,8 +60,265 @@ isMusicPaused = true;
 
   //hover compliation
   //main player hover opacity:0.2 for every devices
+  let PCtimeoutId;
+  let PCisActive = false;
+  
+  function PCactivateBox() {
+    wrapper.classList.remove('inactive');
+    PCisActive = true;
+  }
+  function dePCactivateBox() {
+    wrapper.classList.add('inactive');
+    PCisActive = false;
+  }
+  function PCresetTimeout() {
+    clearTimeout(PCtimeoutId);
+    PCtimeoutId = setTimeout(() => {
+      dePCactivateBox();
+    }, 7500);
+  }
+  wrapper.addEventListener('mousedown', () => {
+    PCactivateBox();
+    PCresetTimeout();
+  });
+  wrapper.addEventListener('mousemove', () => {
+    if (!PCisActive) {
+      PCactivateBox();
+    }
+    PCresetTimeout();
+  });
+  wrapper.addEventListener('mouseleave', () => {
+    PCresetTimeout();
+  });
+  PCresetTimeout();
+  //volumebar disappear for every devices
+  let PCVolumePCtimeoutId;
+  let PCvolumeActive = false;
+  function PCactivateVolume() {
+      volumeProgress.classList.add("showw");
+      voloumeActive = true;
+      PCresetVolumeTimeout()
+  }
+  function dePCactivateVolume() {
+    volumeProgress.classList.remove("showw");
+    voloumeActive = false;
+    PCresetVolumeTimeout()
+  } 
+  function PCresetVolumeTimeout() {
+    clearTimeout(PCVolumePCtimeoutId);
+    PCVolumePCtimeoutId = setTimeout(() => {
+      dePCactivateVolume();
+    }, 5000);
+  }
+  volumeProgress.addEventListener('mousedown', () => {
+    PCactivateVolume();
+    PCresetVolumeTimeout();
+  });
+  volumeProgress.addEventListener('mousemove', () => {
+    if (!PCvolumeActive) {
+      PCactivateVolume();
+    }
+    PCresetVolumeTimeout();
+  });
+  volumeProgress.addEventListener('mouseleave', () => {
+    PCresetVolumeTimeout();
+  });
+  PCresetVolumeTimeout();
+  //Option fly away for every devices
+  let PCOptionPCtimeoutId, PCOptionActive = false;
+  function PCactivateOption() {
+    areaOption.classList.add("show");
+    PCOptionActive = true;
+    PCresetOptionTimeout()
+  }
+  function dePCactivateOption() {
+    areaOption.classList.remove("show");
+    PCOptionActive = false;
+    PCresetOptionTimeout()
+  }
+  function PCresetOptionTimeout() {
+  clearTimeout(PCOptionPCtimeoutId);
+  PCOptionPCtimeoutId = setTimeout(() => {
+    dePCactivateOption();
+  }, 10000);
+  }
+  areaOption.addEventListener('mousedown', () => {
+  PCactivateOption();
+  PCresetOptionTimeout();
+  });
+  areaOption.addEventListener('mousemove', () => {
+  if (!PCOptionActive) {
+    PCactivateOption();
+  }
+  PCresetOptionTimeout();
+  });
+  areaOption.addEventListener('mouseleave', () => {
+  PCresetOptionTimeout();
+  });
+  PCresetOptionTimeout();
+  //Musiclist down for every devices
+  let ListPCtimeoutId, ListPCActive = false;
+  function PCactivateList() {
+    musicList.classList.add("show");
+    ListPCActive = true;
+    PCresetListTimeout()
+  }
+  function dePCactivateList() {
+  musicList.classList.remove("show");
+  ListPCActive = false;
+  PCresetListTimeout()
+  }
+  function PCresetListTimeout() {
+  clearTimeout(ListPCtimeoutId);
+  ListPCtimeoutId = setTimeout(() => {
+    dePCactivateList();
+  }, 15000);
+  }
+  musicList.addEventListener('mousedown', () => {
+  PCactivateList();
+  PCresetListTimeout();
+  });
+  musicList.addEventListener('mousemove', () => {
+  if (!ListPCActive) {
+    PCactivateList();
+  }
+  PCresetListTimeout();
+  });
+  musicList.addEventListener('mouseleave', () => {
+  PCresetListTimeout();
+  });
+  PCresetListTimeout();
 
 
+  //mobile
+  let timeoutId;
+let isActive = false;
+
+function activateBox() {
+  wrapper.classList.remove('inactive');
+  isActive = true;
+}
+function deactivateBox() {
+  wrapper.classList.add('inactive');
+  isActive = false;
+}
+function resetTimeout() {
+  clearTimeout(timeoutId);
+  timeoutId = setTimeout(() => {
+    deactivateBox();
+  }, 7500);
+}
+wrapper.addEventListener('touchstart', () => {
+  activateBox();
+  resetTimeout();
+});
+wrapper.addEventListener('touchmove', () => {
+  if (!isActive) {
+    activateBox();
+  }
+  resetTimeout();
+});
+wrapper.addEventListener('touchend', () => {
+  resetTimeout();
+});
+resetTimeout();
+
+
+//volumebar disappear for every devices
+let VolumetimeoutId;
+let volumeActive = false;
+function activateVolume() {
+    volumeProgress.classList.add("showw");
+    voloumeActive = true;
+    resetVolumeTimeout()
+}
+function deactivateVolume() {
+  volumeProgress.classList.remove("showw");
+  voloumeActive = false;
+  resetVolumeTimeout()
+}
+function resetVolumeTimeout() {
+  clearTimeout(VolumetimeoutId);
+  VolumetimeoutId = setTimeout(() => {
+    deactivateVolume();
+  }, 5000);
+}
+volumeProgress.addEventListener('touchstart', () => {
+  activateVolume();
+  resetVolumeTimeout();
+});
+volumeProgress.addEventListener('touchmove', () => {
+  if (!volumeActive) {
+    activateVolume();
+  }
+  resetVolumeTimeout();
+});
+volumeProgress.addEventListener('touchend', () => {
+  resetVolumeTimeout();
+});
+resetVolumeTimeout();
+let OptiontimeoutId, OptionActive = false;
+function activateOption() {
+  areaOption.classList.add("show");
+  OptionActive = true;
+  resetOptionTimeout()
+}
+function deactivateOption() {
+  areaOption.classList.remove("show");
+  OptionActive = false;
+  resetOptionTimeout()
+}
+function resetOptionTimeout() {
+clearTimeout(OptiontimeoutId);
+OptiontimeoutId = setTimeout(() => {
+  deactivateOption();
+}, 10000);
+}
+areaOption.addEventListener('touchstart', () => {
+activateOption();
+resetOptionTimeout();
+});
+areaOption.addEventListener('touchmove', () => {
+if (!OptionActive) {
+  activateOption();
+}
+resetOptionTimeout();
+});
+areaOption.addEventListener('touchend', () => {
+resetOptionTimeout();
+});
+resetOptionTimeout();
+let ListtimeoutId, ListActive = false;
+function activateList() {
+  musicList.classList.add("show");
+  ListActive = true;
+  resetListTimeout()
+}
+function deactivateList() {
+musicList.classList.remove("show");
+ListActive = false;
+resetListTimeout()
+}
+function resetListTimeout() {
+clearTimeout(ListtimeoutId);
+ListtimeoutId = setTimeout(() => {
+  deactivateList();
+}, 15000);
+}
+musicList.addEventListener('touchstart', () => {
+activateList();
+resetListTimeout();
+});
+musicList.addEventListener('touchmove', () => {
+if (!ListActive) {
+  activateList();
+}
+resetListTimeout();
+});
+musicList.addEventListener('touchend', () => {
+resetListTimeout();
+});
+resetListTimeout();
 
 
 let timeStamp = 0;
@@ -1851,13 +2108,13 @@ opVolume.addEventListener("click", ()=>{
 
 
 let isDragging = false;
-progressArea.addEventListener('touchstart', () => {
+progressArea.addEventListener('mousedown', () => {
   isDragging = true;
 });
-progressArea.addEventListener('touchend', () => {
+progressArea.addEventListener('mouseleave', () => {
   isDragging = false;
 });
-progressArea.addEventListener('touchmove', (e) => {
+progressArea.addEventListener('mousemove', (e) => {
   if (isDragging) {
     const xPos = e.touches[0].clientX - progressArea.getBoundingClientRect().left;
     const percent = xPos / progressArea.offsetWidth;
