@@ -371,12 +371,9 @@ function loadMusic(indexNumb) {
         shine.classList.add('shinely');
 
         let anishine = document.querySelector(".shinely");
-        mainAudio.addEventListener("pause", ()=>{
-          anishine.style.animationPlayState = "paused";
-        });
-        mainAudio.addEventListener("play", ()=> {
-          anishine.style.animationPlayState = "running";
-        });
+        if(wrapper.classList.contains('paused')){anishine.style.animationPlayState = "running";}
+        else{anishine.style.animationPlayState = "paused";}
+          
 
         let duration = lyrics[j].end - lyrics[j].start;
         let currentTime = mainAudio.currentTime - lyrics[j].start;
@@ -443,7 +440,7 @@ function loadMusic(indexNumb) {
     dylyric.addEventListener("click", ()=>{
       if(dylyric.classList.contains('cu')){if(wrapper.classList.contains('paused')){pauseMusic();}
       else {playMusic();}}
-      else{mainAudio.currentTime = lyrics[i].start;}
+      else{mainAudio.currentTime = lyrics[i].start; playMusic();}
     });
   }
 
@@ -492,20 +489,6 @@ function loadMusic(indexNumb) {
     }
   });
 
-
-
-  boardGenre.addEventListener("click",()=>{
-    musicGenre.classList.toggle("show");
-  });
-
-  boardLyric.addEventListener("click",()=>{
-    lyContainer.classList.add("show");
-  });
-
-  closeLyric.addEventListener("click",()=>{
-    lyContainer.classList.remove("show");
-  });
-
   dynamicIcon.setAttribute("href", `static/sla/images/${allMusic[indexNumb - 1].src}.ico`);
   now_playing.textContent = (indexNumb) + " / " + allMusic.length;
   if(allMusic[indexNumb - 1].canvas){
@@ -549,6 +532,20 @@ function loadMusic(indexNumb) {
   //dynamic URL while playing
   history.pushState('', '', `#${allMusic[indexNumb - 1].hash}`);
 }
+
+
+boardGenre.addEventListener("click",()=>{
+  musicGenre.classList.toggle("show");
+});
+
+boardLyric.addEventListener("click",()=>{
+  lyContainer.classList.add("show");
+});
+
+closeLyric.addEventListener("click",()=>{
+  lyContainer.classList.remove("show");
+});
+
 
 function random_bg_color(){
   let hex = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'];
