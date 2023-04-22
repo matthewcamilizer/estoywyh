@@ -589,135 +589,139 @@ resetDlgenre.addEventListener("click",()=>{
   }
 })
 
-let lyricSource = document.createElement("script");
+
 function loadMusic(indexNumb) {
   mainAudio.src = `static/sla/songs/${allMusic[indexNumb - 1].src}.mp3`;
   mainAudio.currentTime = timeStamp;
 
-  lyricSource.src = `static/sla/lyrics/${allMusic[indexNumb - 1].src}.js`;
-  document.head.appendChild(lyricSource);
-  lyricSource.addEventListener("load", ()=>{
-  //lyrics
 
-  // check if scroll or create .empty
-  const hasScrolled  = new Array(lyrics.length).fill(false);
-  const created  = new Array(lyrics.length).fill(false);
-  mainAudio.addEventListener('timeupdate', () => {
-    const currentTime = mainAudio.currentTime;
-    let foundCurrentLyric = false;
-    let currentLyricIndex = 0;
-      for (let i = 0; i < lyrics.length; i++) {
-        if (currentTime >= lyrics[i].start && currentTime <= lyrics[i].end) {
-          currentLyricIndex = i;
-          foundCurrentLyric = true;
-          const animationDuration = lyrics[i].end - lyrics[i].start + 0.2;
-          document.body.style.setProperty('--animation-duration', animationDuration + 's');
+
+  fetch("static/sla/lyrics/music-7.json")
+  .then(response => response.json())
+  .then(data => {
+    const lyricContainer = document.getElementById('lyrics');
+    // check if scroll or create .empty
+    const hasScrolled  = new Array(data['The Motto']['lyrics'].length).fill(false);
+    const created  = new Array(data['The Motto']['lyrics'].length).fill(false);
+    
+    mainAudio.addEventListener('timeupdate', () => {
+      const currentTime = mainAudio.currentTime;
+      let foundCurrentLyric = false;
+      let currentLyricIndex = 0;
+        for (let i = 0; i < data['The Motto']['lyrics'].length; i++) {
+          if (currentTime >= data['The Motto']['lyrics'][i].start && currentTime <= data['The Motto']['lyrics'][i].end) {
+            currentLyricIndex = i;
+            foundCurrentLyric = true;
+            const animationDuration = data['The Motto']['lyrics'][i].end - data['The Motto']['lyrics'][i].start + 0.2;
+            document.body.style.setProperty('--animation-duration', animationDuration + 's');
+          }
         }
-      }
 
-    for (let j = 0; j < lyrics.length; j++){
-    const lyricElem = document.getElementById(`lyric-${j}`);
-    const lyct = document.getElementById(`lyct-${j}`);
-    const shine = document.getElementById(`shinely-${j}`);  
-    if (j === currentLyricIndex && foundCurrentLyric) {
-        lyricElem.classList.add('highlight');
-        lyricElem.classList.remove('played');
-        lyct.classList.add('cu');
-        lyct.classList.remove('played');
-        lyricElem.setAttribute('data-text', lyricElem.textContent);
-        shine.classList.add('shinely');
+        for (let j = 0; j < data['The Motto']['lyrics'].length; j++){
+        const lyricElem = document.getElementById(`lyric-${j}`);
+        const lyct = document.getElementById(`lyct-${j}`);
+        const shine = document.getElementById(`shinely-${j}`);  
+        if (j === currentLyricIndex && foundCurrentLyric) {
+            lyricElem.classList.add('highlight');
+            lyricElem.classList.remove('played');
+            lyct.classList.add('cu');
+            lyct.classList.remove('played');
+            lyricElem.setAttribute('data-text', lyricElem.textContent);
+            shine.classList.add('shinely');
 
-        let anishine = document.querySelector(".shinely");
-        if(wrapper.classList.contains('paused')){anishine.style.animationPlayState = "running";}
-        else{anishine.style.animationPlayState = "paused";}
-          
+            let anishine = document.querySelector(".shinely");
+            if(wrapper.classList.contains('paused')){anishine.style.animationPlayState = "running";}
+            else{anishine.style.animationPlayState = "paused";}  
 
-        let duration = lyrics[j].end - lyrics[j].start;
-        let currentTime = mainAudio.currentTime - lyrics[j].start;
-        let percentage = currentTime / duration;
-        shine.scrollLeft = (lyricElem.scrollWidth - lyricElem.clientWidth) * percentage;
-        lyricElem.scrollLeft = (lyricElem.scrollWidth - lyricElem.clientWidth) * percentage;
+            let duration = data['The Motto']['lyrics'][j].end - data['The Motto']['lyrics'][j].start;
+            let currentTime = mainAudio.currentTime - data['The Motto']['lyrics'][j].start;
+            let percentage = currentTime / duration;
+            shine.scrollLeft = (lyricElem.scrollWidth - lyricElem.clientWidth) * percentage;
+            lyricElem.scrollLeft = (lyricElem.scrollWidth - lyricElem.clientWidth) * percentage;
+            
 
-        let CurrentLyric = document.querySelector('.cu');
-        let lyel = document.querySelector('.lyct');
-        let VisibleLyricAboveQuality = Math.floor(CurrentLyric.offsetTop / lyel.offsetHeight);
+            let CurrentLyric = document.querySelector('.cu');
+            let lyel = document.querySelector('.lyct');
+            let VisibleLyricAboveQuality = Math.floor(CurrentLyric.offsetTop / lyel.offsetHeight);
 
-        //the quality of visible lyrics
-        let ScollThreshold = Math.floor((lyricContainer.offsetHeight / 2 - CurrentLyric.offsetHeight) / lyel.offsetHeight);
+            //the quality of visible lyrics
+            let ScollThreshold = Math.floor((lyricContainer.offsetHeight / 2 - CurrentLyric.offsetHeight) / lyel.offsetHeight);
 
-        if (VisibleLyricAboveQuality >= ScollThreshold && !hasScrolled[j]){
-          lyricContainer.scrollTop += CurrentLyric.offsetHeight;
-          hasScrolled[j] = true;
+            if (VisibleLyricAboveQuality >= ScollThreshold && !hasScrolled[j]){
+              lyricContainer.scrollTop += CurrentLyric.offsetHeight;
+              hasScrolled[j] = true;
+            }
+          // If we've scrolled to the bottom and there are still more lyrics, create a new empty div
+          if (lyricContainer.scrollTop >= lyricContainer.scrollHeight - lyricContainer.offsetHeight && j < lyrics.length - 2 
+            && !created[j]) {
+              const emptyLyricElem = document.createElement('div');
+              emptyLyricElem.classList.add('empty');
+              lyricContainer.appendChild(emptyLyricElem);
+              var emp = `.empty{
+                position: relative;
+                width: 100%;
+                min-height: 2em;
+              }`;
+              var style = document.createElement("style");
+              style.appendChild(document.createTextNode(emp));
+              document.head.appendChild(style);
+              created[j] = true;
+            } 
+          }
+        if (j < currentLyricIndex) {
+              hasScrolled[j] = false;
+            shine.classList.remove('shinely');
+            lyricElem.classList.add('played');
+            lyricElem.classList.remove('highlight');
+            lyct.classList.add('played');
+            lyct.classList.remove('cu');
+          }
+        if (j > currentLyricIndex) {
+            shine.classList.remove('shinely');
+            lyricElem.classList.remove('played');
+            lyricElem.classList.remove('highlight');
+            lyct.classList.remove('played');
+            lyct.classList.remove('cu');
+          }
         }
-       // If we've scrolled to the bottom and there are still more lyrics, create a new empty div
-       if (lyricContainer.scrollTop >= lyricContainer.scrollHeight - lyricContainer.offsetHeight && j < lyrics.length - 2 
-        && !created[j]) {
-          const emptyLyricElem = document.createElement('div');
-          emptyLyricElem.classList.add('empty');
-          lyricContainer.appendChild(emptyLyricElem);
-          var emp = `.empty{
-            position: relative;
-            width: 100%;
-            min-height: 2em;
-          }`;
-          var style = document.createElement("style");
-          style.appendChild(document.createTextNode(emp));
-          document.head.appendChild(style);
-          created[j] = true;
-        } 
-      }
-    if (j < currentLyricIndex) {
-          hasScrolled[j] = false;
-        shine.classList.remove('shinely');
-        lyricElem.classList.add('played');
-        lyricElem.classList.remove('highlight');
-        lyct.classList.add('played');
-        lyct.classList.remove('cu');
-      }
-    if (j > currentLyricIndex) {
-        shine.classList.remove('shinely');
-        lyricElem.classList.remove('played');
-        lyricElem.classList.remove('highlight');
-        lyct.classList.remove('played');
-        lyct.classList.remove('cu');
-      }
-    }
-  });
+      });
 
-  for (let i = 0; i < lyrics.length; i++) {
-    let subly = `<div class=lyct id="lyct-${i}">
-        <div class=lyrics id="lyric-${i}">${lyrics[i].text}</div>
-        <div id="shinely-${i}">${lyrics[i].text}</div>
-      </div>`;
-    lyricContainer.insertAdjacentHTML("beforeend", subly);
-  }
-
-  for (let i = 0; i < lyrics.length; i++) {
-    let dylyric = document.querySelector(`#lyct-${i}`);
-    dylyric.addEventListener("click", ()=>{
-      if(dylyric.classList.contains('cu')){if(wrapper.classList.contains('paused')){pauseMusic();}
-      else {playMusic();}}
-      else{mainAudio.currentTime = lyrics[i].start; playMusic();}
-    });
-  }
-
-  mainAudio.addEventListener("ended", ()=>{
-    for(let j=0;j<lyrics.length;j++){
-      const lyricElem = document.getElementById(`lyric-${j}`);
-      const lyct = document.getElementById(`lyct-${j}`);
-      lyricElem.classList.remove('played');
-      lyct.classList.remove('played');
+    for (let i = 0; i < data['The Motto']['lyrics'].length; i++) {
+      let subly = `<div class=lyct id="lyct-${i}">
+          <div class=lyrics id="lyric-${i}">${data['The Motto']['lyrics'][i].text}</div>
+          <div id="shinely-${i}">${data['The Motto']['lyrics'][i].text}</div>
+        </div>`;
+      lyricContainer.insertAdjacentHTML("beforeend", subly);
     }
 
-  let empty = document.querySelectorAll(".empty");for(let i=0;i<empty.length;i++){lyricContainer.removeChild(empty[i]);}
+    for (let i = 0; i < data['The Motto']['lyrics'].length; i++) {
+      let dylyric = document.querySelector(`#lyct-${i}`);
+      dylyric.addEventListener("click", ()=>{
+        if(dylyric.classList.contains('cu')){if(wrapper.classList.contains('paused')){pauseMusic();}else{playMusic();}}
+        else{mainAudio.currentTime = data['The Motto']['lyrics'][i].start;playMusic();}
+      });
+    }
 
-  let ScrollInterval;
-  ScrollInterval = setInterval(function(){
-    lyricContainer.scrollTop -= 50;
-    if (lyricContainer.scrollTop === 0){clearInterval(ScrollInterval);}
-  }, 40); 
+    mainAudio.addEventListener("ended", ()=>{
+      for(let j=0;j<data['The Motto']['lyrics'].length;j++){
+        const lyricElem = document.getElementById(`lyric-${j}`);
+        const lyct = document.getElementById(`lyct-${j}`);
+        lyricElem.classList.remove('played');
+        lyct.classList.remove('played');
+      }
+
+    let empty = document.querySelectorAll(".empty");for(let i=0;i<empty.length;i++){lyricContainer.removeChild(empty[i]);}
+
+    let ScrollInterval;
+    ScrollInterval = setInterval(function(){
+      lyricContainer.scrollTop -= 50;
+      if (lyricContainer.scrollTop === 0){clearInterval(ScrollInterval);}
+    }, 40); 
+    })
   })
-})
+  .catch(error => {
+    console.error('Error fetching JSON data:', error);
+  });
 
 
 
