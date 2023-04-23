@@ -632,28 +632,27 @@ function loadMusic(indexNumb) {
 
       const cretedCSS = document.querySelector("#newCSS");
       if (cretedCSS){document.head.removeChild(cretedCSS);}
-
+      const ToRemove = lyricContainer.querySelectorAll(`[song]:not([song*="${tag.tags.title}"])`);
+      if(ToRemove){
+        for(let o=0;o<ToRemove.length;o++){
+          ToRemove[o].remove();
+        }
+      }
       fetch(`static/sla/lyrics/${allMusic[indexNumb - 1].src}.json`)
       .then(response => response.json())
       .then(data => {
         // check if scroll or create .empty
         const hasScrolled  = new Array(data[tag.tags.title]['lyrics'].length).fill(false);
         const created  = new Array(data[tag.tags.title]['lyrics'].length).fill(false);
-        const ToRemove = lyricContainer.querySelectorAll(`[id]:not([id*="${tag.tags.title}"])`);
-        if(ToRemove){
-          for(let o=0;o<ToRemove.length;o++){
-            ToRemove[o].remove();
-          }
-        }
         for (let i = 0; i < data[tag.tags.title]['lyrics'].length; i++) {
-          let subly = `<div class=lyct id="${tag.tags.title}-${i}">
+          let subly = `<div class=lyct id="${i}" song=${tag.tags.title} >
               <div class=lyrics id="lyric-${i}">${data[tag.tags.title]['lyrics'][i].text}</div>
               <div id="shinely-${i}">${data[tag.tags.title]['lyrics'][i].text}</div>
             </div>`;
           lyricContainer.insertAdjacentHTML("beforeend", subly);
         }
 
-
+        lyricContainer.scrollTop = 0;
         mainAudio.addEventListener('timeupdate', () => {
           const currentTime = mainAudio.currentTime;
           let foundCurrentLyric = false;
@@ -669,7 +668,7 @@ function loadMusic(indexNumb) {
     
             for (let j = 0; j < data[tag.tags.title]['lyrics'].length; j++){
             const lyricElem = document.getElementById(`lyric-${j}`);
-            const lyct = document.getElementById(`${tag.tags.title}-${j}`);
+            const lyct = document.getElementById(`${j}`);
             const shine = document.getElementById(`shinely-${j}`);  
             if (j === currentLyricIndex && foundCurrentLyric) {
                 lyricElem.classList.add('highlight');
@@ -699,6 +698,7 @@ function loadMusic(indexNumb) {
     
                 if (VisibleLyricAboveQuality >= ScollThreshold && !hasScrolled[j]){
                   lyricContainer.scrollTop += CurrentLyric.offsetHeight;
+                  console.log(lyricContainer.scrollTop);
                   hasScrolled[j] = true;
                 }
               // If we've scrolled to the bottom and there are still more lyrics, create a new empty div
@@ -738,7 +738,7 @@ function loadMusic(indexNumb) {
     
     
         for (let i = 0; i < data[tag.tags.title]['lyrics'].length; i++) {
-          let dylyric = document.getElementById(`${tag.tags.title}-${i}`);
+          let dylyric = document.getElementById(`${i}`);
           dylyric.addEventListener("click", ()=>{
             if(dylyric.classList.contains('cu')){if(wrapper.classList.contains('paused')){pauseMusic();}else{playMusic();}}
             else{mainAudio.currentTime = data[tag.tags.title]['lyrics'][i].start;playMusic();}
@@ -748,7 +748,7 @@ function loadMusic(indexNumb) {
         mainAudio.addEventListener("ended", ()=>{
           for(let j=0;j<data[tag.tags.title]['lyrics'].length;j++){
             const lyricElem = document.getElementById(`lyric-${j}`);
-            const lyct = document.getElementById(`${tag.tags.title}-${j}`);
+            const lyct = document.getElementById(`${j}`);
             lyricElem.classList.remove('played');
             lyct.classList.remove('played');
           }
@@ -1425,10 +1425,7 @@ function prevMusic(){
          
         //same artists skip
         if (fplikedArtists.includes(allMusic[musicIndex-1].artist.toLowerCase())){
-           
           let count = 0;
-           
-           
           if (!(likedGenres.length > 0 || dislikedGenres.length > 0)) {
             musicIndex--;
             musicIndex < 1 ? musicIndex = allMusic.length : musicIndex = musicIndex;
