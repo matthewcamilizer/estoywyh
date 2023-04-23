@@ -686,6 +686,7 @@ function loadMusic(indexNumb) {
         }
       });
 
+      lyricContainer.innerHTML="";
     for (let i = 0; i < data['The Motto']['lyrics'].length; i++) {
       let subly = `<div class=lyct id="lyct-${i}">
           <div class=lyrics id="lyric-${i}">${data['The Motto']['lyrics'][i].text}</div>
