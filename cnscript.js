@@ -4,7 +4,6 @@ musicName = wrapper.querySelector(".song-details .name"),
 musicArtist = wrapper.querySelector(".song-details .artist"),
 musicGenre = wrapper.querySelector(".song-details .genre"),
 playPauseBtn = wrapper.querySelector(".play-pause"),
-shareButton = wrapper.querySelector("#share"),
 
 volumeControl = wrapper.querySelector("#vc"),
 sliderShow = wrapper.querySelector(".slider_container")
@@ -324,15 +323,6 @@ resetListTimeout();
 resetListTimeout();
 
 
-
-
-shareButton.addEventListener("click",()=>{
-  navigator.clipboard.writeText(window.location.href + "&t=" + mainAudio.currentTime);
-})
-
-
-
-
 let timeStamp = 0;
 window.addEventListener("hashchange", () => {
   const urlHash = window.location.hash.slice(1).toLowerCase();// get hash from URL and convert to lowercase
@@ -610,7 +600,16 @@ function loadMusic(indexNumb) {
 
 
   jsmediatags.read(mainAudio.src, {
-    onSuccess: function(tag) {
+    onSuccess: function(tag) {      
+      lyricThreshold.style.width= "92%";      
+      const ToRemove = lyricContainer.querySelectorAll(`[song]:not([song*="${tag.tags.title}"])`);
+      if(ToRemove){
+        for(let o=0;o<ToRemove.length;o++){
+          ToRemove[o].remove();
+        }
+      }
+      const cretedCSS = document.querySelector("#newCSS");
+      if (cretedCSS){document.head.removeChild(cretedCSS);lyricContainer.textContent="";}
       // Set the metadata fields in your music player using the tag information
       musicName.innerText = tag.tags.title;
       musicArtist.innerText = tag.tags.artist;
@@ -618,7 +617,6 @@ function loadMusic(indexNumb) {
       //dynamic title while playing
       dynamicTitle.textContent =tag.tags.artist + ` - ` + tag.tags.title;
       lyricTitle.textContent =tag.tags.artist + ` - ` + tag.tags.title; 
-      lyricThreshold.style.width= "92%";
       // Set the image source for your music player
       var image = tag.tags.picture;
       if (image) {
@@ -630,29 +628,14 @@ function loadMusic(indexNumb) {
         musicImg.src = base64;
       }
 
-      const cretedCSS = document.querySelector("#newCSS");
-      if (cretedCSS){document.head.removeChild(cretedCSS);}
-      const ToRemove = lyricContainer.querySelectorAll(`[song]:not([song*="${tag.tags.title}"])`);
-      if(ToRemove){
-        for(let o=0;o<ToRemove.length;o++){
-          ToRemove[o].remove();
-        }
-      }
+
       fetch(`static/sla/lyrics/${allMusic[indexNumb - 1].src}.json`)
       .then(response => response.json())
       .then(data => {
         // check if scroll or create .empty
         const hasScrolled  = new Array(data[tag.tags.title]['lyrics'].length).fill(false);
         const created  = new Array(data[tag.tags.title]['lyrics'].length).fill(false);
-        for (let i = 0; i < data[tag.tags.title]['lyrics'].length; i++) {
-          let subly = `<div class=lyct id="${i}" song=${tag.tags.title} >
-              <div class=lyrics id="lyric-${i}">${data[tag.tags.title]['lyrics'][i].text}</div>
-              <div id="shinely-${i}">${data[tag.tags.title]['lyrics'][i].text}</div>
-            </div>`;
-          lyricContainer.insertAdjacentHTML("beforeend", subly);
-        }
-
-        lyricContainer.scrollTop = 0;
+        
         mainAudio.addEventListener('timeupdate', () => {
           const currentTime = mainAudio.currentTime;
           let foundCurrentLyric = false;
@@ -668,7 +651,7 @@ function loadMusic(indexNumb) {
     
             for (let j = 0; j < data[tag.tags.title]['lyrics'].length; j++){
             const lyricElem = document.getElementById(`lyric-${j}`);
-            const lyct = document.getElementById(`${j}`);
+            const lyct = document.getElementById(`lyct-${j}`);
             const shine = document.getElementById(`shinely-${j}`);  
             if (j === currentLyricIndex && foundCurrentLyric) {
                 lyricElem.classList.add('highlight');
@@ -698,7 +681,6 @@ function loadMusic(indexNumb) {
     
                 if (VisibleLyricAboveQuality >= ScollThreshold && !hasScrolled[j]){
                   lyricContainer.scrollTop += CurrentLyric.offsetHeight;
-                  console.log(lyricContainer.scrollTop);
                   hasScrolled[j] = true;
                 }
               // If we've scrolled to the bottom and there are still more lyrics, create a new empty div
@@ -735,10 +717,17 @@ function loadMusic(indexNumb) {
               }
             }
           });
-    
+
+        for (let i = 0; i < data[tag.tags.title]['lyrics'].length; i++) {
+          let subly = `<div class=lyct id="lyct-${i}" song="${tag.tags.title}">
+              <div class=lyrics id="lyric-${i}">${data[tag.tags.title]['lyrics'][i].text}</div>
+              <div id="shinely-${i}">${data[tag.tags.title]['lyrics'][i].text}</div>
+            </div>`;
+          lyricContainer.insertAdjacentHTML("beforeend", subly);
+        }
     
         for (let i = 0; i < data[tag.tags.title]['lyrics'].length; i++) {
-          let dylyric = document.getElementById(`${i}`);
+          let dylyric = document.querySelector(`#lyct-${i}`);
           dylyric.addEventListener("click", ()=>{
             if(dylyric.classList.contains('cu')){if(wrapper.classList.contains('paused')){pauseMusic();}else{playMusic();}}
             else{mainAudio.currentTime = data[tag.tags.title]['lyrics'][i].start;playMusic();}
@@ -748,7 +737,7 @@ function loadMusic(indexNumb) {
         mainAudio.addEventListener("ended", ()=>{
           for(let j=0;j<data[tag.tags.title]['lyrics'].length;j++){
             const lyricElem = document.getElementById(`lyric-${j}`);
-            const lyct = document.getElementById(`${j}`);
+            const lyct = document.getElementById(`lyct-${j}`);
             lyricElem.classList.remove('played');
             lyct.classList.remove('played');
           }
@@ -763,9 +752,8 @@ function loadMusic(indexNumb) {
         })
       })
       .catch(error => {
-        lyricContainer.innerHTML="";
         const cretedCSS = document.querySelector("#newCSS");
-        var newcss = `
+        var newcss = `        
         #lyrics{
           display: flex;
           align-items: center;
@@ -773,28 +761,17 @@ function loadMusic(indexNumb) {
         } 
         .what{
           padding-left: 8px;
-        }
-        `;
+        }`;
         var style = document.createElement("style");
-        if (cretedCSS){
-          document.head.removeChild(cretedCSS);
-          {
-            style.setAttribute("id","newCSS");
-            style.appendChild(document.createTextNode(newcss));
-            document.head.appendChild(style);
-            let what = `<div class="what" id="wt">Lyrics came to visit Elon Musk</div>` 
-            lyricContainer.insertAdjacentHTML("beforeend",what);
-          }
-        }
-        else{
-            style.setAttribute("id","newCSS");
-            style.appendChild(document.createTextNode(newcss));
-            document.head.appendChild(style);
-            let what = `<div class="what" id="wt">Lyrics came to visit Elon Musk</div>` 
-            lyricContainer.insertAdjacentHTML("beforeend",what);
-          }
-          lyricThreshold.style.width= "100%";
-          console.error('Error fetching JSON data:', error);
+        if (cretedCSS){document.head.removeChild(cretedCSS);lyricContainer.textContent="";}
+        style.setAttribute("id","newCSS");
+        style.appendChild(document.createTextNode(newcss));
+        document.head.appendChild(style);
+        let what = `<div class="what" id="wt">Lyrics came to visit Elon Musk</div>` 
+        lyricContainer.insertAdjacentHTML("beforeend",what);
+        lyricThreshold.style.width= "100%";
+        console.error('Error fetching JSON data:', error);
+
       });
 
     },
@@ -1425,7 +1402,10 @@ function prevMusic(){
          
         //same artists skip
         if (fplikedArtists.includes(allMusic[musicIndex-1].artist.toLowerCase())){
+           
           let count = 0;
+           
+           
           if (!(likedGenres.length > 0 || dislikedGenres.length > 0)) {
             musicIndex--;
             musicIndex < 1 ? musicIndex = allMusic.length : musicIndex = musicIndex;
@@ -1877,7 +1857,7 @@ prevBtn.addEventListener("click", ()=>{
     if(existingLyric){
       for(let j=0;j<existingLyric.length;j++){
         const lyricElem = document.getElementById(`lyric-${j}`);
-        const lyct = document.getElementById(`${musicName}-${j}`);
+        const lyct = document.getElementById(`lyct-${j}`);
         lyricElem.classList.remove('played');
         lyct.classList.remove('played');
       }
