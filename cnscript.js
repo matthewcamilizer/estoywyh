@@ -4,6 +4,7 @@ musicName = wrapper.querySelector(".song-details .name"),
 musicArtist = wrapper.querySelector(".song-details .artist"),
 musicGenre = wrapper.querySelector(".song-details .genre"),
 playPauseBtn = wrapper.querySelector(".play-pause"),
+shareButton = wrapper.querySelector("#share"),
 
 volumeControl = wrapper.querySelector("#vc"),
 sliderShow = wrapper.querySelector(".slider_container")
@@ -56,7 +57,9 @@ boardGenre = document.querySelector("#c");
 
 let musicIndex = Math.floor((Math.random() * allMusic.length) + 1);
 isMusicPaused = true;
-
+shareButton.addEventListener("click",()=>{
+  navigator.clipboard.writeText(window.location.href + "&t=" + mainAudio.currentTime);
+})
 
 //const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
@@ -192,8 +195,8 @@ isMusicPaused = true;
   PCresetListTimeout();
 
 
-  //mobile
-  let timeoutId;
+//mobile
+let timeoutId;
 let isActive = false;
 
 function activateBox() {
