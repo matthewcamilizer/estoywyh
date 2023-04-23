@@ -47,6 +47,7 @@ now_playing = musicList.querySelector('.now-playing');
 dynamicTitle = document.querySelector("title")
 dynamicIcon = document.getElementById("ddicon");
 
+lyricThreshold = document.querySelector(".threshold");
 lyricContainer = document.querySelector("#lyrics");
 lyricTitle = document.querySelector(".lytitle");
 boardLyric = document.querySelector("#b");
@@ -607,6 +608,7 @@ function loadMusic(indexNumb) {
       //dynamic title while playing
       dynamicTitle.textContent =tag.tags.artist + ` - ` + tag.tags.title;
       lyricTitle.textContent =tag.tags.artist + ` - ` + tag.tags.title; 
+      lyricThreshold.style.width= "92%";
       // Set the image source for your music player
       var image = tag.tags.picture;
       if (image) {
@@ -628,6 +630,17 @@ function loadMusic(indexNumb) {
         const hasScrolled  = new Array(data[tag.tags.title]['lyrics'].length).fill(false);
         const created  = new Array(data[tag.tags.title]['lyrics'].length).fill(false);
         
+
+        lyricContainer.innerHTML="";
+        for (let i = 0; i < data[tag.tags.title]['lyrics'].length; i++) {
+          let subly = `<div class=lyct id="lyct-${i}">
+              <div class=lyrics id="lyric-${i}">${data[tag.tags.title]['lyrics'][i].text}</div>
+              <div id="shinely-${i}">${data[tag.tags.title]['lyrics'][i].text}</div>
+            </div>`;
+          lyricContainer.insertAdjacentHTML("beforeend", subly);
+        }
+
+
         mainAudio.addEventListener('timeupdate', () => {
           const currentTime = mainAudio.currentTime;
           let foundCurrentLyric = false;
@@ -710,14 +723,6 @@ function loadMusic(indexNumb) {
             }
           });
     
-          lyricContainer.innerHTML="";
-        for (let i = 0; i < data[tag.tags.title]['lyrics'].length; i++) {
-          let subly = `<div class=lyct id="lyct-${i}">
-              <div class=lyrics id="lyric-${i}">${data[tag.tags.title]['lyrics'][i].text}</div>
-              <div id="shinely-${i}">${data[tag.tags.title]['lyrics'][i].text}</div>
-            </div>`;
-          lyricContainer.insertAdjacentHTML("beforeend", subly);
-        }
     
         for (let i = 0; i < data[tag.tags.title]['lyrics'].length; i++) {
           let dylyric = document.querySelector(`#lyct-${i}`);
@@ -745,10 +750,18 @@ function loadMusic(indexNumb) {
         })
       })
       .catch(error => {
+        lyricContainer.innerHTML="";
         const cretedCSS = document.querySelector("#newCSS");
-        var newcss = `#lyrics{
-          padding-top: 50px; 
-        }`;
+        var newcss = `
+        #lyrics{
+          display: flex;
+          align-items: center;
+          justifyContent: center;
+        } 
+        .what{
+          padding-left: 8px;
+        }
+        `;
         var style = document.createElement("style");
         if (cretedCSS){
           document.head.removeChild(cretedCSS);
@@ -756,18 +769,19 @@ function loadMusic(indexNumb) {
             style.setAttribute("id","newCSS");
             style.appendChild(document.createTextNode(newcss));
             document.head.appendChild(style);
-            lyricContainer.innerHTML="Lyrics came to visit Elon Musk";
-            console.error('Error fetching JSON data:', error);
+            let what = `<div class="what">Lyrics came to visit Elon Musk</div>` 
+            lyricContainer.insertAdjacentHTML("beforeend",what);
           }
         }
-          else
-            {
-              style.setAttribute("id","newCSS");
-              style.appendChild(document.createTextNode(newcss));
-              document.head.appendChild(style);
-              lyricContainer.innerHTML="Lyrics came to visit Elon Musk";
-              console.error('Error fetching JSON data:', error);
-            }
+        else{
+            style.setAttribute("id","newCSS");
+            style.appendChild(document.createTextNode(newcss));
+            document.head.appendChild(style);
+            let what = `<div class="what">Lyrics came to visit Elon Musk</div>` 
+            lyricContainer.insertAdjacentHTML("beforeend",what);
+          }
+          lyricThreshold.style.width= "100%";
+          console.error('Error fetching JSON data:', error);
       });
 
     },
