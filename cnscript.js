@@ -1847,7 +1847,24 @@ prevBtn.addEventListener("click", ()=>{
   const isMusicPlay = wrapper.classList.contains("paused");
   if(mainAudio.currentTime > 5){
     mainAudio.currentTime = 0; //setting audio current time to 0
-      isMusicPlay ? pauseMusic() : playMusic();
+    const existingLyric = document.querySelector("#lyrics");
+    if(existingLyric){
+      for(let j=0;j<existingLyric.length;j++){
+        const lyricElem = document.getElementById(`lyric-${j}`);
+        const lyct = document.getElementById(`lyct-${j}`);
+        lyricElem.classList.remove('played');
+        lyct.classList.remove('played');
+      }
+    
+      let empty = document.querySelectorAll(".empty");for(let i=0;i<empty.length;i++){lyricContainer.removeChild(empty[i]);}
+      let ScrollInterval;
+      ScrollInterval = setInterval(function(){
+        lyricContainer.scrollTop -= 50;
+        if (lyricContainer.scrollTop === 0){clearInterval(ScrollInterval);}
+      }, 40); 
+    }
+
+    isMusicPlay ? pauseMusic() : playMusic();
     loadMusic(musicIndex); //calling loadMusic function with argument, in the argument there is a index of current song
 
     playMusic(); //calling playMusic function
@@ -2167,6 +2184,21 @@ progressArea.addEventListener('mouseleave', () => {
 });
 progressArea.addEventListener('mousemove', (e) => {
   if (isDragging) {
+    const xPos = e.clientX - progressArea.getBoundingClientRect().left;
+    const percent = xPos / progressArea.offsetWidth;
+    progressBar.style.width = `${percent * 100}%`;
+  }
+});
+
+let MisDragging = false;
+progressArea.addEventListener('touchstart', () => {
+  MisDragging = true;
+});
+progressArea.addEventListener('touchend', () => {
+  MisDragging = false;
+});
+progressArea.addEventListener('touchmove', (e) => {
+  if (MisDragging) {
     const xPos = e.touches[0].clientX - progressArea.getBoundingClientRect().left;
     const percent = xPos / progressArea.offsetWidth;
     progressBar.style.width = `${percent * 100}%`;
