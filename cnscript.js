@@ -832,6 +832,8 @@ function loadMusic(indexNumb) {
 
 boardGenre.addEventListener("click",()=>{
   musicGenre.classList.toggle("show");
+  if(boardGenre.classList.contains("fa-bars")){boardGenre.classList.replace("fa-bars", "fa-list");}
+  else{boardGenre.classList.replace("fa-list", "fa-bars");}
 });
 
 boardLyric.addEventListener("click",()=>{
