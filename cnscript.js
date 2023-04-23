@@ -4,6 +4,7 @@ musicName = wrapper.querySelector(".song-details .name"),
 musicArtist = wrapper.querySelector(".song-details .artist"),
 musicGenre = wrapper.querySelector(".song-details .genre"),
 playPauseBtn = wrapper.querySelector(".play-pause"),
+shareButton = wrapper.querySelector("#share"),
 
 volumeControl = wrapper.querySelector("#vc"),
 sliderShow = wrapper.querySelector(".slider_container")
@@ -323,6 +324,15 @@ resetListTimeout();
 resetListTimeout();
 
 
+
+
+shareButton.addEventListener("click",()=>{
+  navigator.clipboard.writeText(window.location.href + "&t=" + mainAudio.currentTime);
+})
+
+
+
+
 let timeStamp = 0;
 window.addEventListener("hashchange", () => {
   const urlHash = window.location.hash.slice(1).toLowerCase();// get hash from URL and convert to lowercase
@@ -629,11 +639,14 @@ function loadMusic(indexNumb) {
         // check if scroll or create .empty
         const hasScrolled  = new Array(data[tag.tags.title]['lyrics'].length).fill(false);
         const created  = new Array(data[tag.tags.title]['lyrics'].length).fill(false);
-        
-
-        lyricContainer.innerHTML="";
+        const ToRemove = lyricContainer.querySelectorAll(`[id]:not([id*="${tag.tags.title}"])`);
+        if(ToRemove){
+          for(let o=0;o<ToRemove.length;o++){
+            ToRemove[o].remove();
+          }
+        }
         for (let i = 0; i < data[tag.tags.title]['lyrics'].length; i++) {
-          let subly = `<div class=lyct id="lyct-${i}">
+          let subly = `<div class=lyct id="${tag.tags.title}-${i}">
               <div class=lyrics id="lyric-${i}">${data[tag.tags.title]['lyrics'][i].text}</div>
               <div id="shinely-${i}">${data[tag.tags.title]['lyrics'][i].text}</div>
             </div>`;
@@ -656,7 +669,7 @@ function loadMusic(indexNumb) {
     
             for (let j = 0; j < data[tag.tags.title]['lyrics'].length; j++){
             const lyricElem = document.getElementById(`lyric-${j}`);
-            const lyct = document.getElementById(`lyct-${j}`);
+            const lyct = document.getElementById(`${tag.tags.title}-${j}`);
             const shine = document.getElementById(`shinely-${j}`);  
             if (j === currentLyricIndex && foundCurrentLyric) {
                 lyricElem.classList.add('highlight');
@@ -725,7 +738,7 @@ function loadMusic(indexNumb) {
     
     
         for (let i = 0; i < data[tag.tags.title]['lyrics'].length; i++) {
-          let dylyric = document.querySelector(`#lyct-${i}`);
+          let dylyric = document.getElementById(`${tag.tags.title}-${i}`);
           dylyric.addEventListener("click", ()=>{
             if(dylyric.classList.contains('cu')){if(wrapper.classList.contains('paused')){pauseMusic();}else{playMusic();}}
             else{mainAudio.currentTime = data[tag.tags.title]['lyrics'][i].start;playMusic();}
@@ -735,7 +748,7 @@ function loadMusic(indexNumb) {
         mainAudio.addEventListener("ended", ()=>{
           for(let j=0;j<data[tag.tags.title]['lyrics'].length;j++){
             const lyricElem = document.getElementById(`lyric-${j}`);
-            const lyct = document.getElementById(`lyct-${j}`);
+            const lyct = document.getElementById(`${tag.tags.title}-${j}`);
             lyricElem.classList.remove('played');
             lyct.classList.remove('played');
           }
@@ -769,7 +782,7 @@ function loadMusic(indexNumb) {
             style.setAttribute("id","newCSS");
             style.appendChild(document.createTextNode(newcss));
             document.head.appendChild(style);
-            let what = `<div class="what">Lyrics came to visit Elon Musk</div>` 
+            let what = `<div class="what" id="wt">Lyrics came to visit Elon Musk</div>` 
             lyricContainer.insertAdjacentHTML("beforeend",what);
           }
         }
@@ -777,7 +790,7 @@ function loadMusic(indexNumb) {
             style.setAttribute("id","newCSS");
             style.appendChild(document.createTextNode(newcss));
             document.head.appendChild(style);
-            let what = `<div class="what">Lyrics came to visit Elon Musk</div>` 
+            let what = `<div class="what" id="wt">Lyrics came to visit Elon Musk</div>` 
             lyricContainer.insertAdjacentHTML("beforeend",what);
           }
           lyricThreshold.style.width= "100%";
@@ -1867,7 +1880,7 @@ prevBtn.addEventListener("click", ()=>{
     if(existingLyric){
       for(let j=0;j<existingLyric.length;j++){
         const lyricElem = document.getElementById(`lyric-${j}`);
-        const lyct = document.getElementById(`lyct-${j}`);
+        const lyct = document.getElementById(`${musicName}-${j}`);
         lyricElem.classList.remove('played');
         lyct.classList.remove('played');
       }
