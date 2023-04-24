@@ -739,15 +739,26 @@ function loadMusic(indexNumb) {
           align-items: center;
           justifyContent: center;
         } 
+        .doge{
+          position: absolute;
+          width: 100%;
+          height: 80%;
+        }
         .what{
           padding-left: 8px;
-        }`;
+          margin-left:10px; 
+          cursor: pointer;
+          text-decoration: none;
+          z-index: 1;
+        }
+        .what:active{ transform: scale(0.9);}`;
         var style = document.createElement("style");
         if (cretedCSS){document.head.removeChild(cretedCSS);lyricContainer.textContent="";}
         style.setAttribute("id","newCSS");
         style.appendChild(document.createTextNode(newcss));
         document.head.appendChild(style);
-        let what = `<div class="what" id="wt">Lyrics came to visit Elon Musk</div>` 
+        let what = `<a class="what" id="wt" href="https://twitter.com/elonmusk">歌词被Elon Musk扔到火星去了</a>
+        <img class=doge src='static/sla/jjs/dogee.webp' />` 
         lyricContainer.insertAdjacentHTML("beforeend",what);
         lyricThreshold.style.width= "100%";
         console.error('Error fetching JSON data:', error);
