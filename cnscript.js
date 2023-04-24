@@ -789,9 +789,9 @@ function loadMusic(indexNumb) {
         <video class=ikun autoplay muted loop src="static/sla/canvas/music-122.mp4"></video>`] 
         lyricContainer.insertAdjacentHTML("beforeend",what[Math.floor(Math.random()*what.length)]);
         lyricThreshold.style.width= "100%";
+      
       });
-    },
-    onError: function(error) {if(error){throw(error);}}
+    }
   });
 
   dynamicIcon.setAttribute("href", `static/sla/images/${allMusic[indexNumb - 1].src}.ico`);
@@ -2107,7 +2107,6 @@ function playingSong(){
         audioTag.innerText = "正在播放";
       }
     }
-    allLiTag[j].setAttribute("onclick", "clicked(this)");
   }
 }
 
@@ -2126,7 +2125,7 @@ fetch(`static/sla/songs/${allMusic[index].src}.mp3`)
 
   jsmediatags.read(audio, {
     onSuccess: function(tag) {
-      let liTag = `<li li-index="${index + 1}">
+      let liTag = `<li li-index="${index + 1}" onclick="clicked(this)">
                 <div class="roww">
                   <span id="scrolla">${tag.tags.title}</span>
                   <p id="scrollb">${tag.tags.artist}</p>
@@ -2136,7 +2135,6 @@ fetch(`static/sla/songs/${allMusic[index].src}.mp3`)
                 <audio class="${allMusic[index].src}" src="static/sla/songs/${allMusic[index].src}.mp3"></audio>
               </li>`;
       ulTag.insertAdjacentHTML("beforeend", liTag);
-
       let liAudioDuartionTag = ulTag.querySelector(`#${allMusic[index].src}`);
       let liAudioTag = ulTag.querySelector(`.${allMusic[index].src}`);
 
