@@ -8,18 +8,18 @@ server {
 server{
 	listen 443 ssl;
         ## server_name ;
-	ssl_certificate /home/wyh/wyhsite/server.crt;
-	ssl_certificate_key /home/wyh/wyhsite/server.key;	
+	## ssl_certificate /path/to/server.crt;
+	## ssl_certificate_key /path/to/server.key;	
 
         error_page 403 /cnm.html;
         location = /cnm.html {
                 internal;
-                root /home/wyh/wyhsite;
+                ## root /path/to/wyhsite;
         }
 
      	location /static { 
                 
-		alias "/home/wyh/wyhsite/1.3-estoywyh/estoywyh/static";
+		## alias "/path/to/1.3-estoywyh/estoywyh/static";
                 add_header Cache-Control "no-cache, no-store, must-revalidate";
                 expires -1;	
 	}
@@ -42,7 +42,7 @@ server{
 
 
         location /zzyteamo {
-               alias "/home/wyh/wyhsite/1.3-estoywyh/estoywyh/static";
+               ## alias "/path/to/1.3-estoywyh/estoywyh/static";
                add_header Cache-Control "no-cache, no-store, must-revalidate";
                expires -1;
         }
