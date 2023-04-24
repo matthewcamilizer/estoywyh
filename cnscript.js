@@ -328,39 +328,6 @@ resetListTimeout();
 
 
 let timeStamp = 0;
-window.addEventListener("hashchange", () => {
-  const urlHash = window.location.hash.slice(1).toLowerCase();// get hash from URL and convert to lowercase
-  let [hash, timestampStr] = decodeURIComponent(urlHash).split("&t=");
-  if (urlHash) { // if hash is present, try to load song by id
-    function convertTimeToSeconds() {
-      if (/^\d+$/.test(timestampStr)) { // check if timestampStr is a single integer
-        timestampStr = parseInt(timestampStr, 10);
-      } else {
-      const [minutesStr, secondsStr] = timestampStr.split(":");
-      const minutes = parseInt(minutesStr, 10) || 0;
-      const seconds = parseFloat(secondsStr, 0) || 0;
-      timestampStr = minutes * 60 + seconds;
-      }
-    }
-    convertTimeToSeconds()
-
-    const song = allMusic.find((song) => song.hash.toLowerCase() === hash);
-    timeStamp = parseFloat(timestampStr, 0) || 0;
-    if (song) {
-      loadMusic(allMusic.indexOf(song) + 1);
-      musicIndex = allMusic.indexOf(song) + 1;
-    } else {
-      loadMusic(musicIndex); // fallback to default musicIndex if song with id is not found
-    }
-  } else { // no hash present, so load default musicIndex
-    loadMusic(musicIndex);
-  }
-  progressBar.style.width = 0;
-  playPauseBtn.querySelector("i").innerText = "play_arrow";
-  wrapper.classList.remove("paused");
-  musicImg.classList.remove('rotate');
-  void musicImg.offsetWidth;
-});
 
 window.addEventListener("load", () => {
   const urlHash = window.location.hash.slice(1).toLowerCase(); // get hash from URL and convert to lowercase
@@ -373,28 +340,31 @@ window.addEventListener("load", () => {
       musicIndex = allMusic.indexOf(song) + 1; 
       if (timestampStr){
       function convertTimeToSeconds() {
-        if (/^\d+$/.test(timestampStr)) { // check if timestampStr is a single integer
-          timestampStr = parseInt(timestampStr, 10);
-        } else {
+        if (!isNaN(timestampStr)) { // check if timestampStr is a single integer
+          timestampStr = parseFloat(timestampStr, 0) || 0;
+        } 
+        if (/^\d+:\d+$/.test(timestampStr)) {
         const [minutesStr, secondsStr] = timestampStr.split(":");
-        const minutes = parseInt(minutesStr, 10) || 0;
-        const seconds = parseFloat(secondsStr, 0) || 0;
-        timestampStr = minutes * 60 + seconds;
+        timestampStr = minutesStr * 60 + secondsStr;
         }
       }
-      convertTimeToSeconds()
-      const timestamp = parseFloat(timestampStr, 0) || 0;
-      mainAudio.currentTime = timestamp;
+      if((!isNaN(timestampStr)) || (/^\d+:\d+$/.test(timestampStr))){
+        convertTimeToSeconds();
+        mainAudio.currentTime = timestampStr;
+        console.log("loaded by time!");
+      }
+      else{loadMusic(musicIndex);mainAudio.currentTime = 0;console.log("loaded by unknown time!");}
     }
     } else {
       loadMusic(musicIndex); // fallback to default musicIndex if song with id is not found
+      console.log("loaded by unkown song!");
     }
     //refresh without hash
     history.replaceState(null, null, ' '); // remove the hash from the URL
 
   } else { // no hash present, so load default musicIndex
     loadMusic(musicIndex); 
-     
+    console.log("loaded by default!");
   }
   history.replaceState('', '', `#${allMusic[musicIndex - 1 ].hash}`);
   playingSong();
