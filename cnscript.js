@@ -785,7 +785,7 @@ function loadMusic(indexNumb) {
         <img class=doge src='static/sla/jjs/dogee.webp' />`,`<a class="dota" id="wt" href="https://dota2.com">全世界都对Dead Game这货又爱又恨</a>
         <img class=doge src='static/sla/jjs/dota2.jpg' />`,`<a class="what" id="wt" href="https://twitter.com/elonmusk">别看了我只是个打酱油的</a>
         <img class=doge src='static/sla/jjs/doge.jpg' />`,`<a class="gta" id="wt" href="https://rockstargames.com/gta-v">Adventure Awaits</a>
-        <img class=doge src='static/sla/jjs/gta.jpg' />`,`<a class="gta" id="ikun" href="https://rockstargames.com/gta-v">听说你想看唱跳rap篮球?</a>
+        <img class=doge src='static/sla/jjs/gta.jpg' />`,`<a class="gta" id="ikun" href='${window.location.hostname}/cnsla/只因你太美'>听说你想看唱跳rap篮球?</a>
         <video class=ikun autoplay muted loop src="static/sla/canvas/music-122.mp4"></video>`] 
         lyricContainer.insertAdjacentHTML("beforeend",what[Math.floor(Math.random()*what.length)]);
         lyricThreshold.style.width= "100%";
