@@ -595,14 +595,11 @@ resetDlgenre.addEventListener("click",()=>{
   }
 })
 
-
+let loadedJson = null;
+let updateTimeUpdate = () => {};
 function loadMusic(indexNumb) {
   mainAudio.src = `static/sla/songs/${allMusic[indexNumb - 1].src}.mp3`;
   mainAudio.currentTime = timeStamp;
-
-
-
-
   jsmediatags.read(mainAudio.src, {
     onSuccess: function(tag) {      
       lyricThreshold.style.width= "92%";      
@@ -632,28 +629,31 @@ function loadMusic(indexNumb) {
         musicImg.src = base64;
       }
 
+      mainAudio.removeEventListener('timeupdate', updateTimeUpdate);
 
+      if(loadedJson){loadedJson = null;}
       fetch(`static/sla/lyrics/${allMusic[indexNumb - 1].src}.json`)
       .then(response => response.json())
       .then(data => {
+        loadedJson = data;
         // check if scroll or create .empty
-        const hasScrolled  = new Array(data[tag.tags.title]['lyrics'].length).fill(false);
-        const created  = new Array(data[tag.tags.title]['lyrics'].length).fill(false);
+        const hasScrolled  = new Array(loadedJson[tag.tags.title]['lyrics'].length).fill(false);
+        const created  = new Array(loadedJson[tag.tags.title]['lyrics'].length).fill(false);
         
-        mainAudio.addEventListener('timeupdate', () => {
+        updateTimeUpdate = () => {
           const currentTime = mainAudio.currentTime;
           let foundCurrentLyric = false;
           let currentLyricIndex = 0;
-            for (let i = 0; i < data[tag.tags.title]['lyrics'].length; i++) {
-              if (currentTime >= data[tag.tags.title]['lyrics'][i].start && currentTime <= data[tag.tags.title]['lyrics'][i].end) {
+            for (let i = 0; i < loadedJson[tag.tags.title]['lyrics'].length; i++) {
+              if (currentTime >= loadedJson[tag.tags.title]['lyrics'][i].start && currentTime <= loadedJson[tag.tags.title]['lyrics'][i].end) {
                 currentLyricIndex = i;
                 foundCurrentLyric = true;
-                const animationDuration = data[tag.tags.title]['lyrics'][i].end - data[tag.tags.title]['lyrics'][i].start + 0.2;
+                const animationDuration = loadedJson[tag.tags.title]['lyrics'][i].end - loadedJson[tag.tags.title]['lyrics'][i].start + 0.2;
                 document.body.style.setProperty('--animation-duration', animationDuration + 's');
               }
             }
-    
-            for (let j = 0; j < data[tag.tags.title]['lyrics'].length; j++){
+      
+            for (let j = 0; j < loadedJson[tag.tags.title]['lyrics'].length; j++){
             const lyricElem = document.getElementById(`lyric-${j}`);
             const lyct = document.getElementById(`lyct-${j}`);
             const shine = document.getElementById(`${tag.tags.title}-${j}`);  
@@ -664,25 +664,25 @@ function loadMusic(indexNumb) {
                 lyct.classList.remove('played');
                 lyricElem.setAttribute('data-text', lyricElem.textContent);
                 shine.classList.add('shinely');
-    
+      
                 let anishine = document.querySelector(".shinely");
                 if(wrapper.classList.contains('paused')){anishine.style.animationPlayState = "running";}
                 else{anishine.style.animationPlayState = "paused";}  
-    
-                let duration = data[tag.tags.title]['lyrics'][j].end - data[tag.tags.title]['lyrics'][j].start;
-                let currentTime = mainAudio.currentTime - data[tag.tags.title]['lyrics'][j].start;
+      
+                let duration = loadedJson[tag.tags.title]['lyrics'][j].end - loadedJson[tag.tags.title]['lyrics'][j].start;
+                let currentTime = mainAudio.currentTime - loadedJson[tag.tags.title]['lyrics'][j].start;
                 let percentage = currentTime / duration;
                 shine.scrollLeft = (lyricElem.scrollWidth - lyricElem.clientWidth) * percentage;
                 lyricElem.scrollLeft = (lyricElem.scrollWidth - lyricElem.clientWidth) * percentage;
                 
-    
+      
                 let CurrentLyric = document.querySelector('.cu');
                 let lyel = document.querySelector('.lyct');
                 let VisibleLyricAboveQuality = Math.floor(CurrentLyric.offsetTop / lyel.offsetHeight);
-    
+      
                 //the quality of visible lyrics
                 let ScollThreshold = Math.floor((lyricContainer.offsetHeight / 2 - CurrentLyric.offsetHeight) / lyel.offsetHeight);
-    
+      
                 if (VisibleLyricAboveQuality >= ScollThreshold && !hasScrolled[j]){
                   lyricContainer.scrollTop += 1.4*CurrentLyric.offsetHeight;
                   hasScrolled[j] = true;
@@ -721,41 +721,46 @@ function loadMusic(indexNumb) {
                 lyct.classList.remove('cu');
               }
             }
-          });
+          };
+      
 
-        for (let i = 0; i < data[tag.tags.title]['lyrics'].length; i++) {
+        mainAudio.addEventListener('timeupdate',updateTimeUpdate);
+
+
+        for (let i = 0; i < loadedJson[tag.tags.title]['lyrics'].length; i++) {
           let subly = `<div class=lyct id="lyct-${i}" song="${tag.tags.title}">
-              <div class=lyrics id="lyric-${i}">${data[tag.tags.title]['lyrics'][i].text}</div>
-              <div id="${tag.tags.title}-${i}">${data[tag.tags.title]['lyrics'][i].text}</div>
+              <div class=lyrics id="lyric-${i}">${loadedJson[tag.tags.title]['lyrics'][i].text}</div>
+              <div id="${tag.tags.title}-${i}">${loadedJson[tag.tags.title]['lyrics'][i].text}</div>
             </div>`;
           lyricContainer.insertAdjacentHTML("beforeend", subly);
         }
-    
-        for (let i = 0; i < data[tag.tags.title]['lyrics'].length; i++) {
+      
+        for (let i = 0; i < loadedJson[tag.tags.title]['lyrics'].length; i++) {
           let dylyric = document.querySelector(`#lyct-${i}`);
           dylyric.addEventListener("click", ()=>{
             if(dylyric.classList.contains('cu')){if(wrapper.classList.contains('paused')){pauseMusic();}else{playMusic();}}
-            else{mainAudio.currentTime = data[tag.tags.title]['lyrics'][i].start;playMusic();}
+            else{mainAudio.currentTime = loadedJson[tag.tags.title]['lyrics'][i].start;playMusic();}
           });
         }
-    
+      
         mainAudio.addEventListener("ended", ()=>{
-          for(let j=0;j<data[tag.tags.title]['lyrics'].length;j++){
+          for(let j=0;j<loadedJson[tag.tags.title]['lyrics'].length;j++){
             const lyricElem = document.getElementById(`lyric-${j}`);
             const lyct = document.getElementById(`lyct-${j}`);
             lyricElem.classList.remove('played');
             lyct.classList.remove('played');
           }
-    
+      
         let empty = document.querySelectorAll(".empty");for(let i=0;i<empty.length;i++){lyricContainer.removeChild(empty[i]);}
-    
+      
         let ScrollInterval;
         ScrollInterval = setInterval(function(){
           lyricContainer.scrollTop -= 50;
           if (lyricContainer.scrollTop === 0){clearInterval(ScrollInterval);}
         }, 40); 
         })
-      })
+      
+        console.log("fetched!");})
       .catch(error => {
         const cretedCSS = document.querySelector("#newCSS");
         var newcss = `        
@@ -776,9 +781,8 @@ function loadMusic(indexNumb) {
         lyricContainer.insertAdjacentHTML("beforeend",what);
         lyricThreshold.style.width= "100%";
         console.error('Error fetching JSON data:', error);
-
+      
       });
-
     },
     onError: function(error) {if(error){throw(error);}}
   });
@@ -836,6 +840,7 @@ function loadMusic(indexNumb) {
   }
   //dynamic URL while playing
   history.pushState('', '', `#${allMusic[indexNumb - 1].hash}`);
+  console.log("loaded!");
 }
 
 
@@ -1816,8 +1821,6 @@ function prevMusic(){
       musicImg.classList.add('rotate');
       playMusic();
       playingSong();
-       
-       
       isprevGCalled = true;
 } 
     if (agcheck.length == 0 || (likedArtists.length == 0 && dislikedArtists.length == 0 && likedGenres.length == 0 && dislikedGenres.length == 0))
@@ -1830,12 +1833,7 @@ function prevMusic(){
     musicImg.classList.add('rotate');
     playMusic();
     playingSong();
-     
   }
-   
-   
-   
-   
   if (timeStamp != 0 ) {
     mainAudio.currentTime = 0;
     timeStamp = 0;
@@ -1855,7 +1853,6 @@ playPauseBtn.addEventListener("click", ()=>{
 
 //prev music button event
 prevBtn.addEventListener("click", ()=>{
-  const isMusicPlay = wrapper.classList.contains("paused");
   if(mainAudio.currentTime > 5){
     mainAudio.currentTime = 0; //setting audio current time to 0
     const existingLyric = document.querySelector("#lyrics");
@@ -1875,10 +1872,6 @@ prevBtn.addEventListener("click", ()=>{
       }, 40); 
     }
 
-    isMusicPlay ? pauseMusic() : playMusic();
-    loadMusic(musicIndex); //calling loadMusic function with argument, in the argument there is a index of current song
-
-    playMusic(); //calling playMusic function
   }
   else{let getText = repeatBtn.innerText; //getting this tag innerText
       switch(getText){
@@ -1908,7 +1901,6 @@ prevBtn.addEventListener("click", ()=>{
         playingSong();
         break;
       }
-  
   }
 prevBtn.setAttribute("title", "Previous");
 });
