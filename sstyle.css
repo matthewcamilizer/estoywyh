@@ -128,7 +128,8 @@ p{
 .reset_genres:active, .showlgenre:active, .showlat:active, .showdlat:active, .showdlgenre:active, .reset_dlartists:active,
 .reset_dlgenres:active, .showlat:active, .showdlat:active, #closelyric:active, .lyct:active, .header .headerr, #close:active, 
 #b:active, #c:active, #vc:active, #opvc:active, #closelyric:active, .controls #repeat-plist:active, .play-pause:active, 
-.controls #next:active, .controls #prev:active, .wrapperr .options #close_op:active, .controls #more-music:active, #share:active{
+.controls #next:active, .controls #prev:active, .wrapperr .options #close_op:active, .controls #more-music:active, #share:active,
+.opsc:active{
   transform: scale(0.9);  
 }
 
@@ -148,12 +149,13 @@ p{
 	transition: 0.3s ease-in, 0.6s ease-out;
 }
 
-.wrapperr span:opsc{
-  font-size: 18px;
-  margin-left: -3px;
-  color: var(--lightblack);
+.opsc{
+  background: linear-gradient(50deg, #ee9032, #f16d52, #ec4a77, #a063aa, #7963aa, #4b6eb5, #109aaf, #07b89f, #6bb97f);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: color-change 1s ease-in-out infinite;
+  cursor: pointer;
 }
-
 
 .wrapperr .options #opvc{
   font-size: 30px;
@@ -603,6 +605,7 @@ ul li.playing{
   position: absolute;
   overflow: hidden;
   white-space: nowrap;
+  margin-right: 10px;
 }
 .lyrics:hover{
   text-shadow: 
@@ -628,7 +631,6 @@ ul li.playing{
   width: 100%;
   min-height: 1em;
   cursor: pointer;
- 
 }
 .support{
   position: relative;
@@ -657,7 +659,7 @@ ul li.playing{
     0 0 70px #109aaf, 
     0 0 80px #07b89f, 
     0 0 90px #6bb97f; 
-  animation: shine var(--animation-duration, 0s) linear infinite;
+  animation: shine var(--animation-duration, 0s) linear;
 }
 @keyframes shine {
   0% {
@@ -707,7 +709,6 @@ ul li.playing{
   white-space: nowrap;
   overflow-x: hidden;
   height: 86%;
-  width: 92%;
 }
 .threshold::-webkit-scrollbar{
   width: 0px;
