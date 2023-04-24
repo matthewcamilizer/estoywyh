@@ -789,8 +789,6 @@ function loadMusic(indexNumb) {
         <video class=ikun autoplay muted loop src="static/sla/canvas/music-122.mp4"></video>`] 
         lyricContainer.insertAdjacentHTML("beforeend",what[Math.floor(Math.random()*what.length)]);
         lyricThreshold.style.width= "100%";
-        console.error('Error fetching JSON data:', error);
-      
       });
     },
     onError: function(error) {if(error){throw(error);}}
@@ -2082,42 +2080,12 @@ volumeControl.addEventListener("click", ()=>{
   volumeProgress.classList.toggle("showw");
 });
 
+
 const ulTag = wrapper.querySelector("ul");
-// let create li tags according to array length for list
-for (let i = 0; i < allMusic.length; i++) {
-  mainAudio.src = `static/sla/songs/${allMusic[i].src}.mp3`;
-  jsmediatags.read(mainAudio.src, {
-    onSuccess: function(tag) {
-      let liTag = `<li li-index="${i + 1}">
-                <div class="roww">
-                  <span id="scrolla">${tag.tags.title}</span>
-                  <p id="scrollb">${tag.tags.artist}</p>
-                  <p id="scrollb">${tag.tags.genre}</p>
-                </div>
-                <span id="${allMusic[i].src}" class="audio-duration"></span>
-                <audio class="${allMusic[i].src}" src="static/sla/songs/${allMusic[i].src}.mp3"></audio>
-              </li>`;
-      ulTag.insertAdjacentHTML("beforeend", liTag); //inserting the li inside ul tag
-      let liAudioDuartionTag = ulTag.querySelector(`#${allMusic[i].src}`);
-      let liAudioTag = ulTag.querySelector(`.${allMusic[i].src}`);
-      liAudioTag.addEventListener("loadeddata", ()=>{
-        let duration = liAudioTag.duration;
-        let totalMin = Math.floor(duration / 60);
-        let totalSec = Math.floor(duration % 60);
-        if(totalSec < 10){ //if sec is less than 10 then add 0 before it
-          totalSec = `0${totalSec}`;
-        };
-        liAudioDuartionTag.innerText = `${totalMin}:${totalSec}`; //passing total duation of song
-        liAudioDuartionTag.setAttribute("t-duration", `${totalMin}:${totalSec}`); //adding t-duration attribute with total duration value
-      });
 
-    },
-    onError: function(error) {
-      
-    }
-  });
 
-}
+
+
 
 //play particular song from the list onclick of li tag
 function playingSong(){
@@ -2139,10 +2107,58 @@ function playingSong(){
         audioTag.innerText = "正在播放";
       }
     }
-
     allLiTag[j].setAttribute("onclick", "clicked(this)");
   }
 }
+
+
+function loadFile(index) {
+  if (index >= allMusic.length) {
+    return;
+  }
+
+// Create a Blob object from the MP3 file
+fetch(`static/sla/songs/${allMusic[index].src}.mp3`)
+  .then(response => response.blob())
+  .then(blob => {
+
+  const audio = new File([blob], `static/sla/songs/${allMusic[index].src}.mp3`);
+
+  jsmediatags.read(audio, {
+    onSuccess: function(tag) {
+      let liTag = `<li li-index="${index + 1}">
+                <div class="roww">
+                  <span id="scrolla">${tag.tags.title}</span>
+                  <p id="scrollb">${tag.tags.artist}</p>
+                  <p id="scrollb">${tag.tags.genre}</p>
+                </div>
+                <span id="${allMusic[index].src}" class="audio-duration"></span>
+                <audio class="${allMusic[index].src}" src="static/sla/songs/${allMusic[index].src}.mp3"></audio>
+              </li>`;
+      ulTag.insertAdjacentHTML("beforeend", liTag);
+
+      let liAudioDuartionTag = ulTag.querySelector(`#${allMusic[index].src}`);
+      let liAudioTag = ulTag.querySelector(`.${allMusic[index].src}`);
+
+      liAudioTag.addEventListener("loadeddata", ()=>{
+        let duration = liAudioTag.duration;
+        let totalMin = Math.floor(duration / 60);
+        let totalSec = Math.floor(duration % 60);
+        if(totalSec < 10){
+          totalSec = `0${totalSec}`;
+        };
+        liAudioDuartionTag.innerText = `${totalMin}:${totalSec}`;
+        liAudioDuartionTag.setAttribute("t-duration", `${totalMin}:${totalSec}`);
+      });
+
+      // Load next file
+      loadFile(index + 1);
+    }
+    });
+  });
+}
+
+loadFile(0);
 
 //particular li clicked function
 function clicked(element){
