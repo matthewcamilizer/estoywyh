@@ -6,6 +6,7 @@ musicGenre = wrapper.querySelector(".song-details .genre"),
 playPauseBtn = wrapper.querySelector(".play-pause"),
 shareButton = wrapper.querySelector("#share"),
 
+changeProgress = wrapper.querySelector(".opsc"),
 volumeControl = wrapper.querySelector("#vc"),
 sliderShow = wrapper.querySelector(".slider_container")
 volumeProgress = wrapper.querySelector(".volumee"),
@@ -345,7 +346,8 @@ window.addEventListener("load", () => {
         } 
         if (/^\d+:\d+$/.test(timestampStr)) {
         const [minutesStr, secondsStr] = timestampStr.split(":");
-        timestampStr = minutesStr * 60 + secondsStr;
+        timestampStr = Math.floor(minutesStr * 60) + Math.floor(secondsStr);
+        console.log(`minutesStr: ${minutesStr} secondsStr: ${secondsStr} timestampStr: ${timestampStr}`);
         }
       }
       if((!isNaN(timestampStr)) || (/^\d+:\d+$/.test(timestampStr))){
@@ -2189,3 +2191,23 @@ progressArea.addEventListener('touchmove', (e) => {
     progressBar.style.width = `${percent * 100}%`;
   }
 });
+
+changeProgress.addEventListener("click", ()=>{
+  let ToChange = prompt("输入你想听的进度, 格式为纯数字或时间格式: ");
+  function convertTimeToSeconds() {
+    if (!isNaN(ToChange)) { // check if ToChange is a single integer
+      ToChange = parseFloat(ToChange, 0) || 0;
+    } 
+    if (/^\d+:\d+$/.test(ToChange)) {
+    const [minutesStr, secondsStr] = ToChange.split(":");
+    ToChange = Math.floor(minutesStr * 60) + Math.floor(secondsStr);
+    console.log(`minutesStr: ${minutesStr} secondsStr: ${secondsStr} ToChange: ${ToChange}`);
+    }
+  }
+  if((!isNaN(ToChange)) || (/^\d+:\d+$/.test(ToChange))){
+    convertTimeToSeconds();
+    mainAudio.currentTime = ToChange;
+    console.log("loaded by time!");
+  }
+  else{alert("格式输错啦!");}
+})
