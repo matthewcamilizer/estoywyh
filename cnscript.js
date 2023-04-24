@@ -59,6 +59,7 @@ let musicIndex = Math.floor((Math.random() * allMusic.length) + 1);
 isMusicPaused = true;
 shareButton.addEventListener("click",()=>{
   navigator.clipboard.writeText(window.location.href + "&t=" + mainAudio.currentTime);
+  alert("链接已复制到剪切板");
 })
 
 //const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
@@ -655,7 +656,7 @@ function loadMusic(indexNumb) {
             for (let j = 0; j < data[tag.tags.title]['lyrics'].length; j++){
             const lyricElem = document.getElementById(`lyric-${j}`);
             const lyct = document.getElementById(`lyct-${j}`);
-            const shine = document.getElementById(`shinely-${j}`);  
+            const shine = document.getElementById(`${tag.tags.title}-${j}`);  
             if (j === currentLyricIndex && foundCurrentLyric) {
                 lyricElem.classList.add('highlight');
                 lyricElem.classList.remove('played');
@@ -683,8 +684,9 @@ function loadMusic(indexNumb) {
                 let ScollThreshold = Math.floor((lyricContainer.offsetHeight / 2 - CurrentLyric.offsetHeight) / lyel.offsetHeight);
     
                 if (VisibleLyricAboveQuality >= ScollThreshold && !hasScrolled[j]){
-                  lyricContainer.scrollTop += CurrentLyric.offsetHeight;
+                  lyricContainer.scrollTop += 1.4*CurrentLyric.offsetHeight;
                   hasScrolled[j] = true;
+                  console.log(lyricContainer.scrollTop);
                 }
               // If we've scrolled to the bottom and there are still more lyrics, create a new empty div
               if (lyricContainer.scrollTop >= lyricContainer.scrollHeight - lyricContainer.offsetHeight && j < lyrics.length - 2 
@@ -724,7 +726,7 @@ function loadMusic(indexNumb) {
         for (let i = 0; i < data[tag.tags.title]['lyrics'].length; i++) {
           let subly = `<div class=lyct id="lyct-${i}" song="${tag.tags.title}">
               <div class=lyrics id="lyric-${i}">${data[tag.tags.title]['lyrics'][i].text}</div>
-              <div id="shinely-${i}">${data[tag.tags.title]['lyrics'][i].text}</div>
+              <div id="${tag.tags.title}-${i}">${data[tag.tags.title]['lyrics'][i].text}</div>
             </div>`;
           lyricContainer.insertAdjacentHTML("beforeend", subly);
         }
