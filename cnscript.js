@@ -344,29 +344,29 @@ window.addEventListener("load", () => {
         if (!isNaN(timestampStr)) { // check if timestampStr is a single integer
           timestampStr = parseFloat(timestampStr, 0) || 0;
         } 
-        if (/^\d+:\d+$/.test(timestampStr)) {
+        if (/^\d+(\.\d+)?:\d+(\.\d+)?$/.test(timestampStr)) {
         const [minutesStr, secondsStr] = timestampStr.split(":");
         timestampStr = Math.floor(minutesStr * 60) + Math.floor(secondsStr);
-        console.log(`minutesStr: ${minutesStr} secondsStr: ${secondsStr} timestampStr: ${timestampStr}`);
+        
         }
       }
-      if((!isNaN(timestampStr)) || (/^\d+:\d+$/.test(timestampStr))){
+      if((!isNaN(timestampStr)) || (/^\d+(\.\d+)?:\d+(\.\d+)?$/.test(timestampStr))){
         convertTimeToSeconds();
         mainAudio.currentTime = timestampStr;
-        console.log("loaded by time!");
+        
       }
-      else{loadMusic(musicIndex);mainAudio.currentTime = 0;console.log("loaded by unknown time!");}
+      else{loadMusic(musicIndex);mainAudio.currentTime = 0;}
     }
     } else {
       loadMusic(musicIndex); // fallback to default musicIndex if song with id is not found
-      console.log("loaded by unkown song!");
+      
     }
     //refresh without hash
     history.replaceState(null, null, ' '); // remove the hash from the URL
 
   } else { // no hash present, so load default musicIndex
     loadMusic(musicIndex); 
-    console.log("loaded by default!");
+    
   }
   history.replaceState('', '', `#${allMusic[musicIndex - 1 ].hash}`);
   playingSong();
@@ -658,7 +658,7 @@ function loadMusic(indexNumb) {
                 if (VisibleLyricAboveQuality >= ScollThreshold && !hasScrolled[j]){
                   lyricContainer.scrollTop += 1.4*CurrentLyric.offsetHeight;
                   hasScrolled[j] = true;
-                  console.log(lyricContainer.scrollTop);
+                  
                 }
               // If we've scrolled to the bottom and there are still more lyrics, create a new empty div
               if (lyricContainer.scrollTop >= lyricContainer.scrollHeight - lyricContainer.offsetHeight && j < lyrics.length - 2 
@@ -732,25 +732,47 @@ function loadMusic(indexNumb) {
         }, 40); 
         })
       
-        console.log("fetched!");})
+        })
       .catch(error => {
         const cretedCSS = document.querySelector("#newCSS");
         var newcss = `        
         #lyrics{
           display: flex;
           align-items: center;
-          justifyContent: center;
+          justify-content: center;
         } 
+        .ikun{
+          position: absolute;
+          width: 200%;
+          height: 150%;
+        }
+        #ikun{
+          cursor: pointer;
+          text-decoration: none;
+          font-size: 30px;
+          z-index: 1;
+        }
         .doge{
           position: absolute;
           width: 100%;
           height: 80%;
         }
         .what{
-          padding-left: 8px;
-          margin-left:10px; 
           cursor: pointer;
           text-decoration: none;
+          font-size: 25px;
+          z-index: 1;
+        }
+        .dota{
+          cursor: pointer;
+          text-decoration: none;
+          font-size: 20px;
+          z-index: 1;
+        }
+        .gta{
+          cursor: pointer;
+          text-decoration: none;
+          font-size: 40px;
           z-index: 1;
         }
         .what:active{ transform: scale(0.9);}`;
@@ -759,9 +781,13 @@ function loadMusic(indexNumb) {
         style.setAttribute("id","newCSS");
         style.appendChild(document.createTextNode(newcss));
         document.head.appendChild(style);
-        let what = `<a class="what" id="wt" href="https://twitter.com/elonmusk">歌词被Elon Musk扔到火星去了</a>
-        <img class=doge src='static/sla/jjs/dogee.webp' />` 
-        lyricContainer.insertAdjacentHTML("beforeend",what);
+        let what = [`<a class="what" id="wt" href="https://twitter.com/elonmusk">歌词被Elon Musk扔到火星去了</a>
+        <img class=doge src='static/sla/jjs/dogee.webp' />`,`<a class="dota" id="wt" href="https://dota2.com">全世界都对Dead Game这货又爱又恨</a>
+        <img class=doge src='static/sla/jjs/dota2.jpg' />`,`<a class="what" id="wt" href="https://twitter.com/elonmusk">别看了我只是个打酱油的</a>
+        <img class=doge src='static/sla/jjs/doge.jpg' />`,`<a class="gta" id="wt" href="https://rockstargames.com/gta-v">Adventure Awaits</a>
+        <img class=doge src='static/sla/jjs/gta.jpg' />`,`<a class="gta" id="ikun" href="https://rockstargames.com/gta-v">听说你想看唱跳rap篮球?</a>
+        <video class=ikun autoplay muted loop src="static/sla/canvas/music-122.mp4"></video>`] 
+        lyricContainer.insertAdjacentHTML("beforeend",what[Math.floor(Math.random()*what.length)]);
         lyricThreshold.style.width= "100%";
         console.error('Error fetching JSON data:', error);
       
@@ -823,7 +849,7 @@ function loadMusic(indexNumb) {
   }
   //dynamic URL while playing
   history.pushState('', '', `#${allMusic[indexNumb - 1].hash}`);
-  console.log("loaded!");
+  
 }
 
 
@@ -911,7 +937,7 @@ function playMusic(){
   playPauseBtn.querySelector("i").innerText = "pause";
   mainAudio.play();
   showCase.textContent = "正在播放...";
-  console.log(mainAudio.currentTime);
+  
 }
 // Jan 6th
 
@@ -1986,12 +2012,11 @@ mainAudio.addEventListener("ended", ()=>{
   let getText = repeatBtn.innerText; //getting this tag innerText
   switch(getText){
     case "repeat":
-      nextMusic(); //calling nextMusic function
+      nextMusic();
       break;
     case "repeat_one":
-      mainAudio.currentTime = 0; //setting audio current time to 0
-      loadMusic(musicIndex); //calling loadMusic function with argument, in the argument there is a index of current song
-      playMusic(); //calling playMusic function
+      mainAudio.currentTime = 0;
+      playMusic();
       break;
     case "shuffle":
       let randIndex = Math.floor((Math.random() * allMusic.length) + 1); //genereting random index/numb with max range of array length
@@ -2198,16 +2223,16 @@ changeProgress.addEventListener("click", ()=>{
     if (!isNaN(ToChange)) { // check if ToChange is a single integer
       ToChange = parseFloat(ToChange, 0) || 0;
     } 
-    if (/^\d+:\d+$/.test(ToChange)) {
+    if (/^\d+(\.\d+)?:\d+(\.\d+)?$/.test(ToChange)) {
     const [minutesStr, secondsStr] = ToChange.split(":");
     ToChange = Math.floor(minutesStr * 60) + Math.floor(secondsStr);
-    console.log(`minutesStr: ${minutesStr} secondsStr: ${secondsStr} ToChange: ${ToChange}`);
+    
     }
   }
-  if((!isNaN(ToChange)) || (/^\d+:\d+$/.test(ToChange))){
+  if((!isNaN(ToChange)) || (/^\d+(\.\d+)?:\d+(\.\d+)?$/.test(ToChange))){
     convertTimeToSeconds();
     mainAudio.currentTime = ToChange;
-    console.log("loaded by time!");
+    
   }
   else{alert("格式输错啦!");}
 })
