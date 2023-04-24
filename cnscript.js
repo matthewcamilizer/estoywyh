@@ -928,6 +928,7 @@ function playMusic(){
   playPauseBtn.querySelector("i").innerText = "pause";
   mainAudio.play();
   showCase.textContent = "正在播放...";
+  console.log(mainAudio.currentTime);
 }
 // Jan 6th
 
