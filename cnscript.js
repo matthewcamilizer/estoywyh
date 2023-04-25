@@ -369,7 +369,6 @@ window.addEventListener("load", () => {
     
   }
   history.replaceState('', '', `#${allMusic[musicIndex - 1 ].hash}`);
-  playingSong();
 });
 
 // ZZY required
@@ -710,8 +709,8 @@ function loadMusic(indexNumb) {
         for (let i = 0; i < loadedJson[tag.tags.title]['lyrics'].length; i++) {
           let dylyric = document.querySelector(`#lyct-${i}`);
           dylyric.addEventListener("click", ()=>{
-            if(dylyric.classList.contains('cu')){if(wrapper.classList.contains('paused')){pauseMusic();}else{playMusic();}}
-            else{mainAudio.currentTime = loadedJson[tag.tags.title]['lyrics'][i].start;playMusic();}
+            if(dylyric.classList.contains('cu')){if(wrapper.classList.contains('paused')){pauseMusic();playingSong();}else{playMusic();playingSong();}}
+            else{mainAudio.currentTime = loadedJson[tag.tags.title]['lyrics'][i].start;playMusic();playingSong();}
           });
         }
       
@@ -854,6 +853,7 @@ function loadMusic(indexNumb) {
   }
   //dynamic URL while playing
   history.pushState('', '', `#${allMusic[indexNumb - 1].hash}`);
+  playingSong();
 }
 
 
@@ -941,7 +941,7 @@ function playMusic(){
   playPauseBtn.querySelector("i").innerText = "pause";
   mainAudio.play();
   showCase.textContent = "正在播放...";
-  
+  console.info(mainAudio.currentTime);
 }
 // Jan 6th
 
@@ -2090,9 +2090,6 @@ volumeControl.addEventListener("click", ()=>{
 const ulTag = wrapper.querySelector("ul");
 
 
-
-
-
 //play particular song from the list onclick of li tag
 function playingSong(){
   const allLiTag = ulTag.querySelectorAll("li");
@@ -2113,7 +2110,10 @@ function playingSong(){
         audioTag.innerText = "正在播放";
       }
     }
+
+    allLiTag[j].setAttribute("onclick", "clicked(this)");
   }
+  console.info("called!");
 }
 
 
@@ -2131,38 +2131,40 @@ fetch(`static/sla/songs/${allMusic[index].src}.mp3`)
 
   jsmediatags.read(audio, {
     onSuccess: function(tag) {
-      let liTag = `<li li-index="${index + 1}" onclick="clicked(this)">
-                <div class="roww">
-                  <span id="scrolla">${tag.tags.title}</span>
-                  <p id="scrollb">${tag.tags.artist}</p>
-                  <p id="scrollb">${tag.tags.genre}</p>
-                </div>
-                <span id="${allMusic[index].src}" class="audio-duration"></span>
-                <audio class="${allMusic[index].src}" src="static/sla/songs/${allMusic[index].src}.mp3"></audio>
-              </li>`;
-      ulTag.insertAdjacentHTML("beforeend", liTag);
-      let liAudioDuartionTag = ulTag.querySelector(`#${allMusic[index].src}`);
-      let liAudioTag = ulTag.querySelector(`.${allMusic[index].src}`);
+        let liTag = `<li li-index="${index + 1}">
+                  <div class="roww">
+                    <span id="scrolla">${tag.tags.title}</span>
+                    <p id="scrollb">${tag.tags.artist}</p>
+                    <p id="scrollb">${tag.tags.genre}</p>
+                  </div>
+                  <span id="${allMusic[index].src}" class="audio-duration"></span>
+                  <audio class="${allMusic[index].src}" src="static/sla/songs/${allMusic[index].src}.mp3"></audio>
+                </li>`;
+        ulTag.insertAdjacentHTML("beforeend", liTag);
+        let liAudioDuartionTag = ulTag.querySelector(`#${allMusic[index].src}`);
+        let liAudioTag = ulTag.querySelector(`.${allMusic[index].src}`);
 
-      liAudioTag.addEventListener("loadeddata", ()=>{
-        let duration = liAudioTag.duration;
-        let totalMin = Math.floor(duration / 60);
-        let totalSec = Math.floor(duration % 60);
-        if(totalSec < 10){
-          totalSec = `0${totalSec}`;
-        };
-        liAudioDuartionTag.innerText = `${totalMin}:${totalSec}`;
-        liAudioDuartionTag.setAttribute("t-duration", `${totalMin}:${totalSec}`);
-      });
-
-      // Load next file
-      loadFile(index + 1);
-    }
+        liAudioTag.addEventListener("loadeddata", ()=>{
+          let duration = liAudioTag.duration;
+          let totalMin = Math.floor(duration / 60);
+          let totalSec = Math.floor(duration % 60);
+          if(totalSec < 10){
+            totalSec = `0${totalSec}`;
+          };
+          liAudioDuartionTag.innerText = `${totalMin}:${totalSec}`;
+          liAudioDuartionTag.setAttribute("t-duration", `${totalMin}:${totalSec}`);
+        });
+        playingSong();
+        // Load next file
+        loadFile(index + 1);
+      }
     });
   });
 }
-
 loadFile(0);
+
+
+
 
 //particular li clicked function
 function clicked(element){
