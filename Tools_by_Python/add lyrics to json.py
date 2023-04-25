@@ -14,7 +14,7 @@ for root, dirs, files in os.walk(drive):
 
                 base_name, _ = os.path.splitext(filename)
                 jsoutput = os.path.join(drive, f"{base_name}.json")
-                with open(jsoutput, "w") as ff:
+                with open(jsoutput, "w", encoding = 'utf-8') as ff:
                     ff.write("{" + fr'''"{base_name}":''' + '\n' +'\t' + "{" + fr'''"lyrics": [
     {formatted_lyrics}
 ]'''+ "}" + "}")
