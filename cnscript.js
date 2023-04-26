@@ -792,7 +792,12 @@ function loadMusic(indexNumb) {
         if (ikun.length > 0) {
          for (let i=0;i<ikun.length;i++){
           ikun[i].addEventListener("click", () => {
+            musicIndex = 22;
+            wrapper.classList.remove("paused");
+            playPauseBtn.querySelector("i").innerText = "play_arrow";
+            musicImg.classList.remove('rotate');
             loadMusic(22);
+            playingSong();
           });
         }
         }
