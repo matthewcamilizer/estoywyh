@@ -335,7 +335,7 @@ window.addEventListener("load", () => {
 
   if (urlHash) { // if hash is present, try to load song by id
     let [hash, timestampStr] = decodeURIComponent(urlHash).split("&t=");
-    const song = allMusic.find((song) => song.hash.toLowerCase() === hash);
+    const song = allMusic.find((song) => song.name.toLowerCase() === hash);
     if (song) {
       loadMusic(allMusic.indexOf(song) + 1);
       musicIndex = allMusic.indexOf(song) + 1; 
@@ -368,7 +368,7 @@ window.addEventListener("load", () => {
     loadMusic(musicIndex); 
     
   }
-  history.replaceState('', '', `#${allMusic[musicIndex - 1 ].hash}`);
+  history.replaceState('', '', `#${allMusic[musicIndex - 1 ].name}`);
 });
 
 // ZZY required
@@ -573,6 +573,7 @@ function loadMusic(indexNumb) {
   mainAudio.currentTime = timeStamp;
   jsmediatags.read(mainAudio.src, {
     onSuccess: function(tag) {      
+       
       lyricThreshold.style.width= "92%";      
       const ToRemove = lyricContainer.querySelectorAll(`[song]:not([song*="${tag.tags.title}"])`);
       if(ToRemove){
@@ -584,10 +585,10 @@ function loadMusic(indexNumb) {
       if (cretedCSS){document.head.removeChild(cretedCSS);lyricContainer.textContent="";}
       // Set the metadata fields in your music player using the tag information
       musicName.innerText = tag.tags.title;
-      musicArtist.innerText = tag.tags.artist;
       musicGenre.innerText = tag.tags.genre;  
       //dynamic title while playing
-      dynamicTitle.textContent =tag.tags.artist + ` - ` + tag.tags.title;
+      if(tag.tags.TCOM){dynamicTitle.textContent =tag.tags.artist+`, `+tag.tags.TCOM.data+` - `+tag.tags.title;musicArtist.innerText = tag.tags.artist+`, `+tag.tags.TCOM.data;}
+      else{dynamicTitle.textContent =tag.tags.artist + ` - ` + tag.tags.title;musicArtist.innerText = tag.tags.artist;}
       lyricTitle.textContent =tag.tags.artist + ` - ` + tag.tags.title; 
       // Set the image source for your music player
       var image = tag.tags.picture;
@@ -655,7 +656,7 @@ function loadMusic(indexNumb) {
                 let ScollThreshold = Math.floor((lyricContainer.offsetHeight / 2 - CurrentLyric.offsetHeight) / lyel.offsetHeight);
       
                 if (VisibleLyricAboveQuality >= ScollThreshold && !hasScrolled[j]){
-                  lyricContainer.scrollTop += 1.4*CurrentLyric.offsetHeight;
+                  lyricContainer.scrollTop += 1.518*CurrentLyric.offsetHeight;
                   hasScrolled[j] = true;
                   
                 }
@@ -857,7 +858,7 @@ function loadMusic(indexNumb) {
   random_bg_color();
   }
   //dynamic URL while playing
-  history.pushState('', '', `#${allMusic[indexNumb - 1].hash}`);
+  history.pushState('', '', `#${allMusic[indexNumb - 1].name}`);
   playingSong();
 }
 
@@ -946,7 +947,7 @@ function playMusic(){
   playPauseBtn.querySelector("i").innerText = "pause";
   mainAudio.play();
   showCase.textContent = "正在播放...";
-  console.info(mainAudio.currentTime);
+  
 }
 // Jan 6th
 
@@ -1992,6 +1993,7 @@ progressArea.addEventListener("click", (e)=>{
   mainAudio.currentTime = (clickedOffsetX / progressWidth) * songDuration;
   isMusicPlay ? playMusic() : pauseMusic();
   playingSong();
+  
 });
 
 //change loop, shuffle, repeat icon onclick
@@ -2093,6 +2095,41 @@ volumeControl.addEventListener("click", ()=>{
 
 
 const ulTag = wrapper.querySelector("ul");
+// let create li tags according to array length for list
+for (let i = 0; i < allMusic.length; i++) {
+  //let's pass the song name, artist from the array
+  let liTag = `<li li-index="${i + 1}">
+                <div class="roww">
+                  <span id="scrolla">${allMusic[i].name}</span>
+                  <p id="tcom" id="scrollb"></p>
+                  <p id="scrollb">${allMusic[i].genre}</p>
+                </div>
+                <span id="${allMusic[i].src}" class="audio-duration"></span>
+                <audio class="${allMusic[i].src}" src="static/sla/songs/${allMusic[i].src}.mp3"></audio>
+              </li>`;
+  ulTag.insertAdjacentHTML("beforeend", liTag); //inserting the li inside ul tag
+  let liAudioDuartionTag = ulTag.querySelector(`#${allMusic[i].src}`);
+  let liAudioTag = ulTag.querySelector(`.${allMusic[i].src}`);
+  liAudioTag.addEventListener("loadeddata", ()=>{
+    let duration = liAudioTag.duration;
+    let totalMin = Math.floor(duration / 60);
+    let totalSec = Math.floor(duration % 60);
+    if(totalSec < 10){ //if sec is less than 10 then add 0 before it
+      totalSec = `0${totalSec}`;
+    };
+    liAudioDuartionTag.innerText = `${totalMin}:${totalSec}`; //passing total duation of song
+    liAudioDuartionTag.setAttribute("t-duration", `${totalMin}:${totalSec}`); //adding t-duration attribute with total duration value
+    let tcom = ulTag.querySelector(`li[li-index="${i + 1}"] #tcom`);
+    if (allMusic[i].TCOM) {
+      tcom.innerText = `${allMusic[i].artist}, ${allMusic[i].TCOM}`;
+    } else {
+      tcom.innerText = `${allMusic[i].artist}`;
+    }
+  });
+}
+
+
+
 
 
 //play particular song from the list onclick of li tag
@@ -2118,55 +2155,8 @@ function playingSong(){
 
     allLiTag[j].setAttribute("onclick", "clicked(this)");
   }
-  console.info("called!");
+  
 }
-
-
-function loadFile(index) {
-  if (index >= allMusic.length) {
-    return;
-  }
-
-// Create a Blob object from the MP3 file
-fetch(`static/sla/songs/${allMusic[index].src}.mp3`)
-  .then(response => response.blob())
-  .then(blob => {
-
-  const audio = new File([blob], `static/sla/songs/${allMusic[index].src}.mp3`);
-
-  jsmediatags.read(audio, {
-    onSuccess: function(tag) {
-        let liTag = `<li li-index="${index + 1}">
-                  <div class="roww">
-                    <span id="scrolla">${tag.tags.title}</span>
-                    <p id="scrollb">${tag.tags.artist}</p>
-                    <p id="scrollb">${tag.tags.genre}</p>
-                  </div>
-                  <span id="${allMusic[index].src}" class="audio-duration"></span>
-                  <audio class="${allMusic[index].src}" src="static/sla/songs/${allMusic[index].src}.mp3"></audio>
-                </li>`;
-        ulTag.insertAdjacentHTML("beforeend", liTag);
-        let liAudioDuartionTag = ulTag.querySelector(`#${allMusic[index].src}`);
-        let liAudioTag = ulTag.querySelector(`.${allMusic[index].src}`);
-
-        liAudioTag.addEventListener("loadeddata", ()=>{
-          let duration = liAudioTag.duration;
-          let totalMin = Math.floor(duration / 60);
-          let totalSec = Math.floor(duration % 60);
-          if(totalSec < 10){
-            totalSec = `0${totalSec}`;
-          };
-          liAudioDuartionTag.innerText = `${totalMin}:${totalSec}`;
-          liAudioDuartionTag.setAttribute("t-duration", `${totalMin}:${totalSec}`);
-        });
-        playingSong();
-        // Load next file
-        loadFile(index + 1);
-      }
-    });
-  });
-}
-loadFile(0);
 
 
 
