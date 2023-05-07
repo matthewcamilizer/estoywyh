@@ -4,7 +4,9 @@ musicName = wrapper.querySelector(".song-details .name"),
 musicArtist = wrapper.querySelector(".song-details .artist"),
 musicGenre = wrapper.querySelector(".song-details .genre"),
 playPauseBtn = wrapper.querySelector(".play-pause"),
+shareButton = wrapper.querySelector("#share"),
 
+changeProgress = wrapper.querySelector(".opsc"),
 volumeControl = wrapper.querySelector("#vc"),
 sliderShow = wrapper.querySelector(".slider_container")
 volumeProgress = wrapper.querySelector(".volumee"),
@@ -16,7 +18,6 @@ opVolume = wrapper.querySelector("#opvc"),
 areaOption = wrapper.querySelector(".wrapperr"),
 closeOptions = wrapper.querySelector("#close_op"),
 musicOption = wrapper.querySelector("#zzy"),
-showGenretag= wrapper.querySelector(".pin-container")
 muteArtist = wrapper.querySelector(".noat"),
 onlyArtist = wrapper.querySelector(".oat"),
 muteGenre = wrapper.querySelector(".nogenre"),
@@ -40,21 +41,163 @@ progressArea = wrapper.querySelector(".progress-area"),
 progressBar = progressArea.querySelector(".progress-bar"),
 musicList = wrapper.querySelector(".music-list"),
 moreMusicBtn = wrapper.querySelector("#more-music"),
+lyContainer = wrapper.querySelector('.lycontainer');
 closemoreMusic = musicList.querySelector("#close"),
+closeLyric = lyContainer.querySelector("#closelyric"),
 now_playing = musicList.querySelector('.now-playing');
 //dynamic title while playing
 dynamicTitle = document.querySelector("title")
 dynamicIcon = document.getElementById("ddicon");
 
+lyricThreshold = document.querySelector(".threshold");
+lyricContainer = document.querySelector("#lyrics");
+lyricTitle = document.querySelector(".lytitle");
+boardLyric = document.querySelector("#b");
+boardGenre = document.querySelector("#c");
+
 
 let musicIndex = Math.floor((Math.random() * allMusic.length) + 1);
 isMusicPaused = true;
-
+shareButton.addEventListener("click",()=>{
+  navigator.clipboard.writeText(window.location.href + "&t=" + mainAudio.currentTime);
+  alert("link has been copied to clip board");
+})
 
 //const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
-//hover compliation
-//main player hover opacity:0.2 for every devices
+  //hover compliation
+  //main player hover opacity:0.2 for every devices
+  let PCtimeoutId;
+  let PCisActive = false;
+  
+  function PCactivateBox() {
+    wrapper.classList.remove('inactive');
+    PCisActive = true;
+  }
+  function dePCactivateBox() {
+    wrapper.classList.add('inactive');
+    PCisActive = false;
+  }
+  function PCresetTimeout() {
+    clearTimeout(PCtimeoutId);
+    PCtimeoutId = setTimeout(() => {
+      dePCactivateBox();
+    }, 7500);
+  }
+  wrapper.addEventListener('mousedown', () => {
+    PCactivateBox();
+    PCresetTimeout();
+  });
+  wrapper.addEventListener('mousemove', () => {
+    if (!PCisActive) {
+      PCactivateBox();
+    }
+    PCresetTimeout();
+  });
+  wrapper.addEventListener('mouseleave', () => {
+    PCresetTimeout();
+  });
+  PCresetTimeout();
+  //volumebar disappear for every devices
+  let PCVolumePCtimeoutId;
+  let PCvolumeActive = false;
+  function PCactivateVolume() {
+      volumeProgress.classList.add("showw");
+      voloumeActive = true;
+      PCresetVolumeTimeout()
+  }
+  function dePCactivateVolume() {
+    volumeProgress.classList.remove("showw");
+    voloumeActive = false;
+    PCresetVolumeTimeout()
+  } 
+  function PCresetVolumeTimeout() {
+    clearTimeout(PCVolumePCtimeoutId);
+    PCVolumePCtimeoutId = setTimeout(() => {
+      dePCactivateVolume();
+    }, 5000);
+  }
+  volumeProgress.addEventListener('mousedown', () => {
+    PCactivateVolume();
+    PCresetVolumeTimeout();
+  });
+  volumeProgress.addEventListener('mousemove', () => {
+    if (!PCvolumeActive) {
+      PCactivateVolume();
+    }
+    PCresetVolumeTimeout();
+  });
+  volumeProgress.addEventListener('mouseleave', () => {
+    PCresetVolumeTimeout();
+  });
+  PCresetVolumeTimeout();
+  //Option fly away for every devices
+  let PCOptionPCtimeoutId, PCOptionActive = false;
+  function PCactivateOption() {
+    areaOption.classList.add("show");
+    PCOptionActive = true;
+    PCresetOptionTimeout()
+  }
+  function dePCactivateOption() {
+    areaOption.classList.remove("show");
+    PCOptionActive = false;
+    PCresetOptionTimeout()
+  }
+  function PCresetOptionTimeout() {
+  clearTimeout(PCOptionPCtimeoutId);
+  PCOptionPCtimeoutId = setTimeout(() => {
+    dePCactivateOption();
+  }, 10000);
+  }
+  areaOption.addEventListener('mousedown', () => {
+  PCactivateOption();
+  PCresetOptionTimeout();
+  });
+  areaOption.addEventListener('mousemove', () => {
+  if (!PCOptionActive) {
+    PCactivateOption();
+  }
+  PCresetOptionTimeout();
+  });
+  areaOption.addEventListener('mouseleave', () => {
+  PCresetOptionTimeout();
+  });
+  PCresetOptionTimeout();
+  //Musiclist down for every devices
+  let ListPCtimeoutId, ListPCActive = false;
+  function PCactivateList() {
+    musicList.classList.add("show");
+    ListPCActive = true;
+    PCresetListTimeout()
+  }
+  function dePCactivateList() {
+  musicList.classList.remove("show");
+  ListPCActive = false;
+  PCresetListTimeout()
+  }
+  function PCresetListTimeout() {
+  clearTimeout(ListPCtimeoutId);
+  ListPCtimeoutId = setTimeout(() => {
+    dePCactivateList();
+  }, 15000);
+  }
+  musicList.addEventListener('mousedown', () => {
+  PCactivateList();
+  PCresetListTimeout();
+  });
+  musicList.addEventListener('mousemove', () => {
+  if (!ListPCActive) {
+    PCactivateList();
+  }
+  PCresetListTimeout();
+  });
+  musicList.addEventListener('mouseleave', () => {
+  PCresetListTimeout();
+  });
+  PCresetListTimeout();
+
+
+//mobile
 let timeoutId;
 let isActive = false;
 
@@ -96,198 +239,137 @@ function activateVolume() {
     voloumeActive = true;
     resetVolumeTimeout()
 }
-
 function deactivateVolume() {
   volumeProgress.classList.remove("showw");
   voloumeActive = false;
   resetVolumeTimeout()
 }
-
 function resetVolumeTimeout() {
   clearTimeout(VolumetimeoutId);
   VolumetimeoutId = setTimeout(() => {
     deactivateVolume();
   }, 5000);
 }
-
 volumeProgress.addEventListener('touchstart', () => {
   activateVolume();
   resetVolumeTimeout();
 });
-
 volumeProgress.addEventListener('touchmove', () => {
   if (!volumeActive) {
     activateVolume();
   }
   resetVolumeTimeout();
 });
-
 volumeProgress.addEventListener('touchend', () => {
   resetVolumeTimeout();
 });
-
 resetVolumeTimeout();
-
-
-//Option fly away for every devices
 let OptiontimeoutId, OptionActive = false;
 function activateOption() {
   areaOption.classList.add("show");
   OptionActive = true;
   resetOptionTimeout()
 }
-
 function deactivateOption() {
   areaOption.classList.remove("show");
   OptionActive = false;
   resetOptionTimeout()
 }
-
 function resetOptionTimeout() {
 clearTimeout(OptiontimeoutId);
 OptiontimeoutId = setTimeout(() => {
   deactivateOption();
 }, 10000);
 }
-
 areaOption.addEventListener('touchstart', () => {
 activateOption();
 resetOptionTimeout();
 });
-
 areaOption.addEventListener('touchmove', () => {
 if (!OptionActive) {
   activateOption();
 }
 resetOptionTimeout();
 });
-
 areaOption.addEventListener('touchend', () => {
 resetOptionTimeout();
 });
-
 resetOptionTimeout();
-
-
-//Musiclist down for every devices
 let ListtimeoutId, ListActive = false;
 function activateList() {
   musicList.classList.add("show");
   ListActive = true;
   resetListTimeout()
 }
-
 function deactivateList() {
 musicList.classList.remove("show");
 ListActive = false;
 resetListTimeout()
 }
-
 function resetListTimeout() {
 clearTimeout(ListtimeoutId);
 ListtimeoutId = setTimeout(() => {
   deactivateList();
 }, 15000);
 }
-
 musicList.addEventListener('touchstart', () => {
 activateList();
 resetListTimeout();
 });
-
 musicList.addEventListener('touchmove', () => {
 if (!ListActive) {
   activateList();
 }
 resetListTimeout();
 });
-
 musicList.addEventListener('touchend', () => {
 resetListTimeout();
 });
-
 resetListTimeout();
 
-let timeStamp = 0;
-window.addEventListener("hashchange", () => {
-  const urlHash = window.location.hash.slice(1).toLowerCase();// get hash from URL and convert to lowercase
-  let [hash, timestampStr] = decodeURIComponent(urlHash).split("&t=");
-  if (urlHash) { // if hash is present, try to load song by id
-    function convertTimeToSeconds() {
-      if (/^\d+$/.test(timestampStr)) { // check if timestampStr is a single integer
-        timestampStr = parseInt(timestampStr, 10);
-      } else {
-      const [minutesStr, secondsStr] = timestampStr.split(":");
-      const minutes = parseInt(minutesStr, 10) || 0;
-      const seconds = parseFloat(secondsStr, 0) || 0;
-      timestampStr = minutes * 60 + seconds;
-      }
-    }
-    convertTimeToSeconds()
 
-    const song = allMusic.find((song) => song.hash.toLowerCase() === hash);
-    timeStamp = parseFloat(timestampStr, 0) || 0;
-    if (song) {
-      loadMusic(allMusic.indexOf(song) + 1);
-      musicIndex = allMusic.indexOf(song) + 1;
-    } else {
-      loadMusic(musicIndex); // fallback to default musicIndex if song with id is not found
-    }
-  } else { // no hash present, so load default musicIndex
-    loadMusic(musicIndex);
-  }
-  if (!isActive) {
-    activateBox();
-  }
-  resetTimeout();
-  progressBar.style.width = 0;
-  playPauseBtn.querySelector("i").innerText = "play_arrow";
-  wrapper.classList.remove("paused");
-  musicImg.classList.remove('rotate');
-  void musicImg.offsetWidth;
-});
+let timeStamp = 0;
 
 window.addEventListener("load", () => {
   const urlHash = window.location.hash.slice(1).toLowerCase(); // get hash from URL and convert to lowercase
 
   if (urlHash) { // if hash is present, try to load song by id
     let [hash, timestampStr] = decodeURIComponent(urlHash).split("&t=");
-    const song = allMusic.find((song) => song.hash.toLowerCase() === hash);
+    const song = allMusic.find((song) => song.name.toLowerCase() === hash);
     if (song) {
       loadMusic(allMusic.indexOf(song) + 1);
       musicIndex = allMusic.indexOf(song) + 1; 
       if (timestampStr){
       function convertTimeToSeconds() {
-        if (/^\d+$/.test(timestampStr)) { // check if timestampStr is a single integer
-          timestampStr = parseInt(timestampStr, 10);
-        } else {
+        if (!isNaN(timestampStr)) { // check if timestampStr is a single integer
+          timestampStr = parseFloat(timestampStr, 0) || 0;
+        } 
+        if (/^\d+(\.\d+)?:\d+(\.\d+)?$/.test(timestampStr)) {
         const [minutesStr, secondsStr] = timestampStr.split(":");
-        const minutes = parseInt(minutesStr, 10) || 0;
-        const seconds = parseFloat(secondsStr, 0) || 0;
-        timestampStr = minutes * 60 + seconds;
+        timestampStr = Math.floor(minutesStr * 60) + Math.floor(secondsStr);
+        
         }
       }
-      convertTimeToSeconds()
-      const timestamp = parseFloat(timestampStr, 0) || 0;
-      mainAudio.currentTime = timestamp;
+      if((!isNaN(timestampStr)) || (/^\d+(\.\d+)?:\d+(\.\d+)?$/.test(timestampStr))){
+        convertTimeToSeconds();
+        mainAudio.currentTime = timestampStr;
+        
+      }
+      else{loadMusic(musicIndex);mainAudio.currentTime = 0;}
     }
     } else {
       loadMusic(musicIndex); // fallback to default musicIndex if song with id is not found
+      
     }
     //refresh without hash
     history.replaceState(null, null, ' '); // remove the hash from the URL
 
   } else { // no hash present, so load default musicIndex
     loadMusic(musicIndex); 
-     
+    
   }
-  history.replaceState('', '', `#${allMusic[musicIndex - 1 ].hash}`);
-  playingSong();
+  history.replaceState('', '', `#${allMusic[musicIndex - 1 ].name}`);
 });
-
-showGenretag.addEventListener("click",()=>{
-  musicGenre.classList.toggle("show");
-})
 
 // ZZY required
 let likedArtists = [], dislikedArtists = [], likedGenres = [], dislikedGenres = [], fnlikedArtists = [], fnlikedGenres = [], fplikedGenres = [], fplikedArtists = [];
@@ -298,8 +380,8 @@ allArtist.addEventListener("click",()=>{
     ATA.push(allMusic[i].artist);
   }
   const fakeshow = new Set(ATA);
-  const show = Array.from(fakeshow).sort((a,b) => a.localeCompare(b));
-  alert("which one is separated by a comma and a space:\n\n" + [...show]);
+  const show = Array.from(fakeshow).sort((a,b) => a.localeCompare(b)).join(', ');
+  alert("Each singer is separated by a comma and a space:\n\n" + show);
 })
 allGenre.addEventListener("click",()=>{
   let ATG = [];
@@ -307,15 +389,15 @@ allGenre.addEventListener("click",()=>{
     ATG.push(allMusic[i].genre);
   }
   const fakeshow = new Set(ATG);
-  const show = Array.from(fakeshow).sort((a,b) => a.localeCompare(b));
-  alert("which one is separated by a comma and a space:\n\n" + [...show]);
+  const show = Array.from(fakeshow).sort((a,b) => a.localeCompare(b)).join(', ');
+  alert("Each genre is separated by a comma and a space:\n\n" + show);
 })
 
 let enterLikeArtists = [], enterLikeGenres = [], oastoredValue = [], ogstoredValue = [], nastoredValue = [], ngstoredValue = [];
 let enterDislikesa = [], enterDislikesg = [];
 
 onlyArtist.addEventListener("click", ()=>{
-  enterLikeArtists = prompt("enter artists you like, separated by a comma and not case sensitive", oastoredValue);
+  enterLikeArtists = prompt("Enter your liked singer, separated by a comma, not case sensitive", oastoredValue);
   if (enterLikeArtists) {
     oastoredValue = enterLikeArtists;
     likedArtists = enterLikeArtists.split(',').map(artist => artist.trim());
@@ -335,7 +417,7 @@ onlyArtist.addEventListener("click", ()=>{
   }
 });
 muteArtist.addEventListener("click",()=>{
-  enterDislikesa = prompt("enter artists you hate, separated by a comma and not case sensitive", nastoredValue);
+  enterDislikesa = prompt("Enter your disliked singer, separated by a comma, not case sensitive", nastoredValue);
   if (enterDislikesa) {
     nastoredValue = enterDislikesa;
     dislikedArtists = enterDislikesa.split(',').map(artist => artist.trim());
@@ -352,7 +434,7 @@ muteArtist.addEventListener("click",()=>{
 })
 
 onlyGenre.addEventListener("click", ()=>{
-  enterLikeGenres = prompt("enter genres you like, separated by a comma", ogstoredValue);
+  enterLikeGenres = prompt("Enter your liked genre, separated by a comma, not case sensitive", ogstoredValue);
   if (enterLikeGenres) {
     ogstoredValue = enterLikeGenres;
     likedGenres = enterLikeGenres.split(',').map(genre => genre.trim());
@@ -372,7 +454,7 @@ onlyGenre.addEventListener("click", ()=>{
   }
 })
 muteGenre.addEventListener("click",()=>{
-  enterDislikesg = prompt("enter genres you hate, separated by a comma", ngstoredValue);
+  enterDislikesg = prompt("Enter your disliked genre, separated by a comma, not case sensitive", ngstoredValue);
   if (enterDislikesg) {
     ngstoredValue = enterDislikesg;
     dislikedGenres = enterDislikesg.split(',').map(genre => genre.trim());
@@ -394,10 +476,10 @@ showLa.addEventListener("click", ()=>{
     for (let i = 0; i < likedArtists.length; i++){
       ATA.push(likedArtists[i]);
     }
-    alert(ATA.join(', '));
+    alert('These are your liked singer, separated by a comma and a space:\n\n' + ATA.join(', '));
   }
   else {
-    alert("you have no liked artists yet.");
+    alert("You did not enter liked singer");
   }
 })
 showDla.addEventListener("click", ()=>{
@@ -406,10 +488,10 @@ showDla.addEventListener("click", ()=>{
     for (let i = 0; i < dislikedArtists.length; i++){
       ATA.push(dislikedArtists[i]);
     }
-    alert(ATA.join(', '));
+    alert('There are your disliked singer, separated by a comma and a space:\n\n' + ATA.join(', '));
   }
   else {
-    alert("you have no liked artists yet.");
+    alert("You did not enter disliked singer");
   }
 })
 
@@ -419,10 +501,10 @@ showLg.addEventListener("click",()=>{
     for (let i = 0; i < likedGenres.length; i++){
       ATA.push(likedGenres[i]);
     }
-    alert(ATA.join(', '));
+    alert('There are your liked genres, separated by a comma and a space:\n\n' + ATA.join(', '));
   }
   else {
-    alert("you have no liked genres yet.");
+    alert("You did not enter liked genres");
   }
 })
 showDlg.addEventListener("click",()=>{
@@ -431,23 +513,22 @@ showDlg.addEventListener("click",()=>{
     for (let i = 0; i < dislikedGenres.length; i++){
       ATA.push(dislikedGenres[i]);
     }
-    alert(ATA.join(', '));
+    alert('There are your disliked genres, separated by a comma and a space:\n\n' + ATA.join(', '));
   }
   else {
-    alert("you have no liked genres yet.");
+    alert("You did not enter disliked genre");
   }
 })
-
 
 resetLartist.addEventListener("click",()=>{
   if (likedArtists.length > 0){
     likedArtists = [];
     oastoredValue = [];
     enterLikeArtists = [];
-    alert("you have reset your liked artist!");
+    alert("You have reset liked singer!");
   }
   else{
-    alert("you have no liked artists yet.");
+    alert("You did not enter liked singer");
   }
 })
 resetDlartist.addEventListener("click",()=>{
@@ -455,10 +536,10 @@ resetDlartist.addEventListener("click",()=>{
     dislikedArtists = [];
     nastoredValue = [];
     enterDislikesa = [];
-    alert("you have reset your hated artist!");
+    alert("You have reset disliked singer!");
   }
   else{
-    alert("you have no hated artists yet.");
+    alert("You did not enter disliked singer");
   }
 })
 
@@ -467,10 +548,10 @@ resetLgenre.addEventListener("click",()=>{
     likedGenres = [];
     ogstoredValue = [];  
     enterLikeGenres = [];
-    alert("you have reset your liked genres!");
+    alert("You have reset liked genre!");
   }
   else{
-    alert("you have no liked genres yet.");
+    alert("You did not enter liked genre");
   }
 })
 resetDlgenre.addEventListener("click",()=>{
@@ -478,25 +559,37 @@ resetDlgenre.addEventListener("click",()=>{
     dislikedGenres = [];
     ngstoredValue = [];
     enterDislikesg = [];
-    alert("you have reset your hated genres!");
+    alert("You have reset disliked genre!");
   }
   else{
-    alert("you have no hated genres yet.");
+    alert("You did not enter disliked genre");
   }
 })
 
-
+let loadedJson = null;
+let updateTimeUpdate = () => {};
 function loadMusic(indexNumb) {
   mainAudio.src = `static/sla/songs/${allMusic[indexNumb - 1].src}.mp3`;
   mainAudio.currentTime = timeStamp;
   jsmediatags.read(mainAudio.src, {
-    onSuccess: function(tag) {
+    onSuccess: function(tag) {      
+       
+      lyricThreshold.style.width= "92%";      
+      const ToRemove = lyricContainer.querySelectorAll(`[song]:not([song*="${tag.tags.title}"])`);
+      if(ToRemove){
+        for(let o=0;o<ToRemove.length;o++){
+          ToRemove[o].remove();
+        }
+      }
+      const cretedCSS = document.querySelector("#newCSS");
+      if (cretedCSS){document.head.removeChild(cretedCSS);lyricContainer.textContent="";}
       // Set the metadata fields in your music player using the tag information
       musicName.innerText = tag.tags.title;
-      musicArtist.innerText = tag.tags.artist;
       musicGenre.innerText = tag.tags.genre;  
       //dynamic title while playing
-      dynamicTitle.textContent =tag.tags.artist + ` - ` + tag.tags.title;
+      if(tag.tags.TCOM){dynamicTitle.textContent =tag.tags.artist+`, `+tag.tags.TCOM.data+` - `+tag.tags.title;musicArtist.innerText = tag.tags.artist+`, `+tag.tags.TCOM.data;}
+      else{dynamicTitle.textContent =tag.tags.artist + ` - ` + tag.tags.title;musicArtist.innerText = tag.tags.artist;}
+      lyricTitle.textContent =tag.tags.artist + ` - ` + tag.tags.title; 
       // Set the image source for your music player
       var image = tag.tags.picture;
       if (image) {
@@ -507,12 +600,211 @@ function loadMusic(indexNumb) {
         var base64 = "data:" + image.format + ";base64," + window.btoa(base64String);
         musicImg.src = base64;
       }
-    },
-    onError: function(error) {
-      console.log(error);
+
+      mainAudio.removeEventListener('timeupdate', updateTimeUpdate);
+
+      if(loadedJson){loadedJson = null;}
+      fetch(`static/sla/lyrics/${allMusic[indexNumb - 1].src}.json`)
+      .then(response => response.json())
+      .then(data => {
+        loadedJson = data;
+        // check if scroll or create .empty
+        const hasScrolled  = new Array(loadedJson[tag.tags.title]['lyrics'].length).fill(false);
+        const created  = new Array(loadedJson[tag.tags.title]['lyrics'].length).fill(false);
+        
+        updateTimeUpdate = () => {
+          const currentTime = mainAudio.currentTime;
+          let foundCurrentLyric = false;
+          let currentLyricIndex = 0;
+            for (let i = 0; i < loadedJson[tag.tags.title]['lyrics'].length; i++) {
+              if (currentTime >= loadedJson[tag.tags.title]['lyrics'][i].start && currentTime <= loadedJson[tag.tags.title]['lyrics'][i].end) {
+                currentLyricIndex = i;
+                foundCurrentLyric = true;
+                const animationDuration = loadedJson[tag.tags.title]['lyrics'][i].end - loadedJson[tag.tags.title]['lyrics'][i].start + 0.2;
+                document.body.style.setProperty('--animation-duration', animationDuration + 's');
+              }
+            }
+      
+            for (let j = 0; j < loadedJson[tag.tags.title]['lyrics'].length; j++){
+            const lyricElem = document.getElementById(`lyric-${j}`);
+            const lyct = document.getElementById(`lyct-${j}`);
+            const shine = document.getElementById(`${tag.tags.title}-${j}`);  
+            if (j === currentLyricIndex && foundCurrentLyric) {
+                lyricElem.classList.add('highlight');
+                lyricElem.classList.remove('played');
+                lyct.classList.add('cu');
+                lyct.classList.remove('played');
+                lyricElem.setAttribute('data-text', lyricElem.textContent);
+                shine.classList.add('shinely');
+      
+                let anishine = document.querySelector(".shinely");
+                if(wrapper.classList.contains('paused')){anishine.style.animationPlayState = "running";}
+                else{anishine.style.animationPlayState = "paused";}  
+      
+                let duration = loadedJson[tag.tags.title]['lyrics'][j].end - loadedJson[tag.tags.title]['lyrics'][j].start;
+                let currentTime = mainAudio.currentTime - loadedJson[tag.tags.title]['lyrics'][j].start;
+                let percentage = currentTime / duration;
+                shine.scrollLeft = (lyricElem.scrollWidth - lyricElem.clientWidth) * percentage;
+                lyricElem.scrollLeft = (lyricElem.scrollWidth - lyricElem.clientWidth) * percentage;
+                
+      
+                let CurrentLyric = document.querySelector('.cu');
+                let lyel = document.querySelector('.lyct');
+                let VisibleLyricAboveQuality = Math.floor(CurrentLyric.offsetTop / lyel.offsetHeight);
+      
+                //the quality of visible lyrics
+                let ScollThreshold = Math.floor((lyricContainer.offsetHeight / 2 - CurrentLyric.offsetHeight) / lyel.offsetHeight);
+      
+                if (VisibleLyricAboveQuality >= ScollThreshold && !hasScrolled[j]){
+                  lyricContainer.scrollTop += 1.518*CurrentLyric.offsetHeight;
+                  hasScrolled[j] = true;
+                  
+                }
+              // If we've scrolled to the bottom and there are still more lyrics, create a new empty div
+              if (lyricContainer.scrollTop >= lyricContainer.scrollHeight - lyricContainer.offsetHeight && j < lyrics.length - 2 
+                && !created[j]) {
+                  const emptyLyricElem = document.createElement('div');
+                  emptyLyricElem.classList.add('empty');
+                  lyricContainer.appendChild(emptyLyricElem);
+                  var emp = `.empty{
+                    position: relative;
+                    width: 100%;
+                    min-height: 2em;
+                  }`;
+                  var style = document.createElement("style");
+                  style.appendChild(document.createTextNode(emp));
+                  document.head.appendChild(style);
+                  created[j] = true;
+                } 
+              }
+            if (j < currentLyricIndex) {
+                  hasScrolled[j] = false;
+                shine.classList.remove('shinely');
+                lyricElem.classList.add('played');
+                lyricElem.classList.remove('highlight');
+                lyct.classList.add('played');
+                lyct.classList.remove('cu');
+              }
+            if (j > currentLyricIndex) {
+                shine.classList.remove('shinely');
+                lyricElem.classList.remove('played');
+                lyricElem.classList.remove('highlight');
+                lyct.classList.remove('played');
+                lyct.classList.remove('cu');
+              }
+            }
+          };
+      
+
+        mainAudio.addEventListener('timeupdate',updateTimeUpdate);
+
+
+        for (let i = 0; i < loadedJson[tag.tags.title]['lyrics'].length; i++) {
+          let subly = `<div class=lyct id="lyct-${i}" song="${tag.tags.title}">
+              <div class=lyrics id="lyric-${i}">${loadedJson[tag.tags.title]['lyrics'][i].text}</div>
+              <div id="${tag.tags.title}-${i}">${loadedJson[tag.tags.title]['lyrics'][i].text}</div>
+            </div>`;
+          lyricContainer.insertAdjacentHTML("beforeend", subly);
+        }
+      
+        for (let i = 0; i < loadedJson[tag.tags.title]['lyrics'].length; i++) {
+          let dylyric = document.querySelector(`#lyct-${i}`);
+          dylyric.addEventListener("click", ()=>{
+            if(dylyric.classList.contains('cu')){if(wrapper.classList.contains('paused')){pauseMusic();playingSong();}else{playMusic();playingSong();}}
+            else{mainAudio.currentTime = loadedJson[tag.tags.title]['lyrics'][i].start;playMusic();playingSong();}
+          });
+        }
+      
+        mainAudio.addEventListener("ended", ()=>{
+          for(let j=0;j<loadedJson[tag.tags.title]['lyrics'].length;j++){
+            const lyricElem = document.getElementById(`lyric-${j}`);
+            const lyct = document.getElementById(`lyct-${j}`);
+            lyricElem.classList.remove('played');
+            lyct.classList.remove('played');
+          }
+      
+        let empty = document.querySelectorAll(".empty");for(let i=0;i<empty.length;i++){lyricContainer.removeChild(empty[i]);}
+      
+        let ScrollInterval;
+        ScrollInterval = setInterval(function(){
+          lyricContainer.scrollTop -= 50;
+          if (lyricContainer.scrollTop === 0){clearInterval(ScrollInterval);}
+        }, 40); 
+        })
+      
+        })
+      .catch(error => {
+        const cretedCSS = document.querySelector("#newCSS");
+        var newcss = `        
+        #lyrics{
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        } 
+        .ikun{
+          position: absolute;
+          width: 200%;
+          height: 150%;
+        }
+        #ikun{
+          cursor: pointer;
+          text-decoration: none;
+          font-size: 30px;
+          z-index: 1;
+        }
+        .doge{
+          position: absolute;
+          width: 100%;
+          height: 80%;
+        }
+        .what{
+          cursor: pointer;
+          text-decoration: none;
+          font-size: 25px;
+          z-index: 1;
+        }
+        .dota{
+          cursor: pointer;
+          text-decoration: none;
+          font-size: 20px;
+          z-index: 1;
+        }
+        .gta{
+          cursor: pointer;
+          text-decoration: none;
+          font-size: 40px;
+          z-index: 1;
+        }
+        #ikun:active, .what:active, .dota:active, .gta:active, .what:active{ transform: scale(0.9);}`;
+        var style = document.createElement("style");
+        if (cretedCSS){document.head.removeChild(cretedCSS);lyricContainer.textContent="";}
+        style.setAttribute("id","newCSS");
+        style.appendChild(document.createTextNode(newcss));
+        document.head.appendChild(style);
+        let what = [`<a class="what" id="wt" href="https://twitter.com/elonmusk">歌词被Elon Musk扔到火星去了</a>
+        <img class=doge src='static/sla/jjs/dogee.webp' />`,`<a class="dota" id="wt" href="https://dota2.com">全世界都对Dead Game这货又爱又恨</a>
+        <img class=doge src='static/sla/jjs/dota2.jpg' />`,`<a class="what" id="wt" href="https://twitter.com/elonmusk">别看了我只是个打酱油的</a>
+        <img class=doge src='static/sla/jjs/doge.jpg' />`,`<a class="gta" id="wt" href="https://rockstargames.com/gta-v">Adventure Awaits</a>
+        <img class=doge src='static/sla/jjs/gta.jpg' />`,`<a class="gta" id="ikun">听说你想看唱跳rap篮球?</a>
+        <video class=ikun autoplay muted loop src="static/sla/canvas/music-122.mp4"></video>`] 
+        lyricContainer.insertAdjacentHTML("beforeend",what[Math.floor(Math.random()*what.length)]);
+        lyricThreshold.style.width= "100%";
+        let ikun = document.querySelectorAll("#ikun");
+        if (ikun.length > 0) {
+         for (let i=0;i<ikun.length;i++){
+          ikun[i].addEventListener("click", () => {
+            musicIndex = 22;
+            wrapper.classList.remove("paused");
+            playPauseBtn.querySelector("i").innerText = "play_arrow";
+            musicImg.classList.remove('rotate');
+            loadMusic(22);
+            playingSong();
+          });
+        }
+        }
+      });
     }
   });
-
 
   dynamicIcon.setAttribute("href", `static/sla/images/${allMusic[indexNumb - 1].src}.ico`);
   now_playing.textContent = (indexNumb) + " / " + allMusic.length;
@@ -547,19 +839,44 @@ function loadMusic(indexNumb) {
     }
   `;
   // Append the @keyframes atl animation to the stylesheet
-  var style = document.createElement('style');
-  style.appendChild(document.createTextNode(keyframes));
-  document.head.appendChild(style);
+  const canvasCSS = document.querySelector("#canvasCSS");
+  if (canvasCSS){
+    document.head.removeChild(canvasCSS);
+    var style = document.createElement('style');
+    style.setAttribute("id","canvasCSS");
+    style.appendChild(document.createTextNode(keyframes));
+    document.head.appendChild(style);
+  }
+  else{
+    var style = document.createElement('style');
+    style.setAttribute("id","canvasCSS");
+    style.appendChild(document.createTextNode(keyframes));
+    document.head.appendChild(style);
+    }
   }
   else{setCanvas.src = "";
   random_bg_color();
   }
-   
-  console.log("mainAudio.currentTime: ", mainAudio.currentTime);
-  console.log("timeStamp: ", timeStamp);
   //dynamic URL while playing
-  history.pushState('', '', `#${allMusic[indexNumb - 1].hash}`);
+  history.pushState('', '', `#${allMusic[indexNumb - 1].name}`);
+  playingSong();
 }
+
+
+boardGenre.addEventListener("click",()=>{
+  musicGenre.classList.toggle("show");
+  if(boardGenre.classList.contains("fa-bars")){boardGenre.classList.replace("fa-bars", "fa-list");}
+  else{boardGenre.classList.replace("fa-list", "fa-bars");}
+});
+
+boardLyric.addEventListener("click",()=>{
+  lyContainer.classList.add("show");
+});
+
+closeLyric.addEventListener("click",()=>{
+  lyContainer.classList.remove("show");
+});
+
 
 function random_bg_color(){
   let hex = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'];
@@ -605,9 +922,21 @@ function random_bg_color(){
   `;
 
   // Append the @keyframes atl animation to the stylesheet
+  const bgCSS = document.querySelector("#bgCSS");
   var style = document.createElement('style');
-  style.appendChild(document.createTextNode(keyframes));
-  document.head.appendChild(style);
+  if(bgCSS)
+  {
+    document.head.removeChild(bgCSS);  
+    style.setAttribute("id","bgCSS");
+    style.appendChild(document.createTextNode(keyframes));
+    document.head.appendChild(style);
+  }
+  else 
+  {
+    style.setAttribute("id","bgCSS");
+    style.appendChild(document.createTextNode(keyframes));
+    document.head.appendChild(style);
+  }
 }
 
 //play music function
@@ -617,9 +946,11 @@ function playMusic(){
   musicImg.classList.add('rotate');
   playPauseBtn.querySelector("i").innerText = "pause";
   mainAudio.play();
-  showCase.textContent = "Now Playing...";
+  showCase.textContent = "Now playing......";
+  
 }
 // Jan 6th
+
 musicImg.addEventListener("click", ()=>{
   const isMusicPlay = wrapper.classList.contains("paused");
   //if isPlayMusic is true then call pauseMusic else call playMusic
@@ -639,57 +970,56 @@ function pauseMusic(){
 
 let AorG = true, agcheck = [];
 function checkag(){
-    //check like
-    if (enterLikeArtists.length > 0 && enterLikeGenres.length === 0 && enterDislikesa.length === 0 && enterDislikesg.length === 0){
-      let artists = enterLikeArtists.split(',').map(a => a.trim().toLowerCase());
-      agcheck = allMusic.filter(la =>{
-        return artists.includes(la.artist.toLowerCase());
-      })
-    }
-    if (enterLikeArtists.length === 0 && enterLikeGenres.length > 0 && enterDislikesa.length === 0 && enterDislikesg.length === 0){
-      const genres = enterLikeGenres.split(',').map(g => g.trim().toLowerCase());
-      agcheck = allMusic.filter(lg => {
-        return genres.includes(lg.genre.toLowerCase());
-      })
-          
-    }
-    if (enterLikeArtists.length > 0 && enterLikeGenres.length > 0 && enterDislikesa.length === 0 && enterDislikesg.length === 0){
-    agcheck = allMusic.filter(ag => {
-      return enterLikeArtists.toLowerCase().includes(ag.artist.toLowerCase()) && enterLikeGenres.toLowerCase().includes(ag.genre.toLowerCase());
+  //check like
+  if (enterLikeArtists.length > 0 && enterLikeGenres.length === 0 && enterDislikesa.length === 0 && enterDislikesg.length === 0){
+    let artists = enterLikeArtists.split(',').map(a => a.trim().toLowerCase());
+    agcheck = allMusic.filter(la =>{
+      return artists.includes(la.artist.toLowerCase());
     })
-    }
-    if (enterLikeArtists.length > 0 && enterDislikesg.length > 0 && enterDislikesa.length === 0 && enterLikeGenres.length === 0){
-      agcheck = allMusic.filter(ladg => {
-        return enterLikeArtists.toLowerCase().includes(ladg.artist.toLowerCase()) && !(enterDislikesg.toLowerCase().includes(ladg.genre.toLowerCase()));
-      })
-    }
-    //check dislike
-    if (enterDislikesa.length > 0 && enterDislikesg.length > 0 && enterLikeArtists.length === 0 && enterLikeGenres.length === 0) {
-      agcheck = allMusic.filter(dag => {
-        return !(enterDislikesa.toLowerCase().includes(dag.artist.toLowerCase()) && enterDislikesg.toLowerCase().includes(dag.genre.toLowerCase()));
-      })
-      
-    }
-    if (enterDislikesa.length === 0 && enterDislikesg.length > 0 && enterLikeArtists.length === 0 && enterLikeGenres.length === 0) {
-      agcheck = allMusic.filter(dag => {
-        return !(enterDislikesg.toLowerCase().includes(dag.genre.toLowerCase()));
-      })
-    }
-    if (enterDislikesa.length > 0 && enterDislikesg.length === 0 && enterLikeArtists.length === 0 && enterLikeGenres.length === 0) {
-      agcheck = allMusic.filter(dag => {
-        return enterDislikesa.toLowerCase().includes(dag.artist.toLowerCase());
-      })
-    }  
-    if (enterDislikesa.length > 0 && enterLikeGenres.length > 0 && enterDislikesg.length === 0 && enterLikeArtists.length === 0) {
-      const likeGenres = enterLikeGenres.split(',').map(g => g.trim().toLowerCase());
-      agcheck = allMusic.filter(dalg => {
-        const songGenres = dalg.genre.toLowerCase().split(',');
-        return likeGenres.every(g => songGenres.includes(g)) && !(enterDislikesa.toLowerCase().includes(dalg.artist.toLowerCase()));
-      });
-    } 
-    if (enterLikeArtists.length === 0 && enterLikeGenres.length === 0 && enterDislikesa.length === 0 && enterDislikesg.length === 0){
-      agcheck = [];
-    }   
+  }
+  if (enterLikeArtists.length === 0 && enterLikeGenres.length > 0 && enterDislikesa.length === 0 && enterDislikesg.length === 0){
+    const genres = enterLikeGenres.split(',').map(g => g.trim().toLowerCase());
+    agcheck = allMusic.filter(lg => {
+      return genres.includes(lg.genre.toLowerCase());
+    })
+        
+  }
+  if (enterLikeArtists.length > 0 && enterLikeGenres.length > 0 && enterDislikesa.length === 0 && enterDislikesg.length === 0){
+  agcheck = allMusic.filter(ag => {
+    return enterLikeArtists.toLowerCase().includes(ag.artist.toLowerCase()) && enterLikeGenres.toLowerCase().includes(ag.genre.toLowerCase());
+  })
+  }
+  if (enterLikeArtists.length > 0 && enterDislikesg.length > 0 && enterDislikesa.length === 0 && enterLikeGenres.length === 0){
+    agcheck = allMusic.filter(ladg => {
+      return enterLikeArtists.toLowerCase().includes(ladg.artist.toLowerCase()) && !(enterDislikesg.toLowerCase().includes(ladg.genre.toLowerCase()));
+    })
+  }
+  //check dislike
+  if (enterDislikesa.length > 0 && enterDislikesg.length > 0 && enterLikeArtists.length === 0 && enterLikeGenres.length === 0) {
+    agcheck = allMusic.filter(dag => {
+      return !(enterDislikesa.toLowerCase().includes(dag.artist.toLowerCase()) && enterDislikesg.toLowerCase().includes(dag.genre.toLowerCase()));
+    })
+  }
+  if (enterDislikesa.length === 0 && enterDislikesg.length > 0 && enterLikeArtists.length === 0 && enterLikeGenres.length === 0) {
+    agcheck = allMusic.filter(dag => {
+      return !(enterDislikesg.toLowerCase().includes(dag.genre.toLowerCase()));
+    })
+  }
+  if (enterDislikesa.length > 0 && enterDislikesg.length === 0 && enterLikeArtists.length === 0 && enterLikeGenres.length === 0) {
+    agcheck = allMusic.filter(dag => {
+      return enterDislikesa.toLowerCase().includes(dag.artist.toLowerCase());
+    })
+  }  
+  if (enterDislikesa.length > 0 && enterLikeGenres.length > 0 && enterDislikesg.length === 0 && enterLikeArtists.length === 0) {
+    const likeGenres = enterLikeGenres.split(',').map(g => g.trim().toLowerCase());
+    agcheck = allMusic.filter(dalg => {
+      const songGenres = dalg.genre.toLowerCase().split(',');
+      return likeGenres.every(g => songGenres.includes(g)) && !(enterDislikesa.toLowerCase().includes(dalg.artist.toLowerCase()));
+    });
+  } 
+  if (enterLikeArtists.length === 0 && enterLikeGenres.length === 0 && enterDislikesa.length === 0 && enterDislikesg.length === 0){
+    agcheck = [];
+  }   
 }
 
 let isnextACalled = false, isnextGCalled = false; 
@@ -1511,8 +1841,6 @@ function prevMusic(){
       musicImg.classList.add('rotate');
       playMusic();
       playingSong();
-       
-       
       isprevGCalled = true;
 } 
     if (agcheck.length == 0 || (likedArtists.length == 0 && dislikedArtists.length == 0 && likedGenres.length == 0 && dislikedGenres.length == 0))
@@ -1525,12 +1853,7 @@ function prevMusic(){
     musicImg.classList.add('rotate');
     playMusic();
     playingSong();
-     
   }
-   
-   
-   
-   
   if (timeStamp != 0 ) {
     mainAudio.currentTime = 0;
     timeStamp = 0;
@@ -1550,78 +1873,90 @@ playPauseBtn.addEventListener("click", ()=>{
 
 //prev music button event
 prevBtn.addEventListener("click", ()=>{
-    if(mainAudio.currentTime > 5){
-      mainAudio.currentTime = 0; //setting audio current time to 0
-        isMusicPlay ? pauseMusic() : playMusic();
-      loadMusic(musicIndex); //calling loadMusic function with argument, in the argument there is a index of current song
-
-      playMusic(); //calling playMusic function
-    }
-    else{let getText = repeatBtn.innerText; //getting this tag innerText
-        switch(getText){
-        case "repeat":
-          prevMusic(); //calling prevMusic function
-          break;
-        case "repeat_one":
-          prevMusic(); //calling prevMusic function
-          break;
-        case "shuffle":
-          let randIndex = Math.floor((Math.random() * allMusic.length) + 1); //genereting random index/numb with max range of array length
-          let count = 0;
-          do{
-            randIndex = Math.floor((Math.random() * allMusic.length) + 1);
-          }while(musicIndex == randIndex && count < allMusic.length); //this loop run until the next random number won't be the same of current musicIndex
-          musicIndex = randIndex; //passing randomIndex to musicIndex
-          loadMusic(musicIndex);
-          if (timeStamp != 0 ) {
-            mainAudio.currentTime = 0;
-            timeStamp = 0;
-          }
-          count++;
-          musicImg.classList.remove('rotate');
-          void musicImg.offsetWidth;
-          musicImg.classList.add('rotate');
-          playMusic();
-          playingSong();
-          break;
-        }
+  if(mainAudio.currentTime > 5){
+    mainAudio.currentTime = 0; //setting audio current time to 0
+    const existingLyric = document.querySelector("#lyrics");
+    if(existingLyric){
+      for(let j=0;j<existingLyric.length;j++){
+        const lyricElem = document.getElementById(`lyric-${j}`);
+        const lyct = document.getElementById(`lyct-${j}`);
+        lyricElem.classList.remove('played');
+        lyct.classList.remove('played');
+      }
     
+      let empty = document.querySelectorAll(".empty");for(let i=0;i<empty.length;i++){lyricContainer.removeChild(empty[i]);}
+      let ScrollInterval;
+      ScrollInterval = setInterval(function(){
+        lyricContainer.scrollTop -= 50;
+        if (lyricContainer.scrollTop === 0){clearInterval(ScrollInterval);}
+      }, 40); 
     }
-  prevBtn.setAttribute("title", "Previous");
+
+  }
+  else{let getText = repeatBtn.innerText; //getting this tag innerText
+      switch(getText){
+      case "repeat":
+        prevMusic(); //calling prevMusic function
+        break;
+      case "repeat_one":
+        prevMusic(); //calling prevMusic function
+        break;
+      case "shuffle":
+        let randIndex = Math.floor((Math.random() * allMusic.length) + 1); //genereting random index/numb with max range of array length
+        let count = 0;
+        do{
+          randIndex = Math.floor((Math.random() * allMusic.length) + 1);
+        }while(musicIndex == randIndex && count < allMusic.length); //this loop run until the next random number won't be the same of current musicIndex
+        musicIndex = randIndex; //passing randomIndex to musicIndex
+        loadMusic(musicIndex);
+        if (timeStamp != 0 ) {
+          mainAudio.currentTime = 0;
+          timeStamp = 0;
+        }
+        count++;
+        musicImg.classList.remove('rotate');
+        void musicImg.offsetWidth;
+        musicImg.classList.add('rotate');
+        playMusic();
+        playingSong();
+        break;
+      }
+  }
+prevBtn.setAttribute("title", "Previous");
 });
 
 //next music button event
 nextBtn.addEventListener("click", ()=>{
 
 let getText = repeatBtn.innerText; //getting this tag innerText
-  switch(getText){
-    case "repeat":
-      nextMusic(); //calling nextMusic function
-      break;
-    case "repeat_one":
-      nextMusic(); //calling nextMusic function
-      break;
-    case "shuffle":
-      let randIndex = Math.floor((Math.random() * allMusic.length) + 1); //genereting random index/numb with max range of array length
-      let count = 0;
-      do{
-        randIndex = Math.floor((Math.random() * allMusic.length) + 1);
-      }while(musicIndex == randIndex && count < allMusic.length); //this loop run until the next random number won't be the same of current musicIndex
-      musicIndex = randIndex; //passing randomIndex to musicIndex
-      loadMusic(musicIndex);
-      if (timeStamp != 0 ) {
-        mainAudio.currentTime = 0;
-        timeStamp = 0;
-      }
-      count++;
-      musicImg.classList.remove('rotate');
-      void musicImg.offsetWidth;
-      musicImg.classList.add('rotate');
-      playMusic();
-      playingSong();
-      break;
-  }
-  nextBtn.setAttribute("title", "Next");
+switch(getText){
+  case "repeat":
+    nextMusic(); //calling nextMusic function
+    break;
+  case "repeat_one":
+    nextMusic(); //calling nextMusic function
+    break;
+  case "shuffle":
+    let randIndex = Math.floor((Math.random() * allMusic.length) + 1); //genereting random index/numb with max range of array length
+    let count = 0;
+    do{
+      randIndex = Math.floor((Math.random() * allMusic.length) + 1);
+    }while(musicIndex == randIndex && count < allMusic.length); //this loop run until the next random number won't be the same of current musicIndex
+    musicIndex = randIndex; //passing randomIndex to musicIndex
+    loadMusic(musicIndex);
+    if (timeStamp != 0 ) {
+      mainAudio.currentTime = 0;
+      timeStamp = 0;
+    }
+    count++;
+    musicImg.classList.remove('rotate');
+    void musicImg.offsetWidth;
+    musicImg.classList.add('rotate');
+    playMusic();
+    playingSong();
+    break;
+}
+nextBtn.setAttribute("title", "Next");
 });
 
 // update progress bar width according to music current time
@@ -1650,6 +1985,7 @@ mainAudio.addEventListener("timeupdate", (e)=>{
 
 // update playing song currentTime on according to the progress bar width
 progressArea.addEventListener("click", (e)=>{
+  const isMusicPlay = wrapper.classList.contains("paused");
   let progressWidth = progressArea.clientWidth; //getting width of progress bar
   let clickedOffsetX = e.offsetX; //getting offset x value
   let songDuration = mainAudio.duration; //getting song total duration
@@ -1657,6 +1993,7 @@ progressArea.addEventListener("click", (e)=>{
   mainAudio.currentTime = (clickedOffsetX / progressWidth) * songDuration;
   isMusicPlay ? playMusic() : pauseMusic();
   playingSong();
+  
 });
 
 //change loop, shuffle, repeat icon onclick
@@ -1686,12 +2023,11 @@ mainAudio.addEventListener("ended", ()=>{
   let getText = repeatBtn.innerText; //getting this tag innerText
   switch(getText){
     case "repeat":
-      nextMusic(); //calling nextMusic function
+      nextMusic();
       break;
     case "repeat_one":
-      mainAudio.currentTime = 0; //setting audio current time to 0
-      loadMusic(musicIndex); //calling loadMusic function with argument, in the argument there is a index of current song
-      playMusic(); //calling playMusic function
+      mainAudio.currentTime = 0;
+      playMusic();
       break;
     case "shuffle":
       let randIndex = Math.floor((Math.random() * allMusic.length) + 1); //genereting random index/numb with max range of array length
@@ -1724,7 +2060,6 @@ closemoreMusic.addEventListener("click", ()=>{
 });
 
 musicImg.addEventListener("click", ()=>{
-
     let getText = musicImg.innerText; //getting this tag innerText
       switch(getText){
         case "rotate":
@@ -1749,10 +2084,8 @@ function setVolume(){
 
 volumeProgress.oninput = function () {
     var value = (this.value - this.min) / (this.max - this.min) * 100
-
     this.style.background = 'linear-gradient(to left, #6b8dff 0%, #ff2a5f '
         + value + '%,  #fff ' + value + '%, #fff 100%)'
-    random_webkit_color()
 }
 
 //show volume control
@@ -1764,39 +2097,40 @@ volumeControl.addEventListener("click", ()=>{
 const ulTag = wrapper.querySelector("ul");
 // let create li tags according to array length for list
 for (let i = 0; i < allMusic.length; i++) {
-  mainAudio.src = `static/sla/songs/${allMusic[i].src}.mp3`;
-  jsmediatags.read(mainAudio.src, {
-    onSuccess: function(tag) {
-      let liTag = `<li li-index="${i + 1}">
+  //let's pass the song name, artist from the array
+  let liTag = `<li li-index="${i + 1}">
                 <div class="roww">
-                  <span id="scrolla">${tag.tags.title}</span>
-                  <p id="scrollb">${tag.tags.artist}</p>
-                  <p id="scrollb">${tag.tags.genre}</p>
+                  <span id="scrolla">${allMusic[i].name}</span>
+                  <p id="tcom" id="scrollb"></p>
+                  <p id="scrollb">${allMusic[i].genre}</p>
                 </div>
                 <span id="${allMusic[i].src}" class="audio-duration"></span>
                 <audio class="${allMusic[i].src}" src="static/sla/songs/${allMusic[i].src}.mp3"></audio>
               </li>`;
-      ulTag.insertAdjacentHTML("beforeend", liTag); //inserting the li inside ul tag
-      let liAudioDuartionTag = ulTag.querySelector(`#${allMusic[i].src}`);
-      let liAudioTag = ulTag.querySelector(`.${allMusic[i].src}`);
-      liAudioTag.addEventListener("loadeddata", ()=>{
-        let duration = liAudioTag.duration;
-        let totalMin = Math.floor(duration / 60);
-        let totalSec = Math.floor(duration % 60);
-        if(totalSec < 10){ //if sec is less than 10 then add 0 before it
-          totalSec = `0${totalSec}`;
-        };
-        liAudioDuartionTag.innerText = `${totalMin}:${totalSec}`; //passing total duation of song
-        liAudioDuartionTag.setAttribute("t-duration", `${totalMin}:${totalSec}`); //adding t-duration attribute with total duration value
-      });
-
-    },
-    onError: function(error) {
-      console.log(error);
+  ulTag.insertAdjacentHTML("beforeend", liTag); //inserting the li inside ul tag
+  let liAudioDuartionTag = ulTag.querySelector(`#${allMusic[i].src}`);
+  let liAudioTag = ulTag.querySelector(`.${allMusic[i].src}`);
+  liAudioTag.addEventListener("loadeddata", ()=>{
+    let duration = liAudioTag.duration;
+    let totalMin = Math.floor(duration / 60);
+    let totalSec = Math.floor(duration % 60);
+    if(totalSec < 10){ //if sec is less than 10 then add 0 before it
+      totalSec = `0${totalSec}`;
+    };
+    liAudioDuartionTag.innerText = `${totalMin}:${totalSec}`; //passing total duation of song
+    liAudioDuartionTag.setAttribute("t-duration", `${totalMin}:${totalSec}`); //adding t-duration attribute with total duration value
+    let tcom = ulTag.querySelector(`li[li-index="${i + 1}"] #tcom`);
+    if (allMusic[i].TCOM) {
+      tcom.innerText = `${allMusic[i].artist}, ${allMusic[i].TCOM}`;
+    } else {
+      tcom.innerText = `${allMusic[i].artist}`;
     }
   });
-
 }
+
+
+
+
 
 //play particular song from the list onclick of li tag
 function playingSong(){
@@ -1814,14 +2148,18 @@ function playingSong(){
     //if the li tag index is equal to the musicIndex then add playing class in it
     if(allLiTag[j].getAttribute("li-index") == musicIndex){
       allLiTag[j].classList.add("playing");
-      if (wrapper.classList.contains("paused")){
-        audioTag.innerText = "Playing...";
+      if(wrapper.classList.contains("paused")){
+        audioTag.innerText = "Now playing...";
       }
     }
 
     allLiTag[j].setAttribute("onclick", "clicked(this)");
   }
+  
 }
+
+
+
 
 //particular li clicked function
 function clicked(element){
@@ -1831,6 +2169,7 @@ function clicked(element){
   musicImg.classList.remove('rotate');
   void musicImg.offsetWidth;
   musicImg.classList.add('rotate');
+  mainAudio.currentTime = 0;
   playMusic();
   playingSong();
 }
@@ -1845,7 +2184,6 @@ closeOptions.addEventListener("click", ()=>{
 
 function random_webkit_color() {
   let a, hex = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e'];
-
   function populate(a) {
       for (let i = 0; i < 6; i++) {
           let x = Math.round(Math.random() * 14);
@@ -1857,7 +2195,6 @@ function random_webkit_color() {
   let Color1 = populate('#');
   let Color2 = populate('#');
   var angle = 'to left';
-
   let gradient = 'linear-gradient(' + angle + ',' + Color1 + ', ' + Color2 + ")";
   volumeProgress.style.background = gradient;
 }
@@ -1867,5 +2204,52 @@ opVolume.addEventListener("click", ()=>{
 });
 
 
+let isDragging = false;
+progressArea.addEventListener('mousedown', () => {
+  isDragging = true;
+});
+progressArea.addEventListener('mouseleave', () => {
+  isDragging = false;
+});
+progressArea.addEventListener('mousemove', (e) => {
+  if (isDragging) {
+    const xPos = e.clientX - progressArea.getBoundingClientRect().left;
+    const percent = xPos / progressArea.offsetWidth;
+    progressBar.style.width = `${percent * 100}%`;
+  }
+});
 
+let MisDragging = false;
+progressArea.addEventListener('touchstart', () => {
+  MisDragging = true;
+});
+progressArea.addEventListener('touchend', () => {
+  MisDragging = false;
+});
+progressArea.addEventListener('touchmove', (e) => {
+  if (MisDragging) {
+    const xPos = e.touches[0].clientX - progressArea.getBoundingClientRect().left;
+    const percent = xPos / progressArea.offsetWidth;
+    progressBar.style.width = `${percent * 100}%`;
+  }
+});
 
+changeProgress.addEventListener("click", ()=>{
+  let ToChange = prompt("Enter your desired time stamp, format - mm:ss or number ");
+  function convertTimeToSeconds() {
+    if (!isNaN(ToChange)) { // check if ToChange is a single integer
+      ToChange = parseFloat(ToChange, 0) || 0;
+    } 
+    if (/^\d+(\.\d+)?:\d+(\.\d+)?$/.test(ToChange)) {
+    const [minutesStr, secondsStr] = ToChange.split(":");
+    ToChange = Math.floor(minutesStr * 60) + Math.floor(secondsStr);
+    
+    }
+  }
+  if((!isNaN(ToChange)) || (/^\d+(\.\d+)?:\d+(\.\d+)?$/.test(ToChange))){
+    convertTimeToSeconds();
+    mainAudio.currentTime = ToChange;
+    
+  }
+  else{alert("Invalid format. Please input again");}
+})
