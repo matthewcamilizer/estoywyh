@@ -369,6 +369,7 @@ window.addEventListener("load", () => {
     
   }
   history.replaceState('', '', `#${allMusic[musicIndex - 1 ].name}`);
+  playingSong();
 });
 
 // ZZY required
