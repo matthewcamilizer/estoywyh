@@ -33,6 +33,7 @@ showDla = wrapper.querySelector(".showdlat"),
 resetDlartist = wrapper.querySelector(".reset_dlartists"),
 resetDlgenre = wrapper.querySelector(".reset_dlgenres"),
 setCanvas = document.querySelector("#video-background"),
+searchMusic = document.querySelector("#search"),
 
 prevBtn = wrapper.querySelector("#prev"),
 nextBtn = wrapper.querySelector("#next"),
@@ -2247,3 +2248,18 @@ changeProgress.addEventListener("click", ()=>{
   }
   else{alert("格式输错啦!");}
 })
+
+searchMusic.addEventListener("click", ()=>{
+  let ATS = [];
+  for (let i = 0; i < allMusic.length; i++){
+    ATS.push(allMusic[i].name.toLowerCase());
+  }
+  let searchs = prompt("输入你想听的歌曲, 英文不区分大小写: ");
+  let search = allMusic.find((get)=>get.name.toLowerCase() === searchs.toLowerCase());
+  if (search)
+  { wrapper.classList.remove("paused");
+  playPauseBtn.querySelector("i").innerText = "play_arrow";
+  musicImg.classList.remove('rotate');
+  musicIndex = allMusic.indexOf(search) + 1;
+  loadMusic(musicIndex);}
+  else{alert("没有这首歌");}})
