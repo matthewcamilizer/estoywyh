@@ -363,7 +363,6 @@ window.addEventListener("load", () => {
     }
     //refresh without hash
     history.replaceState(null, null, ' '); // remove the hash from the URL
-
   } else { // no hash present, so load default musicIndex
     loadMusic(musicIndex); 
     
@@ -588,9 +587,8 @@ function loadMusic(indexNumb) {
       musicName.innerText = tag.tags.title;
       musicGenre.innerText = tag.tags.genre;  
       //dynamic title while playing
-      if(tag.tags.TCOM){dynamicTitle.textContent =tag.tags.artist+`, `+tag.tags.TCOM.data+` - `+tag.tags.title;musicArtist.innerText = tag.tags.artist+`, `+tag.tags.TCOM.data;}
-      else{dynamicTitle.textContent =tag.tags.artist + ` - ` + tag.tags.title;musicArtist.innerText = tag.tags.artist;}
-      lyricTitle.textContent =tag.tags.artist + ` - ` + tag.tags.title; 
+      if(tag.tags.TCOM){lyricTitle.textContent=tag.tags.artist+`, `+tag.tags.TCOM.data+` - `+tag.tags.title;dynamicTitle.textContent=tag.tags.artist+`, `+tag.tags.TCOM.data+` - `+tag.tags.title;musicArtist.innerText=tag.tags.artist+`, `+tag.tags.TCOM.data;}
+      else{lyricTitle.textContent =tag.tags.artist + ` - ` + tag.tags.title;dynamicTitle.textContent =tag.tags.artist + ` - ` + tag.tags.title;musicArtist.innerText = tag.tags.artist;} 
       // Set the image source for your music player
       var image = tag.tags.picture;
       if (image) {
@@ -794,11 +792,12 @@ function loadMusic(indexNumb) {
         if (ikun.length > 0) {
          for (let i=0;i<ikun.length;i++){
           ikun[i].addEventListener("click", () => {
-            musicIndex = 22;
             wrapper.classList.remove("paused");
             playPauseBtn.querySelector("i").innerText = "play_arrow";
             musicImg.classList.remove('rotate');
-            loadMusic(22);
+            const song = allMusic.find((song) => song.name.toLowerCase() === '只因你太美');
+            loadMusic(allMusic.indexOf(song) + 1);
+            musicIndex = allMusic.indexOf(song) + 1;
             playingSong();
           });
         }
@@ -2102,7 +2101,7 @@ for (let i = 0; i < allMusic.length; i++) {
   let liTag = `<li li-index="${i + 1}">
                 <div class="roww">
                   <span id="scrolla">${allMusic[i].name}</span>
-                  <p id="tcom" id="scrollb"></p>
+                  <p id="tcom" id="scrollb">${allMusic[i].artist}</p>
                   <p id="scrollb">${allMusic[i].genre}</p>
                 </div>
                 <span id="${allMusic[i].src}" class="audio-duration"></span>
@@ -2120,12 +2119,6 @@ for (let i = 0; i < allMusic.length; i++) {
     };
     liAudioDuartionTag.innerText = `${totalMin}:${totalSec}`; //passing total duation of song
     liAudioDuartionTag.setAttribute("t-duration", `${totalMin}:${totalSec}`); //adding t-duration attribute with total duration value
-    let tcom = ulTag.querySelector(`li[li-index="${i + 1}"] #tcom`);
-    if (allMusic[i].TCOM) {
-      tcom.innerText = `${allMusic[i].artist}, ${allMusic[i].TCOM}`;
-    } else {
-      tcom.innerText = `${allMusic[i].artist}`;
-    }
   });
 }
 

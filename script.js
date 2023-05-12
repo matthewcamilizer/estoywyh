@@ -60,7 +60,7 @@ let musicIndex = Math.floor((Math.random() * allMusic.length) + 1);
 isMusicPaused = true;
 shareButton.addEventListener("click",()=>{
   navigator.clipboard.writeText(window.location.href + "&t=" + mainAudio.currentTime);
-  alert("link has been copied to clip board");
+  alert("Link has been copied!");
 })
 
 //const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
@@ -398,7 +398,7 @@ let enterLikeArtists = [], enterLikeGenres = [], oastoredValue = [], ogstoredVal
 let enterDislikesa = [], enterDislikesg = [];
 
 onlyArtist.addEventListener("click", ()=>{
-  enterLikeArtists = prompt("Enter your liked singer, separated by a comma, not case sensitive", oastoredValue);
+  enterLikeArtists = prompt("Enter your desired singers, separated by a comma and not case sensitive.", oastoredValue);
   if (enterLikeArtists) {
     oastoredValue = enterLikeArtists;
     likedArtists = enterLikeArtists.split(',').map(artist => artist.trim());
@@ -418,7 +418,7 @@ onlyArtist.addEventListener("click", ()=>{
   }
 });
 muteArtist.addEventListener("click",()=>{
-  enterDislikesa = prompt("Enter your disliked singer, separated by a comma, not case sensitive", nastoredValue);
+  enterDislikesa = prompt("Enter your hated singers, separated by a comma and not case sensitive.", nastoredValue);
   if (enterDislikesa) {
     nastoredValue = enterDislikesa;
     dislikedArtists = enterDislikesa.split(',').map(artist => artist.trim());
@@ -435,7 +435,7 @@ muteArtist.addEventListener("click",()=>{
 })
 
 onlyGenre.addEventListener("click", ()=>{
-  enterLikeGenres = prompt("Enter your liked genre, separated by a comma, not case sensitive", ogstoredValue);
+  enterLikeGenres = prompt("Enter your desired genres, separated by a comma and not case sensitive.", ogstoredValue);
   if (enterLikeGenres) {
     ogstoredValue = enterLikeGenres;
     likedGenres = enterLikeGenres.split(',').map(genre => genre.trim());
@@ -455,7 +455,7 @@ onlyGenre.addEventListener("click", ()=>{
   }
 })
 muteGenre.addEventListener("click",()=>{
-  enterDislikesg = prompt("Enter your disliked genre, separated by a comma, not case sensitive", ngstoredValue);
+  enterDislikesg = prompt("Enter your hated genres, separated by a comma and not case sensitive.", ngstoredValue);
   if (enterDislikesg) {
     ngstoredValue = enterDislikesg;
     dislikedGenres = enterDislikesg.split(',').map(genre => genre.trim());
@@ -477,10 +477,10 @@ showLa.addEventListener("click", ()=>{
     for (let i = 0; i < likedArtists.length; i++){
       ATA.push(likedArtists[i]);
     }
-    alert('These are your liked singer, separated by a comma and a space:\n\n' + ATA.join(', '));
+    alert('These are your desired singers, separated by a comma and a space:\n\n' + ATA.join(', '));
   }
   else {
-    alert("You did not enter liked singer");
+    alert("You did not enter desired singer ");
   }
 })
 showDla.addEventListener("click", ()=>{
@@ -489,10 +489,10 @@ showDla.addEventListener("click", ()=>{
     for (let i = 0; i < dislikedArtists.length; i++){
       ATA.push(dislikedArtists[i]);
     }
-    alert('There are your disliked singer, separated by a comma and a space:\n\n' + ATA.join(', '));
+    alert('These are your hated singer , separated by a comma and a space:\n\n' + ATA.join(', '));
   }
   else {
-    alert("You did not enter disliked singer");
+    alert("You did not enter hated singer ");
   }
 })
 
@@ -502,10 +502,10 @@ showLg.addEventListener("click",()=>{
     for (let i = 0; i < likedGenres.length; i++){
       ATA.push(likedGenres[i]);
     }
-    alert('There are your liked genres, separated by a comma and a space:\n\n' + ATA.join(', '));
+    alert('These are your desired genre , separated by a comma and a space:\n\n' + ATA.join(', '));
   }
   else {
-    alert("You did not enter liked genres");
+    alert("You did not enter desired genre ");
   }
 })
 showDlg.addEventListener("click",()=>{
@@ -514,10 +514,10 @@ showDlg.addEventListener("click",()=>{
     for (let i = 0; i < dislikedGenres.length; i++){
       ATA.push(dislikedGenres[i]);
     }
-    alert('There are your disliked genres, separated by a comma and a space:\n\n' + ATA.join(', '));
+    alert('These are your hated genre , separated by a comma and a space:\n\n' + ATA.join(', '));
   }
   else {
-    alert("You did not enter disliked genre");
+    alert("You did not enter hated genre ");
   }
 })
 
@@ -526,10 +526,10 @@ resetLartist.addEventListener("click",()=>{
     likedArtists = [];
     oastoredValue = [];
     enterLikeArtists = [];
-    alert("You have reset liked singer!");
+    alert("You have reset desired singer !");
   }
   else{
-    alert("You did not enter liked singer");
+    alert("You did not enter desired singer ");
   }
 })
 resetDlartist.addEventListener("click",()=>{
@@ -537,10 +537,10 @@ resetDlartist.addEventListener("click",()=>{
     dislikedArtists = [];
     nastoredValue = [];
     enterDislikesa = [];
-    alert("You have reset disliked singer!");
+    alert("You have reset hated singer !");
   }
   else{
-    alert("You did not enter disliked singer");
+    alert("You did not enter hated singer ");
   }
 })
 
@@ -549,10 +549,10 @@ resetLgenre.addEventListener("click",()=>{
     likedGenres = [];
     ogstoredValue = [];  
     enterLikeGenres = [];
-    alert("You have reset liked genre!");
+    alert("You have reset desired genre !");
   }
   else{
-    alert("You did not enter liked genre");
+    alert("You did not enter desired genre ");
   }
 })
 resetDlgenre.addEventListener("click",()=>{
@@ -560,10 +560,10 @@ resetDlgenre.addEventListener("click",()=>{
     dislikedGenres = [];
     ngstoredValue = [];
     enterDislikesg = [];
-    alert("You have reset disliked genre!");
+    alert("You have reset hated genre !");
   }
   else{
-    alert("You did not enter disliked genre");
+    alert("You did not enter hated genre ");
   }
 })
 
@@ -588,9 +588,8 @@ function loadMusic(indexNumb) {
       musicName.innerText = tag.tags.title;
       musicGenre.innerText = tag.tags.genre;  
       //dynamic title while playing
-      if(tag.tags.TCOM){dynamicTitle.textContent =tag.tags.artist+`, `+tag.tags.TCOM.data+` - `+tag.tags.title;musicArtist.innerText = tag.tags.artist+`, `+tag.tags.TCOM.data;}
-      else{dynamicTitle.textContent =tag.tags.artist + ` - ` + tag.tags.title;musicArtist.innerText = tag.tags.artist;}
-      lyricTitle.textContent =tag.tags.artist + ` - ` + tag.tags.title; 
+      if(tag.tags.TCOM){lyricTitle.textContent=tag.tags.artist+`, `+tag.tags.TCOM.data+` - `+tag.tags.title;dynamicTitle.textContent=tag.tags.artist+`, `+tag.tags.TCOM.data+` - `+tag.tags.title;musicArtist.innerText=tag.tags.artist+`, `+tag.tags.TCOM.data;}
+      else{lyricTitle.textContent =tag.tags.artist + ` - ` + tag.tags.title;dynamicTitle.textContent =tag.tags.artist + ` - ` + tag.tags.title;musicArtist.innerText = tag.tags.artist;} 
       // Set the image source for your music player
       var image = tag.tags.picture;
       if (image) {
@@ -786,23 +785,24 @@ function loadMusic(indexNumb) {
         <img class=doge src='static/sla/jjs/dogee.webp' />`,`<a class="dota" id="wt" href="https://dota2.com">全世界都对Dead Game这货又爱又恨</a>
         <img class=doge src='static/sla/jjs/dota2.jpg' />`,`<a class="what" id="wt" href="https://twitter.com/elonmusk">别看了我只是个打酱油的</a>
         <img class=doge src='static/sla/jjs/doge.jpg' />`,`<a class="gta" id="wt" href="https://rockstargames.com/gta-v">Adventure Awaits</a>
-        <img class=doge src='static/sla/jjs/gta.jpg' />`,`<a class="gta" id="ikun">听说你想看唱跳rap篮球?</a>
+        <img class=doge src='static/sla/jjs/gta.jpg' />`,`<a class="gta" id="ikun">Who the hell is this?</a>
         <video class=ikun autoplay muted loop src="static/sla/canvas/music-122.mp4"></video>`] 
         lyricContainer.insertAdjacentHTML("beforeend",what[Math.floor(Math.random()*what.length)]);
         lyricThreshold.style.width= "100%";
         let ikun = document.querySelectorAll("#ikun");
         if (ikun.length > 0) {
-         for (let i=0;i<ikun.length;i++){
-          ikun[i].addEventListener("click", () => {
-            musicIndex = 22;
-            wrapper.classList.remove("paused");
-            playPauseBtn.querySelector("i").innerText = "play_arrow";
-            musicImg.classList.remove('rotate');
-            loadMusic(22);
-            playingSong();
-          });
-        }
-        }
+          for (let i=0;i<ikun.length;i++){
+           ikun[i].addEventListener("click", () => {
+             wrapper.classList.remove("paused");
+             playPauseBtn.querySelector("i").innerText = "play_arrow";
+             musicImg.classList.remove('rotate');
+             const song = allMusic.find((song) => song.name.toLowerCase() === '只因你太美');
+             loadMusic(allMusic.indexOf(song) + 1);
+             musicIndex = allMusic.indexOf(song) + 1;
+             playingSong();
+           });
+         }
+         }
       });
     }
   });
@@ -2102,7 +2102,7 @@ for (let i = 0; i < allMusic.length; i++) {
   let liTag = `<li li-index="${i + 1}">
                 <div class="roww">
                   <span id="scrolla">${allMusic[i].name}</span>
-                  <p id="tcom" id="scrollb"></p>
+                  <p id="tcom" id="scrollb">${allMusic[i].artist}</p>
                   <p id="scrollb">${allMusic[i].genre}</p>
                 </div>
                 <span id="${allMusic[i].src}" class="audio-duration"></span>
@@ -2120,12 +2120,6 @@ for (let i = 0; i < allMusic.length; i++) {
     };
     liAudioDuartionTag.innerText = `${totalMin}:${totalSec}`; //passing total duation of song
     liAudioDuartionTag.setAttribute("t-duration", `${totalMin}:${totalSec}`); //adding t-duration attribute with total duration value
-    let tcom = ulTag.querySelector(`li[li-index="${i + 1}"] #tcom`);
-    if (allMusic[i].TCOM) {
-      tcom.innerText = `${allMusic[i].artist}, ${allMusic[i].TCOM}`;
-    } else {
-      tcom.innerText = `${allMusic[i].artist}`;
-    }
   });
 }
 
@@ -2236,7 +2230,7 @@ progressArea.addEventListener('touchmove', (e) => {
 });
 
 changeProgress.addEventListener("click", ()=>{
-  let ToChange = prompt("Enter your desired time stamp, format - mm:ss or number ");
+  let ToChange = prompt("Enter your desired time stamp. Format - mm:ss or number");
   function convertTimeToSeconds() {
     if (!isNaN(ToChange)) { // check if ToChange is a single integer
       ToChange = parseFloat(ToChange, 0) || 0;
