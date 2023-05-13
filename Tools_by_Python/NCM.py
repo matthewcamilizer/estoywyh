@@ -21,7 +21,7 @@ while True:
             song_instance = getSong.get_song_instance(Songreq)
             print('URL: {}\n'.format(Songreq))
             songs.append(song_instance)
-        print("\nLoad finished and the songs are\n")
+        print("\nCongrat! All of the songs are here!\n")
         for r in songs:
             print(r)
         break
