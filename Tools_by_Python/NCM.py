@@ -26,7 +26,7 @@ while True:
             print(r)
         break
     except:
-        print("\nError while loading and the {} songs are\n".format(len(songs)))
+        print("\nError while loading and the {} of {} songs are\n".format(len(songs),len(tracks)))
         for r in songs:
             print(r)
         break
