@@ -12,19 +12,21 @@ title = json.loads(requests.get(req).text)['playlist']['name']
 author = json.loads(requests.get(req).text)['playlist']['creator']['nickname']
 
 songs = []
-print("The playlist is: {} by {}\nAnd the number of total song is: {}".format(title,author,len(tracks)))
+print("The playlist is: {} by {}\nAnd there are {} songs\n".format(title,author,len(tracks)))
 while True:
     try:
-        for t in tracks:
+        for count, t in enumerate(tracks, start=1):
             Songreq = "https://music.163.com/song?id={}".format(t['id'])
+            print('Number: {}'.format(count))
             song_instance = getSong.get_song_instance(Songreq)
+            print('URL: {}\n'.format(Songreq))
             songs.append(song_instance)
-        print("load finished and the songs are")
+        print("\nCongrat! All of the songs are here!\n")
         for r in songs:
             print(r)
         break
     except:
-        print("error while loading and the songs are")
+        print("\nError while loading and the {} of {} songs are\n".format(len(songs),len(tracks)))
         for r in songs:
             print(r)
         break
