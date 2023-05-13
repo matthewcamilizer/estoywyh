@@ -1,0 +1,14 @@
+import json
+
+# Sample array in JavaScript format
+js_array = '[{"artist":"a","src":"aa","img":"aaa","song":"a"},{"artist":"b","src":"bb","img":"bbb","song":"b"},{"artist":"abc","src":"acb","img":"abcd","song":"c"}]'
+
+# Parse the JavaScript array as a JSON string
+json_str = json.loads(js_array)
+
+# Convert the JSON string into a Python list
+py_list = json.loads(json_str)
+
+# Now you can use the Python list and perform the desired operations on it
+for item in py_list:
+    print(item['artist'], item['src'], item['img'], item['song'])
