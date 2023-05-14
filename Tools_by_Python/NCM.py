@@ -1,6 +1,7 @@
-import json, requests
+import json, requests, os
 from NCMGet import getSong
 
+SavePath = input("Enter the path to save logs\nLeave blank if need no logs: ")
 APIPath = "https://music.163.com/api/v3/playlist/detail?id="
 reqAPI = input(r"enter your playlist here: ")
 APIBase = reqAPI.find("playlist?id=")+len("playlist?id=")
@@ -13,7 +14,7 @@ author = json.loads(requests.get(req).text)['playlist']['creator']['nickname']
 
 songs = []
 FailedLoad =[]
-print("\nThe playlist is: {} by {}\n\n{} songs in it\n".format(title,author,len(tracks)))
+print("\nThe playlist is: {} by {}\n\n{} songs\n".format(title,author,len(tracks)))
 
 for count, t in enumerate(tracks, start=1):
     Songreq = "https://music.163.com/song?id={}".format(t['id'])
@@ -32,8 +33,14 @@ if(len(songs) == len(tracks)):
 else:
     print("\nPartly loaded. And {} of {} songs are:\n".format(len(songs), len(tracks)))
 for r in songs:
+    if SavePath:
+        with open(os.path.join(SavePath, 'NCM exported.log'), 'a', encoding='utf-8') as e:
+            e.write('\n'+r+'\n')
     print(r)
 if FailedLoad:
     print("the failed URLs are here.")
-    for ct, f in enumerate(FailedLoad, start=1):
-        print("\n{}:\n{}".format(ct, f))
+    if SavePath:
+        for ct, f in enumerate(FailedLoad, start=1):
+            with open(os.path.join(SavePath, 'NCM failed export.log'), 'a', encoding='utf-8') as e:
+                e.write('\n'+f+'\n')
+    print("\n{}:\n{}".format(ct, f))
