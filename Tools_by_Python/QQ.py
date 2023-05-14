@@ -20,21 +20,28 @@ title = json.loads(requests.get(req).text)['data']['cdlist'][0]['dissname']
 author = json.loads(requests.get(req).text)['data']['cdlist'][0]['nick']
 
 songs = []
+FailedLoad =[]
 print("The playlist is {} by {}\nAnd there are {} songs\n".format(title,author,len(tracks)))
-while True:
+
+for count, t in enumerate(tracks, start=1):
+    Songreq = "https://y.qq.com/n/ryqq/songDetail/{}".format(t['file']['media_mid'])
+    print('Number: {}'.format(count))
     try:
-        for count, t in enumerate(tracks, start=1):
-            Songreq = "https://y.qq.com/n/ryqq/songDetail/{}".format(t['file']['media_mid'])
-            print('Number: {}'.format(count))
-            song_instance = getSong.get_song_instance(Songreq)
-            print('URL: {}\n'.format(Songreq))
-            songs.append(song_instance)
-        print("\nCongrat! All of the songs are here!\n")
-        for r in songs:
-            print(r)
-        break
+        song_instance = getSong.get_song_instance(Songreq)
     except:
-        print("\nError while loading and the {} of {} songs are\n".format(len(songs),len(tracks)))
-        for r in songs:
-            print(r)
-        break
+        print("Load song {} failed!".format(t['name']))
+        FailedLoad.append({"number":count,"song":t['name'],"artist":t['singer'][0]['name'], "URL":Songreq})
+        continue
+    print('URL: {}\n'.format(Songreq))
+    songs.append(song_instance)
+if(len(songs) == len(tracks)):
+    print("\nCongrat! All of the songs are here!\n")
+else:
+    print("\nPartly loaded. And the {} songs are:\n".format(len(songs)))
+for r in songs:
+    print(r)
+if FailedLoad:
+    print("\nthe following songs load failed: ")
+    for f in FailedLoad:
+        print("Number: {}\n{} - {}\nURL: {}".format(f["number"],f["artist"],f["song"],f["URL"] ))
+
