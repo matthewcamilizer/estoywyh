@@ -35,7 +35,7 @@ for count, t in enumerate(tracks, start=1):
     print('URL: {}\n'.format(Songreq))
     songs.append(song_instance)
 if(len(songs) == len(tracks)):
-    print("\nCongrats! All of the songs are here!\n")
+    print("\nCongrats! All of songs are here!")
 else:
     print("\nPartly loaded. And the {} songs are:\n".format(len(songs)))
 for r in songs:
