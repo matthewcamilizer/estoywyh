@@ -24,7 +24,7 @@ FailedLoad =[]
 print("The playlist is {} by {}\nAnd there are {} songs\n".format(title,author,len(tracks)))
 
 for count, t in enumerate(tracks, start=1):
-    Songreq = "https://y.qq.com/n/ryqq/songDetail/{}".format(t['file']['media_mid'])
+    Songreq = "https://y.qq.com/n/ryqq/songDetail/{}".format(t['mid'])
     print('Number: {}'.format(count))
     try:
         song_instance = getSong.get_song_instance(Songreq)
@@ -35,7 +35,7 @@ for count, t in enumerate(tracks, start=1):
     print('URL: {}\n'.format(Songreq))
     songs.append(song_instance)
 if(len(songs) == len(tracks)):
-    print("\nCongrat! All of the songs are here!\n")
+    print("\nCongrats! All of the songs are here!\n")
 else:
     print("\nPartly loaded. And the {} songs are:\n".format(len(songs)))
 for r in songs:
