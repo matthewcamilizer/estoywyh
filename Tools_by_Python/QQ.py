@@ -29,7 +29,7 @@ for count, t in enumerate(tracks, start=1):
     try:
         song_instance = getSong.get_song_instance(Songreq)
     except:
-        print("Load song {} failed!".format(t['name']))
+        print("Failed to load {} - {}".format(t['singer'][0]['name'], t['name']))
         FailedLoad.append({"number":count,"song":t['name'],"artist":t['singer'][0]['name'], "URL":Songreq})
         continue
     print('URL: {}\n'.format(Songreq))
@@ -37,7 +37,7 @@ for count, t in enumerate(tracks, start=1):
 if(len(songs) == len(tracks)):
     print("\nCongrats! All of songs are here!")
 else:
-    print("\nPartly loaded. And the {} songs are:\n".format(len(songs)))
+    print("\nPartly loaded. And {} of {} songs are:\n".format(len(songs), len(tracks)))
 for r in songs:
     print(r)
 if FailedLoad:
