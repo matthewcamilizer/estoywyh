@@ -1,7 +1,8 @@
-import json, requests, re
+import json, requests, re, os
 from QQGet import getSong
 
 url = input(r'Enter URL: ')
+SavePath = input("Enter the path to save logs\nLeave blank if need no logs: ")
 getAPI=''
 pattern = r"id=(.+)"
 if "u?__=" in url:
@@ -39,9 +40,15 @@ if(len(songs) == len(tracks)):
 else:
     print("\nPartly loaded. And {} of {} songs are:\n".format(len(songs), len(tracks)))
 for r in songs:
+    if SavePath:
+        with open(os.path.join(), 'a', encoding='utf-8') as s:
+            s.write('\n'+r+'n')
     print(r)
 if FailedLoad:
     print("\nthe following songs load failed: ")
+    if SavePath:
+        with open(os.path.join(), 'a', encoding='utf-8') as f:
+            f.write('\n'+r+'n')
     for f in FailedLoad:
         print("Number: {}\n{} - {}\nURL: {}".format(f["number"],f["artist"],f["song"],f["URL"] ))
 
