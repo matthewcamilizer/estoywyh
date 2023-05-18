@@ -1,5 +1,10 @@
-import json, requests, os
+import json, requests, os, datetime
 from NCMGet import getSong
+
+
+current_datetime = datetime.datetime.now()
+ff=current_datetime.strftime('%Y-%m-%d')
+
 
 SavePath = input("Enter the path to save logs\nLeave blank if need no logs: ")
 APIPath = "https://music.163.com/api/v3/playlist/detail?id="
@@ -34,13 +39,13 @@ else:
     print("\nPartly loaded. And {} of {} songs are:\n".format(len(songs), len(tracks)))
 for r in songs:
     if SavePath:
-        with open(os.path.join(SavePath, 'NCM exported.log'), 'a', encoding='utf-8') as e:
+        with open(os.path.join(SavePath, f"NCM exported {ff}.log"), 'a', encoding='utf-8') as e:
             e.write('\n'+r+'\n')
     print(r)
 if FailedLoad:
     print("the failed URLs are here.")
     if SavePath:
         for ct, f in enumerate(FailedLoad, start=1):
-            with open(os.path.join(SavePath, 'NCM failed export.log'), 'a', encoding='utf-8') as e:
+            with open(os.path.join(SavePath, f"NCM failed export {ff}.log"), 'a', encoding='utf-8') as e:
                 e.write('\n'+f+'\n')
     print("\n{}:\n{}".format(ct, f))

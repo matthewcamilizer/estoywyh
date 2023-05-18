@@ -1,5 +1,10 @@
-import json, requests, re, os
+import json, requests, re, os, datetime
 from QQGet import getSong
+
+
+current_datetime = datetime.datetime.now()
+ff=current_datetime.strftime('%Y-%m-%d')
+
 
 url = input(r'Enter URL: ')
 SavePath = input("Enter the path to save logs\nLeave blank if need no logs: ")
@@ -41,14 +46,14 @@ else:
     print("\nPartly loaded. And {} of {} songs are:\n".format(len(songs), len(tracks)))
 for r in songs:
     if SavePath:
-        with open(os.path.join(SavePath, 'QQ exported.log'), 'a', encoding='utf-8') as s:
-            s.write('\n'+r+'n')
+        with open(os.path.join(SavePath, f"QQ exported {ff}.log"), 'a', encoding='utf-8') as s:
+            s.write('\n'+r+'\n')
     print(r)
 if FailedLoad:
     print("\nthe following songs load failed: ")
     if SavePath:
-        with open(os.path.join(SavePath, 'QQ failed export.log'), 'a', encoding='utf-8') as f:
-            f.write('\n'+r+'n')
+        with open(os.path.join(SavePath, f"QQ failed export {ff}.log"), 'a', encoding='utf-8') as f:
+            f.write('\n'+r+'\n')
     for f in FailedLoad:
         print("Number: {}\n{} - {}\nURL: {}".format(f["number"],f["artist"],f["song"],f["URL"] ))
 
