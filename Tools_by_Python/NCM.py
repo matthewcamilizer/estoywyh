@@ -6,7 +6,7 @@ current_datetime = datetime.datetime.now()
 ff=current_datetime.strftime('%Y-%m-%d')
 
 
-SavePath = input("Enter the path to save logs\nLeave blank if need no logs: ")
+SavePath = input("Enter the path to save logs, Leave blank if need no logs: ")
 APIPath = "https://music.163.com/api/v3/playlist/detail?id="
 reqAPI = input(r"enter your playlist here: ")
 APIBase = reqAPI.find("playlist?id=")+len("playlist?id=")
