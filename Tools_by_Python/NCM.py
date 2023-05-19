@@ -1,4 +1,4 @@
-import json, requests, os, datetime
+import json, requests, os, datetime, re
 from NCMGet import getSong
 
 
@@ -9,10 +9,8 @@ ff=current_datetime.strftime('%Y-%m-%d')
 SavePath = input("Enter the path to save logs, Leave blank if need no logs: ")
 APIPath = "https://music.163.com/api/v3/playlist/detail?id="
 reqAPI = input(r"enter your playlist here: ")
-APIBase = reqAPI.find("playlist?id=")+len("playlist?id=")
-getAPI = reqAPI[APIBase:]
-req = APIPath + getAPI
-
+req = APIPath + re.search(r"playlist\?id=([^\W]+)", reqAPI).group(1)
+print(req)
 tracks = json.loads(requests.get(req).text)['playlist']['trackIds']
 title = json.loads(requests.get(req).text)['playlist']['name']
 author = json.loads(requests.get(req).text)['playlist']['creator']['nickname']

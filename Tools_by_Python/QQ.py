@@ -9,16 +9,17 @@ ff=current_datetime.strftime('%Y-%m-%d')
 url = input(r'Enter URL: ')
 SavePath = input("Enter the path to save logs\nLeave blank if need no logs: ")
 getAPI=''
-pattern = r"id=(.+)"
-pattern2 = r"playlist/(.+)"
+pattern = r"id=([^\W]+)"
+pattern2 = r"playlist/([^\W]+)"
 if "u?__=" in url:
     request = requests.get(url, allow_redirects=False)
     redPath = request.headers.get('location')
     getAPI = re.search(pattern, redPath).group(1)
-if "id=" in url:
-    getAPI = re.search(pattern, url).group(1)
-if "playlist/" in url:
+if "playlist/" in url and not "id=" in url:
     getAPI = re.search(pattern2, url).group(1)
+if "id=" in url and not "playlist/" in url:
+    getAPI = re.search(pattern, url).group(1)
+
 
 
 req = "https://c.y.qq.com/v8/fcg-bin/fcg_v8_playlist_cp.fcg?cv=10000&ct=19&newsong=1&tpl=wk&id={}&g_tk=5381&platform=mac&loginUin=0&hostUin=0&format=json&inCharset=GB2312&outCharset=utf-8&notice=0&platform=jqspaframe.json&needNewCode=0".format(getAPI)
