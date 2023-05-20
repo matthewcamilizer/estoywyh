@@ -1,19 +1,32 @@
 import json, requests, os, datetime, re
 from NCMGet import getSong
 
-
+req=''
+title=''
+author=''
+final=''
 current_datetime = datetime.datetime.now()
 ff=current_datetime.strftime('%Y-%m-%d')
 
-
+#https://music.163.com/api/album/{}
 SavePath = input("Enter the path to save logs, Leave blank if need no logs: ")
 APIPath = "https://music.163.com/api/v3/playlist/detail?id="
-reqAPI = input(r"enter your playlist here: ")
-req = APIPath + re.search(r"playlist\?id=([^\W]+)", reqAPI).group(1)
-print(req)
-tracks = json.loads(requests.get(req).text)['playlist']['trackIds']
-title = json.loads(requests.get(req).text)['playlist']['name']
-author = json.loads(requests.get(req).text)['playlist']['creator']['nickname']
+ALBUMpath = "https://music.163.com/api/album/"
+reqAPI = input(r"enter your URL here: ")
+if "playlist" in reqAPI:
+    req = APIPath + re.search(r"playlist\?id=([^\W]+)", reqAPI).group(1)
+    tracks = json.loads(requests.get(req).text)['playlist']['trackIds']
+    title = json.loads(requests.get(req).text)['playlist']['name']
+    author = json.loads(requests.get(req).text)['playlist']['creator']['nickname']
+
+if "album" in reqAPI:
+    req = ALBUMpath+re.search(r"album\?id=([^\W]+)", reqAPI).group(1)
+    print(requests.get(req).text)
+    print(req)
+    tracks = json.loads(requests.get(req).text)['album']['songs']
+    title = json.loads(requests.get(req).text)['album']['name']
+    author = json.loads(requests.get(req).text)['album']['artist']['name']
+
 
 songs = []
 FailedLoad =[]
@@ -42,8 +55,8 @@ for r in songs:
     print(r)
 if FailedLoad:
     print("the failed URLs are here.")
-    if SavePath:
-        for ct, f in enumerate(FailedLoad, start=1):
+    for ct, f in enumerate(FailedLoad, start=1):
+        print("\n{}:\n{}".format(ct, f))
+        if SavePath:
             with open(os.path.join(SavePath, f"NCM failed export {ff}.log"), 'a', encoding='utf-8') as e:
                 e.write('\n'+f+'\n')
-    print("\n{}:\n{}".format(ct, f))
