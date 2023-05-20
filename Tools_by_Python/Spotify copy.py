@@ -62,7 +62,7 @@ def get_playlist(ttk):
             artists=[]
             for jjj in value:
                 artists.append(jjj['name'])
-            store_artist.append(", ".join(artists))
+            store_artist.append(artists)
     if path:
         logFile=os.path.join(path, f"Spotify {title} {ff}")        
         if os.path.exists(f"{logFile}.log"):
