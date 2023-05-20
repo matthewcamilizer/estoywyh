@@ -45,45 +45,86 @@ store_track=[]
 store_song=[]
 store_artist=[]
 logFile=''
+title=''
+author=''
 
-def get_playlist(ttk):
+
+def APIget(ttk):
     h=get_auth_token(ttk)
     re=get(tp,headers=h)
-    title=json.loads(re.content)['name']
-    author=json.loads(re.content)['owner']['display_name']
     json_re=json.loads(re.content)["tracks"]["items"]
-    for j in json_re:
-        for k,jj in j['track'].items():
-            store_track.append((k,jj))
-    for key, value in store_track:
-        if key=='name':
-            store_song.append(value)
-        if key=='artists':
-            artists=[]
-            for jjj in value:
-                artists.append(jjj['name'])
-            store_artist.append(", ".join(artists))
-    if path:
-        logFile=os.path.join(path, f"Spotify {title} {ff}")        
-        if os.path.exists(f"{logFile}.log"):
-            user_input=input('The file already exists. Press Y to create a new file or append to the existing file )')
-            if user_input.upper()=='Y':
-                for artist, song in zip(store_artist, store_song):
-                    with open(f"{logFile}(1).log", 'a', encoding='utf-8') as f:
-                        if f.tell()==0:
-                            f.write(f"{title} by {author}\n{ff}\n")
-                        f.write('\n'+f"{artist} - {song}"+'\n')
+    if "playlist" in tp:
+        title=json.loads(re.content)['name']
+        author=json.loads(re.content)['owner']['display_name']
+        for j in json_re:
+            for k,jj in j['track'].items():
+                store_track.append((k,jj))
+        for key, value in store_track:
+            if key=='name':
+                store_song.append(value)
+            if key=='artists':
+                artists=[]
+                for jjj in value:
+                    artists.append(jjj['name'])
+                store_artist.append(", ".join(artists))
+        if path:
+            logFile=os.path.join(path, f"{title} by {author} from Spotify {ff}")        
+            if os.path.exists(f"{logFile}.log"):
+                user_input=input('The file already exists. Press Y to create a new file or append to the existing file )')
+                if user_input.upper()=='Y':
+                    for artist, song in zip(store_artist, store_song):
+                        with open(f"{logFile}(1).log", 'a', encoding='utf-8') as f:
+                            if f.tell()==0:
+                                f.write(f"{title} by {author}\n{ff}\n")
+                            f.write('\n'+f"{artist} - {song}"+'\n')
+                else:
+                    for artist, song in zip(store_artist, store_song):
+                        with open(f"{logFile}.log", 'a', encoding='utf-8') as f:
+                            if f.tell()==0:
+                                f.write(f"{title} by {author}\n{ff}\n")
+                            f.write('\n'+f"{artist} - {song}"+'\n')
             else:
                 for artist, song in zip(store_artist, store_song):
                     with open(f"{logFile}.log", 'a', encoding='utf-8') as f:
                         if f.tell()==0:
                             f.write(f"{title} by {author}\n{ff}\n")
                         f.write('\n'+f"{artist} - {song}"+'\n')
-        else:
-            for artist, song in zip(store_artist, store_song):
-                with open(f"{logFile}.log", 'a', encoding='utf-8') as f:
-                    if f.tell()==0:
-                        f.write(f"{title} by {author}\n{ff}\n")
-                    f.write('\n'+f"{artist} - {song}"+'\n')
 
-get_playlist(token)
+    if "album" in tp:
+        title=json.loads(re.content)['name']
+        author=json.loads(re.content)['artists'][0]['name']
+        for j in json_re:
+            for k,jj in j.items():
+                store_track.append((k,jj))
+        for key, value in store_track:
+            if key=='name':
+                store_song.append(value)
+            if key=='artists':
+                artists=[]
+                for jjj in value:
+                    artists.append(jjj['name'])
+                store_artist.append(", ".join(artists))
+        if path:
+            logFile=os.path.join(path, f"{title} by {author} from Spotify {ff}")        
+            if os.path.exists(f"{logFile}.log"):
+                user_input=input('The file already exists. Press Y to create a new file or append to the existing file )')
+                if user_input.upper()=='Y':
+                    for artist, song in zip(store_artist, store_song):
+                        with open(f"{logFile}(1).log", 'a', encoding='utf-8') as f:
+                            if f.tell()==0:
+                                f.write(f"{title} by {author}\n{ff}\n")
+                            f.write('\n'+f"{artist} - {song}"+'\n')
+                else:
+                    for artist, song in zip(store_artist, store_song):
+                        with open(f"{logFile}.log", 'a', encoding='utf-8') as f:
+                            if f.tell()==0:
+                                f.write(f"{title} by {author}\n{ff}\n")
+                            f.write('\n'+f"{artist} - {song}"+'\n')
+            else:
+                for artist, song in zip(store_artist, store_song):
+                    with open(f"{logFile}.log", 'a', encoding='utf-8') as f:
+                        if f.tell()==0:
+                            f.write(f"{title} by {author}\n{ff}\n")
+                        f.write('\n'+f"{artist} - {song}"+'\n')
+
+APIget(token)
