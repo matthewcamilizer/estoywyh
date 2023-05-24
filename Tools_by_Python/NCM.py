@@ -1,18 +1,19 @@
 import json, requests, os, datetime, re
 from NCMGet import getSong
+from NewFile import newfile
 
-req=''
+req=exp=SavePath=''
 title=''
 author=''
 final=''
 current_datetime = datetime.datetime.now()
 ff=current_datetime.strftime('%Y-%m-%d')
 
-#https://music.163.com/api/album/{}
-SavePath = input("Enter the path to save logs, Leave blank if need no logs: ")
+
+reqAPI = input("\n"+r'输入网易云歌单链接: ')
+EnterPath = input(r"\n如果需要导出记录, 请输入保存路径并按Enter(或直接按Enter跳过): \n")
 APIPath = "https://music.163.com/api/v3/playlist/detail?id="
 ALBUMpath = "https://music.163.com/api/album/"
-reqAPI = input(r"enter your URL here: ")
 if "playlist" in reqAPI:
     req = APIPath + re.search(r"playlist\?id=([^\W]+)", reqAPI).group(1)
     tracks = json.loads(requests.get(req).text)['playlist']['trackIds']
@@ -27,36 +28,52 @@ if "album" in reqAPI:
     title = json.loads(requests.get(req).text)['album']['name']
     author = json.loads(requests.get(req).text)['album']['artist']['name']
 
+if EnterPath:
+    exp=os.path.join(EnterPath, "歌单导出")
+    if not os.path.exists(exp):
+        os.mkdir(exp)
+    NCM=os.path.join(exp, "网易云导出")
+    if not os.path.exists(NCM):
+        os.mkdir(NCM)
+    SavePath=NCM
 
 songs = []
 FailedLoad =[]
-print("\nThe playlist is: {} by {}\n\n{} songs\n".format(title,author,len(tracks)))
+Uris=[]
+FailedUris=[]
 
 for count, t in enumerate(tracks, start=1):
     Songreq = "https://music.163.com/song?id={}".format(t['id'])
-    print('Number: {}'.format(count))
+    print('第{}个: '.format(count))
     try:
         song_instance = getSong.get_song_instance(Songreq)
+        Uris.append(Songreq)
     except:
-        print("Error while loading song of {}".format(Songreq))
+        print("歌曲: {} 导出失败\n".format(Songreq))
         FailedLoad.append(Songreq)
         continue
-    print('URL: {}\n'.format(Songreq))
+    print('歌曲链接: {}\n'.format(Songreq))
     songs.append(song_instance)
 
+print("\n歌单: {} 作者: {}\n\n共有{}首歌\n".format(title,author,len(tracks)))
 if(len(songs) == len(tracks)):
-    print("\nCongrats! All of the songs are here!\n")
+    print(f"\n网易云歌单: {title} 的所有歌曲导出完成!\n")
 else:
-    print("\nPartly loaded. And {} of {} songs are:\n".format(len(songs), len(tracks)))
-for r in songs:
-    if SavePath:
-        with open(os.path.join(SavePath, f"NCM exported {ff}.log"), 'a', encoding='utf-8') as e:
-            e.write('\n'+r+'\n')
-    print(r)
+    print("\n部分歌曲导出失败 已导出: {}首 歌曲总数: {}首\n".format(len(songs), len(tracks)))
+if SavePath:
+    logFile=newfile(SavePath, f"网易云 - {author} 的 {title} {ff}.log")
+    for r, u in zip(songs, Uris):
+        with open(logFile, 'a', encoding='utf-8') as e:
+            if e.tell()==0:
+                e.write(f"{author} 的 {title}\n{ff}\n")
+            e.write(f"\n{r}\n{u}\n\n")
+
 if FailedLoad:
-    print("the failed URLs are here.")
+    print("导出失败歌曲的链接: ")
     for ct, f in enumerate(FailedLoad, start=1):
-        print("\n{}:\n{}".format(ct, f))
-        if SavePath:
-            with open(os.path.join(SavePath, f"NCM failed export {ff}.log"), 'a', encoding='utf-8') as e:
-                e.write('\n'+f+'\n')
+        print("\n第{}首:\n{}".format(ct, f))
+    if SavePath:
+        logFile=newfile(SavePath, f"网易云导出失败的歌单 - {title} - {author} {ff}.log")
+        for ct, f in enumerate(FailedLoad, start=1):
+            with open(logFile, 'a', encoding='utf-8') as e:
+                e.write(f"第{ct}首: {f}\n\n")
