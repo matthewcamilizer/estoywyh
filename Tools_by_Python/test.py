@@ -1,4 +1,4 @@
-import spotipy, os, requests, webbrowser
+import spotipy, os
 from spotipy.oauth2 import SpotifyOAuth
 
 scope = "playlist-modify-public"  # Customize the scope according to your needs
@@ -23,14 +23,23 @@ code = sp_oauth.parse_response_code(response)
 token_info = sp_oauth.get_access_token(code)
 access_token = token_info['access_token']
 sp = spotipy.Spotify(auth=access_token)
-print(sp.current_user())
 
 # Create the playlist
-sp.user_playlist_create(
+playlist = sp.user_playlist_create(
     user=sp.current_user()['display_name'],
     name=playlist_name,
     public=True
 )
 
+song_list=["the motto","10:35","havana"]
+for song in song_list:
+    results = sp.search(q=song, limit=1, type="track")
+    if results['tracks']['items']:
+        track=results['tracks']['items'][0]
+        print(track)
+        sp.playlist_add_items(playlist['id'], track['uri'])
+        print(f"{', '.join([artist['name'] for artist in track['artists']])} - '{track['name']}' added!")
+    else:
+        print(f"Failed to add '{song}'")
 if os.path.exists(".cache"):
     os.remove(".cache")
