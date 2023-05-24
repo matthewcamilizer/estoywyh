@@ -31,15 +31,14 @@ playlist = sp.user_playlist_create(
     public=True
 )
 
-song_list=["the motto","10:35","havana"]
+uris = []
+song_list=["tiesto - the motto","10:35","havana"]
 for song in song_list:
     results = sp.search(q=song, limit=1, type="track")
     if results['tracks']['items']:
         track=results['tracks']['items'][0]
-        print(track)
-        sp.playlist_add_items(playlist['id'], track['uri'])
-        print(f"{', '.join([artist['name'] for artist in track['artists']])} - '{track['name']}' added!")
-    else:
-        print(f"Failed to add '{song}'")
+        uris.append(track['uri'])
+sp.playlist_add_items(playlist['id'], uris)
+
 if os.path.exists(".cache"):
     os.remove(".cache")
