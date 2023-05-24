@@ -32,7 +32,7 @@ if EnterPath:
     exp=os.path.join(EnterPath, "歌单导出")
     if not os.path.exists(exp):
         os.mkdir(exp)
-    NCM=os.path.join(exp, "网易云导出")
+    NCM=os.path.join(exp, "网易云")
     if not os.path.exists(NCM):
         os.mkdir(NCM)
     SavePath=NCM
