@@ -6,8 +6,8 @@ current_datetime = datetime.datetime.now()
 ff=current_datetime.strftime('%Y-%m-%d')
 
 
-client_id = "d97e9b6c652b4a2780787a0de9f5fef5"
-client_secret = "08403632e6aa4ffe813741c1dab279c5"
+client_id = "348de570cabd4bbdabb3eb80b2be3b54"
+client_secret = "f6282eee472c4add954af47b5f5379c2"
 #tp = "https://api.spotify.com/v1/playlists/3dpaAexEtkFHiQvLeNzNjw"
 #https://api.spotify.com/v1/albums/3nG37CdJEbz1c7KrOOQn4Z
 base_tp = r"https://api.spotify.com/v1/"
@@ -34,6 +34,7 @@ def get_token():
     d={"grant_type":"client_credentials"}
     r=post(u,headers=h,data=d)
     json_result=json.loads(r.content)
+    print(json_result)
     tk=json_result["access_token"]
     return tk
 token = get_token()
