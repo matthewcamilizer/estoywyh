@@ -56,5 +56,5 @@ try:
                 if f.tell()==0:
                     f.write(f"{author}的{title}\n{ff}\n\n")
                 f.write(f"{s}\n{u}\n\n")
-except Exceptions as e:
+except Exception as e:
     print("出错啦!",e)
