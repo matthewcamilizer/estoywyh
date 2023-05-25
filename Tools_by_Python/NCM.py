@@ -11,7 +11,7 @@ ff=current_datetime.strftime('%Y-%m-%d')
 
 
 reqAPI = input("\n"+r'输入网易云歌单链接: ')
-EnterPath = input(r"\n如果需要导出记录, 请输入保存路径并按Enter(或直接按Enter跳过): \n")
+EnterPath = input("\n"+r"如果需要导出记录, 请输入保存路径并按Enter(或直接按Enter跳过): "+"\n")
 APIPath = "https://music.163.com/api/v3/playlist/detail?id="
 ALBUMpath = "https://music.163.com/api/album/"
 if "playlist" in reqAPI:
@@ -42,38 +42,42 @@ FailedLoad =[]
 Uris=[]
 FailedUris=[]
 
-for count, t in enumerate(tracks, start=1):
-    Songreq = "https://music.163.com/song?id={}".format(t['id'])
-    print('第{}个: '.format(count))
-    try:
-        song_instance = getSong.get_song_instance(Songreq)
-        Uris.append(Songreq)
-    except:
-        print("歌曲: {} 导出失败\n".format(Songreq))
-        FailedLoad.append(Songreq)
-        continue
-    print('歌曲链接: {}\n'.format(Songreq))
-    songs.append(song_instance)
+try:
+    for count, t in enumerate(tracks, start=1):
+        Songreq = "https://music.163.com/song?id={}".format(t['id'])
+        print('第{}个: '.format(count))
+        try:
+            song_instance = getSong.get_song_instance(Songreq)
+            Uris.append(Songreq)
+        except:
+            print("歌曲: {} 导出失败\n".format(Songreq))
+            FailedLoad.append(Songreq)
+            continue
+        print('歌曲链接: {}\n'.format(Songreq))
+        songs.append(song_instance)
 
-print("\n歌单: {} 作者: {}\n\n共有{}首歌\n".format(title,author,len(tracks)))
-if(len(songs) == len(tracks)):
-    print(f"\n网易云歌单: {title} 的所有歌曲导出完成!\n")
-else:
-    print("\n部分歌曲导出失败 已导出: {}首 歌曲总数: {}首\n".format(len(songs), len(tracks)))
-if SavePath:
-    logFile=newfile(SavePath, f"网易云 - {author} 的 {title} {ff}.txt")
-    for r, u in zip(songs, Uris):
-        with open(logFile, 'a', encoding='utf-8') as e:
-            if e.tell()==0:
-                e.write(f"{author} 的 {title}\n{ff}\n")
-            e.write(f"\n{r}\n{u}\n\n")
-
-if FailedLoad:
-    print("导出失败歌曲的链接: ")
-    for ct, f in enumerate(FailedLoad, start=1):
-        print("\n第{}首:\n{}".format(ct, f))
+    print("\n歌单: {} 作者: {}\n\n共有{}首歌\n".format(title,author,len(tracks)))
+    if(len(songs) == len(tracks)):
+        print(f"\n网易云歌单: {title} 的所有歌曲导出完成!\n")
+    else:
+        print("\n部分歌曲导出失败 已导出: {}首 歌曲总数: {}首\n".format(len(songs), len(tracks)))
     if SavePath:
-        logFile=newfile(SavePath, f"网易云导出失败的歌单 - {title} - {author} {ff}.txt")
-        for ct, f in enumerate(FailedLoad, start=1):
+        logFile=newfile(SavePath, f"网易云 - {author} 的 {title} {ff}.txt")
+        for r, u in zip(songs, Uris):
             with open(logFile, 'a', encoding='utf-8') as e:
-                e.write(f"第{ct}首: {f}\n\n")
+                if e.tell()==0:
+                    e.write(f"{author} 的 {title}\n{ff}\n")
+                e.write(f"\n{r}\n{u}\n\n")
+
+    if FailedLoad:
+        print("导出失败歌曲的链接: ")
+        for ct, f in enumerate(FailedLoad, start=1):
+            print("\n第{}首:\n{}".format(ct, f))
+        if SavePath:
+            logFile=newfile(SavePath, f"网易云导出失败的歌单 - {title} - {author} {ff}.txt")
+            for ct, f in enumerate(FailedLoad, start=1):
+                with open(logFile, 'a', encoding='utf-8') as e:
+                    e.write(f"第{ct}首: {f}\n\n")
+
+except Exception as e:
+    print("出错啦!",e)
