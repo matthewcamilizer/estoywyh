@@ -61,7 +61,7 @@ if(len(songs) == len(tracks)):
 else:
     print("\n部分歌曲导出失败 已导出: {}首 歌曲总数: {}首\n".format(len(songs), len(tracks)))
 if SavePath:
-    logFile=newfile(SavePath, f"网易云 - {author} 的 {title} {ff}.log")
+    logFile=newfile(SavePath, f"网易云 - {author} 的 {title} {ff}.txt")
     for r, u in zip(songs, Uris):
         with open(logFile, 'a', encoding='utf-8') as e:
             if e.tell()==0:
@@ -73,7 +73,7 @@ if FailedLoad:
     for ct, f in enumerate(FailedLoad, start=1):
         print("\n第{}首:\n{}".format(ct, f))
     if SavePath:
-        logFile=newfile(SavePath, f"网易云导出失败的歌单 - {title} - {author} {ff}.log")
+        logFile=newfile(SavePath, f"网易云导出失败的歌单 - {title} - {author} {ff}.txt")
         for ct, f in enumerate(FailedLoad, start=1):
             with open(logFile, 'a', encoding='utf-8') as e:
                 e.write(f"第{ct}首: {f}\n\n")

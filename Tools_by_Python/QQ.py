@@ -1,14 +1,14 @@
 import json, requests, re, os, datetime
 from QQGet import getSong
-
+from NewFile import newfile
 
 current_datetime = datetime.datetime.now()
 ff=current_datetime.strftime('%Y-%m-%d')
 
 
-url = input(r'Enter URL: ')
-SavePath = input("Enter the path to save logs\nLeave blank if need no logs: ")
-getAPI=''
+url = input("\n"+r'输入歌单链接: ')
+EnterPath = input("\n"+r"如果需要导出记录, 请输入保存路径并按Enter(或直接按Enter跳过): ")
+getAPI=SavePath=''
 pattern = r"id=([^\W]+)"
 pattern2 = r"playlist/([^\W]+)"
 if "u?__=" in url:
@@ -23,41 +23,38 @@ if "id=" in url and not "playlist/" in url:
 
 
 req = "https://c.y.qq.com/v8/fcg-bin/fcg_v8_playlist_cp.fcg?cv=10000&ct=19&newsong=1&tpl=wk&id={}&g_tk=5381&platform=mac&loginUin=0&hostUin=0&format=json&inCharset=GB2312&outCharset=utf-8&notice=0&platform=jqspaframe.json&needNewCode=0".format(getAPI)
-print(req)
 
 tracks = json.loads(requests.get(req).text)['data']['cdlist'][0]['songlist']
 title = json.loads(requests.get(req).text)['data']['cdlist'][0]['dissname']
 author = json.loads(requests.get(req).text)['data']['cdlist'][0]['nick']
 
-songs = []
-FailedLoad =[]
-print("The playlist is {} by {}\nAnd there are {} songs\n".format(title,author,len(tracks)))
 
-for count, t in enumerate(tracks, start=1):
-    Songreq = "https://y.qq.com/n/ryqq/songDetail/{}".format(t['mid'])
-    print('Number: {}'.format(count))
-    try:
+print("作者: {} 歌单: {}\n 有{}首歌\n".format(title,author,len(tracks)))
+if EnterPath:
+    exp=os.path.join(EnterPath, "歌单导出")
+    if not os.path.exists(exp):
+        os.mkdir(exp)
+    QM=os.path.join(exp, "QQ音乐")
+    if not os.path.exists(QM):
+        os.mkdir(QM)
+    SavePath=QM
+
+try:
+    songs=[]
+    Uris=[]
+    for count, t in enumerate(tracks, start=1):
+        Songreq = "https://y.qq.com/n/ryqq/songDetail/{}".format(t['mid'])
+        print('第{}个:'.format(count))
         song_instance = getSong.get_song_instance(Songreq)
-    except:
-        print("Failed to load {} - {}".format(t['singer'][0]['name'], t['name']))
-        FailedLoad.append({"number":count,"song":t['name'],"artist":t['singer'][0]['name'], "URL":Songreq})
-        continue
-    print('URL: {}\n'.format(Songreq))
-    songs.append(song_instance)
-if(len(songs) == len(tracks)):
-    print("\nCongrats! All of songs are here!")
-else:
-    print("\nPartly loaded. And {} of {} songs are:\n".format(len(songs), len(tracks)))
-for r in songs:
+        print('链接: {}\n'.format(Songreq))
+        songs.append(song_instance)
+        Uris.append(Songreq)
     if SavePath:
-        with open(os.path.join(SavePath, f"QQ exported {ff}.log"), 'a', encoding='utf-8') as s:
-            s.write('\n'+r+'\n')
-    print(r)
-if FailedLoad:
-    print("\nthe following songs load failed: ")
-    if SavePath:
-        with open(os.path.join(SavePath, f"QQ failed export {ff}.log"), 'a', encoding='utf-8') as f:
-            f.write('\n'+r+'\n')
-    for f in FailedLoad:
-        print("Number: {}\n{} - {}\nURL: {}".format(f["number"],f["artist"],f["song"],f["URL"] ))
-
+        logFile=newfile(SavePath, f"QQ音乐 - {author}的{title} {ff}.txt")
+        for s,u in zip(songs, Uris):
+            with open(logFile, 'a', encoding='utf-8') as f:
+                if f.tell()==0:
+                    f.write(f"{author}的{title}\n{ff}\n\n")
+                f.write(f"{s}\n{u}\n\n")
+except Exceptions as e:
+    print("出错啦!",e)
