@@ -79,10 +79,10 @@ def APIget(ttk):
             for jjj in value:
                 artists.append(jjj['name'])
             store_artist.append(", ".join(artists))
-    for count, (a,b,c) in enumerate(zip(artists,store_song ,uris), start=1):
+    for count, (a,b,c) in enumerate(zip(store_artist,store_song ,uris), start=1):
         print(f"第{count}首:\n{a} - {b}\n{c}\n\n")
     if path:
-        logFile=newfile(path, f"Spotify '{author}'的歌单'{title}{ff}'.txt")        
+        logFile=newfile(path, f"Spotify {author}的歌单{title}{ff}.txt")        
         for artist, song, u in zip(store_artist, store_song, uris):
             with open(logFile, 'a', encoding='utf-8') as f:
                 if f.tell()==0:
