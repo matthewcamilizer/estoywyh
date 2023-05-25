@@ -1,7 +1,8 @@
 #-*- coding: utf-8 -*-
-import requests, json, html, os, datetime, re
+import requests, json, html, os, datetime, re, sys
 from NewFile import newfile
 from naming import Fuck
+sys.dont_write_bytecode=True
 
 def ExportQQ(url, EnterPath):
     dt=datetime.datetime.now()
