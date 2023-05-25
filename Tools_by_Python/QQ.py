@@ -51,10 +51,10 @@ try:
         Uris.append(Songreq)
     if SavePath:
         logFile=newfile(SavePath, f"QQ音乐 - {author}的{title} {ff}.txt")
-        for s,u in zip(songs, Uris):
+        for count, (s,u) in enumerate(zip(songs, Uris),start=1):
             with open(logFile, 'a', encoding='utf-8') as f:
                 if f.tell()==0:
-                    f.write(f"{author}的{title}\n{ff}\n\n")
-                f.write(f"{s}\n{u}\n\n")
+                    f.write(f"{ff}\n作者: {author}\n歌单: {title}\n链接: {url}\n\n")
+                f.write(f"第{count}首:\n{s}\n{u}\n\n")
 except Exception as e:
     print("出错啦!",e)

@@ -83,11 +83,11 @@ def APIget(ttk):
         print(f"第{count}首:\n{a} - {b}\n{c}\n\n")
     if path:
         logFile=newfile(path, f"Spotify {author}的歌单{title}{ff}.txt")        
-        for artist, song, u in zip(store_artist, store_song, uris):
+        for count, (artist, song, u) in enumerate(zip(store_artist, store_song, uris),start=1):
             with open(logFile, 'a', encoding='utf-8') as f:
                 if f.tell()==0:
-                    f.write(f"{ff}\n作者: {author}\n歌单: {title}\n\n")
-                f.write(f"{artist} - {song}\n{u}\n\n")
+                    f.write(f"{ff}\n作者: {author}\n歌单: {title}\n链接: {ttp}\n\n")
+                f.write(f"第{count}首:\n{artist} - {song}\n{u}\n\n")
 
 
 APIget(token)
