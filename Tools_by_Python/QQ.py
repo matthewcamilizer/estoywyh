@@ -2,10 +2,6 @@
 import requests, json, html, os, datetime, re
 from NewFile import newfile
 from naming import Fuck
-
-fq=input("enter url: ")
-spath=input(("enter path: "))
-
 def ExportQQ(url, EnterPath):
     dt=datetime.datetime.now()
     ff=dt.strftime('%Y-%m-%d')
@@ -15,9 +11,6 @@ def ExportQQ(url, EnterPath):
     sTitleFuck=[]
     sAuthorFuck=[]
 
-
-    #url = input("\n"+r'输入歌单链接: ')
-    #EnterPath = input("\n"+r"如果需要导出记录, 请输入保存路径并按Enter(或直接按Enter跳过): ")
     getAPI=SavePath=''
     pattern = r"id=([^\W]+)"
     pattern2 = r"playlist/([^\W]+)"
@@ -46,9 +39,6 @@ def ExportQQ(url, EnterPath):
         Store_Songs=[]
         Store_URL=[]
 
-
-
-
         if EnterPath:
             exp=os.path.join(EnterPath, "歌单导出")
             if not os.path.exists(exp):
@@ -57,8 +47,6 @@ def ExportQQ(url, EnterPath):
             if not os.path.exists(QM):
                 os.mkdir(QM)
             SavePath=QM
-
-
 
         for s in Songs:
             sa=[]
@@ -86,5 +74,3 @@ def ExportQQ(url, EnterPath):
         print(f"\n\nQQ音乐: {Title}导出完成!\n共有{len(Store_Songs)}首歌\n")
     except Exception as e:
         print("出错啦!",e)
-
-ExportQQ(fq, spath)
