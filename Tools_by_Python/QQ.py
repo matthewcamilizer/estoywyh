@@ -2,6 +2,7 @@
 import requests, json, html, os, datetime, re
 from NewFile import newfile
 from naming import Fuck
+
 def ExportQQ(url, EnterPath):
     dt=datetime.datetime.now()
     ff=dt.strftime('%Y-%m-%d')
@@ -11,6 +12,9 @@ def ExportQQ(url, EnterPath):
     sTitleFuck=[]
     sAuthorFuck=[]
 
+
+    #url = input("\n"+r'输入歌单链接: ')
+    #EnterPath = input("\n"+r"如果需要导出记录, 请输入保存路径并按Enter(或直接按Enter跳过): ")
     getAPI=SavePath=''
     pattern = r"id=([^\W]+)"
     pattern2 = r"playlist/([^\W]+)"
@@ -39,6 +43,9 @@ def ExportQQ(url, EnterPath):
         Store_Songs=[]
         Store_URL=[]
 
+
+
+
         if EnterPath:
             exp=os.path.join(EnterPath, "歌单导出")
             if not os.path.exists(exp):
@@ -47,6 +54,8 @@ def ExportQQ(url, EnterPath):
             if not os.path.exists(QM):
                 os.mkdir(QM)
             SavePath=QM
+
+
 
         for s in Songs:
             sa=[]
@@ -67,10 +76,12 @@ def ExportQQ(url, EnterPath):
                     if f.tell()==0:
                         f.write(f"{ff}\n作者: {rAuthor}\n歌单: {rTitle}\n链接: {PlaylistURL}\n\n")
                         if TitleFuck:
-                            f.write(f"因为如下符号不允许出现在文件名中''\\', '/', ':', '?', '*', '\"', '<', '>', '|''\n\n所以我统一替换为\u2022\n所以歌单原名是{rTitle}而不是{rTitle}\n替换的符号为{', '.join([fuck for fuck in sTitleFuck])}\n\n")
+                            f.write(f"因为如下符号不允许出现在文件名中''\\', '/', ':', '?', '*', '\"', '<', '>', '|''\n\n所以我统一替换为\u2022\n所以歌单原名是 '{rTitle}', 而不是 '{rTitle}'\n替换的符号为{', '.join([fuck for fuck in sTitleFuck])}\n\n")
                         if AuthorFuck:
-                            f.write(f"因为如下符号不允许出现在文件名中''\\', '/', ':', '?', '*', '\"', '<', '>', '|''\n\n所以我统一替换为\u2022\n所以作者原名是{Author}而不是{rAuthor}\n替换的符号为{', '.join([fuck for fuck in sAuthorFuck])}\n\n")
+                            f.write(f"因为如下符号不允许出现在文件名中''\\', '/', ':', '?', '*', '\"', '<', '>', '|''\n\n所以我统一替换为\u2022\n所以作者原名是 '{Author}', 而不是 '{rAuthor}'\n替换的符号为{', '.join([fuck for fuck in sAuthorFuck])}\n\n")
                     f.write(f"第{count}首:\n{s}\n{u}\n\n")
         print(f"\n\nQQ音乐: {Title}导出完成!\n共有{len(Store_Songs)}首歌\n")
     except Exception as e:
         print("出错啦!",e)
+
+ExportQQ(fq, spath)
