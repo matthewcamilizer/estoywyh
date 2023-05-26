@@ -1,5 +1,7 @@
-import subprocess, os, datetime, win32api
+import subprocess, os, datetime, win32api, sys
 from NewFile import newfile
+
+sys.dont_write_bytecode=True
 
 ct=datetime.datetime.now()
 ff=ct.strftime("%Y-%m-%d")
