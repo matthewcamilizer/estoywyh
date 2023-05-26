@@ -9,14 +9,22 @@ a=aa.split('\000')[:-1]
 enter=input("输入忘记位置的文件: ")
 file, fmt = os.path.splitext(enter)
 p=input(r"输入保存日志的路径(如果什么都不输入就直接按回车, 默认保存在桌面, 路径输错了也保存在桌面):")
-ep=''
+ToSaveRoot=ToSave=ep=FinalFile=''
 if not p or not os.path.exists(p):
 	if not os.path.exists(p):
 		ep=p
 		print(f"你输入的这个路径{p}电脑里没有, 日志默认保存在桌面")
 	p=r"C:\Users\Administrator\Desktop"
 
-log=newfile(p, f"{ff}找文件 \u2022 '{file}'.txt")
+ToSaveRoot=os.path.join(p, "找文件")
+if not os.path.exists(ToSaveRoot):
+	os.mkdir(ToSaveRoot)
+
+ToSave=os.path.join(ToSaveRoot, ff)
+if not os.path.exists(ToSave):
+	os.mkdir(ToSave)
+
+log=newfile(ToSave, f"{ff} - 找文件 \u2022 '{file}'.txt")
 
 found=[]
 for ss in a:
