@@ -37,7 +37,7 @@ for ss in a:
 				print(f"\n第{len(found)}个(要复制就复制单引号里的内容): '{here}'\n因为是全电脑搜索, 所以不要手动关闭. 搜索完会问“按回车关闭, 如果你觉得卡了也可以按回车, 但可能会闪退")
 				with open (log, 'a', encoding='utf-8') as lf:
 					if lf.tell()==0:
-						lf.write(f"{ff}\n找这个文件: {enter}\n\n打开方式: 先打开'我的电脑' \n再把每行的文件路径复制粘贴到'我的电脑'上面那个长框框中, 然后按回车\n下面列出的是文件路径\n\n")
+						lf.write(f"{ff}\n你输入的想找文件是这个: {enter}\n\n打开方式: 先打开'我的电脑' \n再把每行的文件路径复制粘贴到'我的电脑'上面那个长框框中, 然后按回车\n下面列出的是文件路径\n\n")
 						if not os.path.exists(ep):
 							lf.write(f"你的保存路径输的是这个: {ep} 电脑里没有\n所以默认存在桌面: {p}")
 					here=here.replace("\\\\", "\\")
