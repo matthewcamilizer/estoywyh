@@ -44,6 +44,17 @@ for ss in a:
 							lf.write(f"你的保存路径输的是这个: {ep} 电脑里没有\n所以默认存在桌面: {p}")
 					here=here.replace("\\\\", "\\")
 					lf.write(f"\n\n第{len(found)}个可能的 {enter} 文件:\n{here}\n\n")
+# Read the file
+with open(log, 'r', encoding='utf-8') as file:
+    lines = file.readlines()
+
+# Modify the second line
+if len(lines) >= 2:
+    lines[1] = f"一共找到{len(found)}个可能的 '{enter}' 文件\n{lines[1]}"
+
+# Write the modified lines back to the file
+with open(log, 'w', encoding='utf-8') as file:
+    file.writelines(lines)
 
 input(f"一共找到{len(found)}个可能的 {enter} 文件, 按回车退出")
 
