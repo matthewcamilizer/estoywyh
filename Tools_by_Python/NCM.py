@@ -1,3 +1,6 @@
+import sys
+sys.dont_write_bytecode = True
+
 import json, requests, os, datetime, re
 from NCMGet import getSong
 from NewFile import newfile

@@ -1,3 +1,6 @@
+import sys
+sys.dont_write_bytecode = True
+
 import json
 with open (input("input file:"), "r", encoding = 'utf-8') as f:
     js_code = f.read()

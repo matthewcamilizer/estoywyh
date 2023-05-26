@@ -1,3 +1,6 @@
+import sys
+sys.dont_write_bytecode = True
+
 import os
 
 # Set the directory path containing the files you want to rename

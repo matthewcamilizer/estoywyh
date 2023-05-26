@@ -1,3 +1,6 @@
+import sys
+sys.dont_write_bytecode = True
+
 import os, base64, requests, json, re, datetime
 from requests import post, get
 from NewFile import newfile

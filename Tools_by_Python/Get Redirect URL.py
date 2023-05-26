@@ -1,3 +1,6 @@
+import sys
+sys.dont_write_bytecode = True
+
 import requests
 
 url = input(r"Enter URL:")

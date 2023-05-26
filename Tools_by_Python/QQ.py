@@ -1,3 +1,6 @@
+import sys
+sys.dont_write_bytecode = True
+
 #-*- coding: utf-8 -*-
 import requests, json, html, os, datetime, re, sys
 from NewFile import newfile
