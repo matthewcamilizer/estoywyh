@@ -21,7 +21,7 @@ sa=re.search(album, ttp)
 path=tp=""
 
 if Enterpath:
-    exp=os.path.join(Enterpath, "歌单导出")
+    exp=os.path.join(Enterpath, "Export")
     if not os.path.exists(exp):
         os.mkdir(exp)
     spexp=os.path.join(exp, "Spotify")
@@ -83,14 +83,14 @@ def APIget(ttk):
                 artists.append(jjj['name'])
             store_artist.append(", ".join(artists))
     for count, (a,b,c) in enumerate(zip(store_artist,store_song ,uris), start=1):
-        print(f"第{count}首:\n{a} - {b}\n{c}\n\n")
+        print(f"Number: {count}\n{a} - {b}\n{c}\n\n")
     if path:
-        logFile=newfile(path, f"Spotify {author}的歌单{title}{ff}.txt")        
+        logFile=newfile(path, f"Spotify {author} - {title}{ff}.txt")        
         for count, (artist, song, u) in enumerate(zip(store_artist, store_song, uris),start=1):
             with open(logFile, 'a', encoding='utf-8') as f:
                 if f.tell()==0:
-                    f.write(f"{ff}\n作者: {author}\n歌单: {title}\n链接: {ttp}\n\n")
-                f.write(f"第{count}首:\n{artist} - {song}\n{u}\n\n")
+                    f.write(f"{ff}\nauthor: {author}\nplaylist: {title}\nURL: {ttp}\n\n")
+                f.write(f"Number: {count}\n{artist} - {song}\n{u}\n\n")
 
 
 APIget(token)
