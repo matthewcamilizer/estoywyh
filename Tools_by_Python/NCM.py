@@ -16,7 +16,7 @@ def ExportNCM(reqAPI, EnterPath):
 
     APIPath = "https://music.163.com/api/v3/playlist/detail?id="
     ALBUMpath = "https://music.163.com/api/album/"
-    
+
     req = APIPath + re.search(r"playlist\?id=([^\W]+)", reqAPI).group(1)
     tracks = json.loads(requests.get(req).text)['playlist']['trackIds']
     title = json.loads(requests.get(req).text)['playlist']['name']
@@ -68,7 +68,7 @@ def ExportNCM(reqAPI, EnterPath):
             for ct, f in enumerate(FailedLoad, start=1):
                 print("\n第{}首:\n{}".format(ct, f))
             if SavePath:
-                logFile=newfile(SavePath, f"网易云导出失败的歌单 - {title} - {author} {ff}.txt")
+                logFile=newfile(SavePath, f"网易云导出失败的歌单 - {title} \u2022 {author} {ff}.txt")
                 for ct, f in enumerate(FailedLoad, start=1):
                     with open(logFile, 'a', encoding='utf-8') as e:
                         if e.tell()==0:
