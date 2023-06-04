@@ -7,7 +7,7 @@ from NewFile import newfile
 from naming import Fuck
 
 
-def ExportNCM(reqAPI, EnterPath, NCM_export, Ons, Failed_export):
+def ExportNCM(reqAPI, EnterPath, NCM_export, Failed_export):
     req=exp=SavePath=''
     title=''
     author=''
@@ -97,7 +97,6 @@ def ExportNCM(reqAPI, EnterPath, NCM_export, Ons, Failed_export):
                             e.write(f"第{ct}首: {f}\n\n")
                 Failed_export.append(reqAPI)
                 print("\n上面是这些导出失败的歌曲")
-            Ons.append(f"网易云音乐: {reqAPI}")
         
         except Exception as e:
             print(f"\n出错啦!\n{e}")

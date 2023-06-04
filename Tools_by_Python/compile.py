@@ -15,18 +15,17 @@ QQ_export=[]
 NCM_export=[]
 Failed_export=[]
 Spotify_export=[]
-Ons=[]
 
 for play_list in pl:
     print("等一下...")
     try:
         get=re.search(pattern, play_list).group(1)
         if "y.qq.com" in get:
-            ExportQQ(play_list, save_path, QQ_export, Ons, Failed_export)
+            ExportQQ(play_list, save_path, QQ_export, Failed_export)
         elif "open.spotify.com" in get:
-            ExportSpotify(play_list, save_path, Spotify_export, Ons, Failed_export)
+            ExportSpotify(play_list, save_path, Spotify_export, Failed_export)
         elif "music.163.com" in get:
-            ExportNCM(play_list, save_path, NCM_export, Ons, Failed_export)  
+            ExportNCM(play_list, save_path, NCM_export, Failed_export)  
         else:
             print(f"\n{play_list}\n{er[random.randint(0, len(er)-1)]}\n")
     except:

@@ -8,7 +8,7 @@ from NewFile import newfile
 current_datetime = datetime.datetime.now()
 ff=current_datetime.strftime('%Y-%m-%d')
 
-def ExportSpotify(ttp, Enterpath, Spotify_export, Ons, Failed_export):
+def ExportSpotify(ttp, Enterpath, Spotify_export, Failed_export):
     #ttp = input(r"Enter Spotify URL here: ")
     #Enterpath = input(r"Enter path to save log or press ENTER to skip: ")
     client_id = "348de570cabd4bbdabb3eb80b2be3b54"
@@ -87,8 +87,6 @@ def ExportSpotify(ttp, Enterpath, Spotify_export, Ons, Failed_export):
                         if f.tell()==0:
                             f.write(f"{ff}\nauthor: {author}\nplaylist: {title}\nURL: {ttp}\n\n")
                         f.write(f"Number: {count}\n{artist} • {song}\n{u}\n\n")
-            Ons.append(f"Spotify: {ttp}")
-
         APIget(token)
     except:
         Failed_export.append(ttp)

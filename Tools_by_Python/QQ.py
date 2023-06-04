@@ -7,11 +7,7 @@ from NewFile import newfile
 from naming import Fuck
 sys.dont_write_bytecode=True
 
-#https://y.qq.com/n/ryqq/playlist/8858909560
-
-
-
-def ExportQQ(url, EnterPath, QQ_export, Ons, Failed_export):
+def ExportQQ(url, EnterPath, QQ_export, Failed_export):
     dt=datetime.datetime.now()
     ff=dt.strftime('%Y-%m-%d')
 
@@ -86,7 +82,6 @@ def ExportQQ(url, EnterPath, QQ_export, Ons, Failed_export):
                                 f.write(f"因此作者原名是 '{Author}', 而不是 '{rAuthor}'\n替换的符号为{', '.join([fuck for fuck in sAuthorFuck])}\n\n")
                     f.write(f"第{count}首:\n{a}  •  {s}\nhttps://y.qq.com/n/ryqq/songDetail/{u}\n\n")
         print(f"\n\nQQ音乐: {Title}导出完成!\n共有{len(Store_Songs)}首歌\n")
-        Ons.append(f"QQ音乐: {url}")
 
     except Exception as e:
         Failed_export.append(url)
