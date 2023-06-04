@@ -11,7 +11,7 @@ sys.dont_write_bytecode=True
 
 
 
-def ExportQQ(url, EnterPath, QQ_export):
+def ExportQQ(url, EnterPath, QQ_export, Ons, Failed_export):
     dt=datetime.datetime.now()
     ff=dt.strftime('%Y-%m-%d')
 
@@ -86,7 +86,10 @@ def ExportQQ(url, EnterPath, QQ_export):
                                 f.write(f"因此作者原名是 '{Author}', 而不是 '{rAuthor}'\n替换的符号为{', '.join([fuck for fuck in sAuthorFuck])}\n\n")
                     f.write(f"第{count}首:\n{a}  •  {s}\nhttps://y.qq.com/n/ryqq/songDetail/{u}\n\n")
         print(f"\n\nQQ音乐: {Title}导出完成!\n共有{len(Store_Songs)}首歌\n")
+        Ons.append(f"QQ音乐: {url}")
+
     except Exception as e:
+        Failed_export.append(url)
         alb=["= =|, 这个是专辑的种子呐, 只能种歌单呢!","我不吃专辑啊，我要吃歌单!","这是专辑的链接，你需要给我歌单的链接"]
         mv=["我要歌单不要MV! 没眼睛我又看不了= =","这个MV里没有帅哥也没有美女, 所以请给我歌单的链接呢","好困, 但还是知道你给我的是个MV, 给我歌单让我好好睡吧!"]
         sg=["这是歌手的链接呢==我不要歌手我要歌单","不要歌手啊啊啊, 我要歌单我要歌单我要歌单...","你一定很喜欢这个链接里的歌手吧，不然怎么会给我一个歌手的链接呢"]
@@ -97,10 +100,4 @@ def ExportQQ(url, EnterPath, QQ_export):
         elif "/album.html" in url or "/albumDetail/" in url or "/album.html" in redPath:
             print(f"\n{url}\n{sg[random.randint(0, len(alb)-1)]}")
         else:
-            print(f"出错啦!",e)
-
-"""
-fuck=input("url:")
-suck=input("path:")
-ExportQQ(fuck, suck)
-"""
+            print(f"\n出错啦!",e)
