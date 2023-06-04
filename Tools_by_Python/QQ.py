@@ -66,7 +66,7 @@ def ExportQQ(url, EnterPath, QQ_export, Failed_export):
 
         for count, (a, b,c ) in enumerate(zip(Store_Artists, Store_Songs, Store_URL), start=1):
             print(f"\n第{count}首:\n{a}  •  {b}\nhttps://y.qq.com/n/ryqq/songDetail/{c}\n")
-            To_export.append(f"{a} • {b}")
+            QQ_export.append(f"{a} • {b}")
 
         if SavePath:
             logFile=newfile(SavePath, f"QQ音乐 - {Author}的{Title} {ff}.txt")

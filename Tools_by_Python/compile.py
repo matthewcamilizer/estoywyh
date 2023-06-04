@@ -1,5 +1,6 @@
 import sys,re, random
 sys.dont_write_bytecode=True
+from ToSpotify import ImportSpotify
 from exportSpotify import ExportSpotify
 from NCM import ExportNCM
 from QQ import ExportQQ
@@ -11,31 +12,31 @@ er=["楼上是谁啊???只能用网易云音乐/QQ音乐/Spotify的歌单链接,
 
 pattern=r"https://([^/]+)"
 pl= "".join(play_lists.split()).split(",")
-QQ_export=[]
-NCM_export=[]
 Failed_export=[]
-Spotify_export=[]
+To_input=[]
 
 for play_list in pl:
     print("等一下...")
     try:
         get=re.search(pattern, play_list).group(1)
         if "y.qq.com" in get:
-            ExportQQ(play_list, save_path, QQ_export, Failed_export)
+            ExportQQ(play_list, save_path, To_input, Failed_export)
         elif "open.spotify.com" in get:
-            ExportSpotify(play_list, save_path, Spotify_export, Failed_export)
+            ExportSpotify(play_list, save_path, To_input, Failed_export)
         elif "music.163.com" in get:
-            ExportNCM(play_list, save_path, NCM_export, Failed_export)  
+            ExportNCM(play_list, save_path, To_input, Failed_export)  
         else:
             print(f"\n{play_list}\n{er[random.randint(0, len(er)-1)]}\n")
     except:
         print(f"\n{play_list}\n{er[random.randint(0, len(er)-1)]}\n")
 
 if len(Failed_export)==0 and len(pl) > 0:
-    wh=["终于无差错全部导出, 累死我了, 给你搞这么多","还行, 如果ZZY知道我一次能不出错完成这么多, 肯定会把黑名单给我解了!",
+    wh=["终于无差错全部导出, 累死我了, 给你搞这么多， 要是ZZY也能把我拉出黑名单就好了","还行, 如果ZZY知道我一次能不出错完成这么多, 肯定会把黑名单给我解了!",
     "好了好了, 没有报错, 回家睡觉"]
     print(f"{wh[random.randint(0, len(wh)-1)]}")
 if len(Failed_export)!=0:
     for fa in Failed_export:
         print(f"\n{fa}\n")
     print(f"\n这些歌单链接有问题, 看看是不是输错了, 或者是部分歌曲下架了\n") 
+
+ImportSpotify(To_input)

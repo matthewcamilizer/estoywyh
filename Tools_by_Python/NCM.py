@@ -7,7 +7,7 @@ from NewFile import newfile
 from naming import Fuck
 
 
-def ExportNCM(reqAPI, EnterPath, NCM_export, Failed_export):
+def ExportNCM(reqAPI, EnterPath, To_export, Failed_export):
     req=exp=SavePath=''
     title=''
     author=''
