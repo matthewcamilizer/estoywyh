@@ -22,6 +22,7 @@ def ExportNCM(reqAPI, EnterPath):
 
     APIPath = "https://music.163.com/api/v3/playlist/detail?id="
     try:
+        print("等一下...\n")
         captions=["好耶! 歌单导完啦! ","全部弄好了, 但是好饿...", "ZZY ZZY ZZY",
         "导出完成", "任务已完成! That's The Motto!", "在音乐的花园里, 种歌曲的种子, 得歌单的花...",
         "任务完成了, 如果你认识ZZY, 麻烦说一声把我微信黑名单解了"]
