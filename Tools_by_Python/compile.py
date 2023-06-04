@@ -8,8 +8,8 @@ from QQ import ExportQQ
 
 play_list=input("你要种什么歌单? ")
 save_path=input("想保存在哪个文件夹的花园里? ")
-er=["只能用网易云音乐/QQ音乐/Spotify的歌单链接, 其他的都种不出花的", "只能用网易云音乐/QQ音乐/Spotify的歌单呢! 其他的在火星暂时摸不到", 
-"这啥啊我不认得啊? 我只要网易云音乐/QQ音乐/Spotify的⊙ ⁠_ ⁠◎ ⁠)"]
+er=["只能用网易云音乐/QQ音乐/Spotify的歌单链接, 其他的都种不出花的", "只能用网易云音乐/QQ音乐/Spotify的歌单呢! 其他的在火星上还没摸不到", 
+"⊙ ⁠_ ⁠◎ ⁠)这啥啊我不认得啊? 我只要网易云音乐/QQ音乐/Spotify的"]
 
 pattern=r"https://([^/]+)"
 try:
