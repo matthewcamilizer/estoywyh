@@ -69,7 +69,7 @@ def ExportNCM(reqAPI, EnterPath, To_export, Failed_export):
             else:
                 print("\n部分歌曲导出失败 已导出: {}首 歌曲总数: {}首\n".format(len(songs), len(tracks)))
             if SavePath:
-                logFile=newfile(SavePath, f"网易云 - {author} 的 {title} {ff}.txt")
+                logFile=newfile(SavePath, f"{author} 的 {title} {ff}.txt")
                 for count, (r, u) in enumerate(zip(songs, Uris),start=1):
                     with open(logFile, 'a', encoding='utf-8') as e:
                         if e.tell()==0:

@@ -69,7 +69,7 @@ def ExportQQ(url, EnterPath, QQ_export, Failed_export):
             QQ_export.append(f"{a} • {b}")
 
         if SavePath:
-            logFile=newfile(SavePath, f"QQ音乐 - {Author}的{Title} {ff}.txt")
+            logFile=newfile(SavePath, f"{Author}的{Title} {ff}.txt")
             for count, (a, s,u) in enumerate(zip(Store_Artists,Store_Songs, Store_URL),start=1):
                 with open(logFile, 'a', encoding='utf-8') as f:
                     if f.tell()==0:
