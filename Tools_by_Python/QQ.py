@@ -72,7 +72,7 @@ def ExportQQ(url, EnterPath):
                     if f.tell()==0:
                         f.write(f"{ff}\n作者: {rAuthor}\n歌单: {rTitle}\n链接: {PlaylistURL}\n\n")
                         if TitleFuck or AuthorFuck:
-                            f.write(f"\n因为如下符号不允许出现在文件名中''\\', '/', ':', '?', '*', '\"', '<', '>', '|'\n\n所以我统一替换为\u2022\n")
+                            f.write(f"\n因为如下符号不允许出现在文件名中\\ / : ? * \" < > |\n\n所以我统一替换为\u2022\n")
                             if TitleFuck:
                                 f.write(f"因此歌单原名是 '{rTitle}', 而不是 '{rTitle}'\n替换的符号为{', '.join([fuck for fuck in sTitleFuck])}\n\n")
                             if AuthorFuck:

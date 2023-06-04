@@ -4,6 +4,7 @@ sys.dont_write_bytecode = True
 import json, requests, os, datetime, re
 from NCMGet import getSong
 from NewFile import newfile
+from naming import Fuck
 
 
 def ExportNCM(reqAPI, EnterPath):
@@ -14,13 +15,20 @@ def ExportNCM(reqAPI, EnterPath):
     current_datetime = datetime.datetime.now()
     ff=current_datetime.strftime('%Y-%m-%d')
 
+    TitleFuck=[]
+    AuthorFuck=[]
+    sTitleFuck=[]
+    sAuthorFuck=[]
+
     APIPath = "https://music.163.com/api/v3/playlist/detail?id="
-    ALBUMpath = "https://music.163.com/api/album/"
 
     req = APIPath + re.search(r"playlist\?id=([^\W]+)", reqAPI).group(1)
     tracks = json.loads(requests.get(req).text)['playlist']['trackIds']
-    title = json.loads(requests.get(req).text)['playlist']['name']
-    author = json.loads(requests.get(req).text)['playlist']['creator']['nickname']
+    rAuthor=json.loads(requests.get(req).text)['playlist']['creator']['nickname']
+    rTitle=json.loads(requests.get(req).text)['playlist']['name']
+    author=Fuck(rAuthor, AuthorFuck, sAuthorFuck)[0] #Fuck naming
+    title=Fuck(rTitle, TitleFuck, sTitleFuck)[0] #Fuck naming
+
 
     if EnterPath:
         exp=os.path.join(EnterPath, "歌单导出")
@@ -61,6 +69,12 @@ def ExportNCM(reqAPI, EnterPath):
                 with open(logFile, 'a', encoding='utf-8') as e:
                     if e.tell()==0:
                         e.write(f"{ff}\n作者:{author}\n歌单:{title}\n链接:{reqAPI}\n\n")
+                        if TitleFuck or AuthorFuck:
+                            e.write(f"\n因为如下符号不允许出现在文件名中 \\ / : ? * \" < > |\n\n所以我统一替换为\u2022\n")
+                            if TitleFuck:
+                                e.write(f"因此歌单原名是 '{rTitle}', 而不是 '{rTitle}'\n替换的符号为{' '.join([fuck for fuck in sTitleFuck])}\n\n")
+                            if AuthorFuck:
+                                e.write(f"因此作者原名是 '{Author}', 而不是 '{rAuthor}'\n替换的符号为{' '.join([fuck for fuck in sAuthorFuck])}\n\n")
                     e.write(f"第{count}首:\n{r}\n{u}\n\n")
 
         if FailedLoad:
@@ -78,3 +92,6 @@ def ExportNCM(reqAPI, EnterPath):
     except Exception as e:
         print("出错啦!",e)
 
+r=input("url: ")
+E=input("path: ")
+ExportNCM(r, E)

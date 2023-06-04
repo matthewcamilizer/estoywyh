@@ -15,4 +15,4 @@ class getSong():
         name = soup.find('em',{'class':'f-ff2'}).text
         print("{} - {}".format(artist,name))
         requests.session().close()
-        return f"{artist} - {name}"
+        return f"{artist} \u2022 {name}"
