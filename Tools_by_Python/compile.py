@@ -52,7 +52,7 @@ if len(Failed_export)==0 and imported and len(pl) > 0:
     print(f"{wh[random.randint(0, len(wh)-1)]}\n\n")
 if len(Failed_export)!=0:
     for fa in Failed_export:
-        print(f"\n{fa}\n")
+        print(f"{fa}")
     print(f"这些歌单链接有问题, 看看是不是输错了, 或者是部分歌曲下架了\n") 
 
 ImportSpotify(To_input, SpotifyAdded)
