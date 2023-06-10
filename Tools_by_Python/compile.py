@@ -16,7 +16,7 @@ Failed_export=[]
 To_input=[]
 
 for play_list in pl:
-    print("等一下...")
+    print(f"等一下...\n")
     try:
         get=re.search(pattern, play_list).group(1)
         if "y.qq.com" in get:
@@ -33,10 +33,10 @@ for play_list in pl:
 if len(Failed_export)==0 and len(pl) > 0:
     wh=["终于无差错全部导出, 累死我了, 给你搞这么多， 要是ZZY也能把我拉出黑名单就好了","还行, 如果ZZY知道我一次能不出错完成这么多, 肯定会把黑名单给我解了!",
     "好了好了, 没有报错, 回家睡觉"]
-    print(f"{wh[random.randint(0, len(wh)-1)]}")
+    print(f"{wh[random.randint(0, len(wh)-1)]}\n\n")
 if len(Failed_export)!=0:
     for fa in Failed_export:
         print(f"\n{fa}\n")
-    print(f"\n这些歌单链接有问题, 看看是不是输错了, 或者是部分歌曲下架了\n") 
+    print(f"\n这些歌单链接有问题, 看看是不是输错了, 或者是部分歌曲下架了\n\n") 
 
 ImportSpotify(To_input)
