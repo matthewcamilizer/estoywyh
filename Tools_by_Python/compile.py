@@ -18,8 +18,9 @@ To_input=[]
 SpotifyAdded=[]
 imported=True
 
+
+print(f"等一下...\n")
 for play_list in pl:
-    print(f"等一下...\n")
     try:
         get=re.search(pattern, play_list).group(1)
         if "y.qq.com" in get:
