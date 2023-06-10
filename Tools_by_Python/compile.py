@@ -5,7 +5,7 @@ from exportSpotify import ExportSpotify
 from NCM import ExportNCM
 from QQ import ExportQQ
 
-play_lists=input("你要种什么歌单? 如果是多个请用逗号隔开 ")
+play_lists=input("你要种什么歌单? 如果是多个请用逗号隔开: ")
 save_path=input("想保存在哪个文件夹的花园里? ")
 er=["楼上是谁啊???只能用网易云音乐/QQ音乐/Spotify的歌单链接, 其他的都种不出花的", "上面是火星来的链接吗, 只能用网易云音乐/QQ音乐/Spotify的歌单呢!", 
 "⊙ ⁠_ ⁠◎ ⁠)这玩意是啥啊我不认得啊? 我只要网易云音乐/QQ音乐/Spotify的^_^"]
