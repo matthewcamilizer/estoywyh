@@ -45,8 +45,6 @@ for play_list in pl:
         print(f"\n{play_list}\n{er[random.randint(0, len(er)-1)]}\n")
 
 if len(Failed_export)==0 and imported and len(pl) > 0:
-    print(pl)
-    print(imported)
     wh=["终于无差错全部导出, 累死我了, 给你搞这么多， 要是ZZY也能把我拉出黑名单就好了","还行, 如果ZZY知道我一次能不出错完成这么多, 肯定会把黑名单给我解了!",
     "好了好了, 没有报错, 回家睡觉"]
     print(f"{wh[random.randint(0, len(wh)-1)]}\n\n")
