@@ -12,3 +12,12 @@ class StoppableThread(threading.Thread):
 
     def stopped(self):
         return self._stop_event.is_set()
+
+    def run(self):
+        while not self.stopped():
+            # Insert your thread's main logic here
+
+            # Check for the stop event
+            if self.stopped():
+                # Perform cleanup actions if needed
+                return  # Exit the run method and stop the thread
