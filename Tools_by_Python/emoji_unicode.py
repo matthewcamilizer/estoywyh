@@ -10,8 +10,9 @@ while True:
       for io in ii:
         i=io.strip()
         try:
-          print(f"\\U000{re.search(p,hex(ord(i))).group(1)}")
-        except:
+          print(f"{i.encode('unicode-escape').decode()}")
+        except Exception as e:
+          print(e)
           print(f"Invalid input: {io}, is it a single character?")
       break                        
     elif a=="unicode":
@@ -27,6 +28,7 @@ while True:
             print(em)
         else:
           print(em)
+      break
     elif a=="q":
       print("bye")
       break
