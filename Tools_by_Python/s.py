@@ -3,16 +3,21 @@ import os
 
 ee=input("enter path: ")
 to=[]
+res=[]
 for f in os.listdir(ee):
     if f.endswith(".mp3"):
         to.append(f) 
 
-res=[]
 for tt in to:
-    what = open(os.path.join(ee,tt), 'rb').read()
-    shazam = Shazam(what)
-    here = shazam.recognizeSong()
-    get = f"{next(here)[1]['track']['subtitle']} - {next(here)[1]['track']['title']}"
-    res.append(get)
+    to_get=os.path.join(ee,tt)
+    try:
+        what = open(to_get, 'rb').read()
+        shazam = Shazam(what)
+        here = shazam.recognizeSong()
+        get = f"{next(here)[1]['track']['subtitle']} - {next(here)[1]['track']['title']}"
+        res.append(get)
+    except:
+        print(f"no matched results found for {to_get}")
+        res.append(f"nothing for {to_get}")
 
 print(', '.join(res))
