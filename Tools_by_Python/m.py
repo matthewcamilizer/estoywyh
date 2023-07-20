@@ -1,5 +1,6 @@
 #pip install mysql-connector-python
-import mysql.connector
+import mysql.connector, sys
+sys.dont_write_bytecode=True
 
 def tomysql():
   user=input("Enter SQL user: ")
