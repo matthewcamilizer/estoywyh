@@ -1,5 +1,6 @@
 from ShazamAPI import Shazam
-import os
+import os,sys
+sys.dont_write_bytecode=True
 
 ee=input("enter path: ")
 to=[]
