@@ -19,7 +19,6 @@ def identify_song(ee):
             get = f"{next(here)[1]['track']['subtitle']} - {next(here)[1]['track']['title']}"
             res.append(get)
         except:
-            print(f"no matched results found for {to_get}")
-            res.append(f"nothing for {to_get}")
+            res.append(f"no matched results found for {to_get}")
 
-    print(', '.join(res))
+    return ', '.join(res)
