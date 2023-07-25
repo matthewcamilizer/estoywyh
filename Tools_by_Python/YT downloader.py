@@ -31,7 +31,7 @@ while True:
     
 try:         
     video_obj = YouTube(selected_video)
-    stream = video_obj.streams.filter(file_extension="mp4").get_highest_resolution()
+    stream = video_obj.streams.get_highest_resolution()
     print('downloading...')
     stream.download(DOWNLOAD_FOLDER)
     print('\n\nfinished!\n\n')
