@@ -7,8 +7,8 @@ c={
     **dotenv_values(".env.zzyily")
 }
 
-client_id=c['sp_cid']
-client_secret=c['sp_cs']
+client_id = c['sp_cid']
+client_secret = c['sp_cs']
 
 def get_ncm(song_name):
     a=requests.get(f"https://music.163.com/api/search/get/?csrf_token=hlpretag=&hlposttag=&s={song_name}&type=1&offset=0&total=true&limit=20", headers=h).text
@@ -27,7 +27,7 @@ def get_Spotify(song_name):
     results = sp.search(q=song_name, type='track', limit=1)
     return results['tracks']['items'][0]['external_urls']['spotify'], results['tracks']['items'][0]['uri']
 
-h = {'user-agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36', 'cookie': "b_nut=1691327560;b_ut=7;buvid3=A6160ADF-167A-5909-DC9B-968637F1F9D260792infoc;i-wanna-go-back=-1;innersign=0"}
+h = c['header']
 def get_bilibili(song_name):
     a=requests.get(f"https://api.bilibili.com/x/web-interface/search/all/v2?page=1&keyword={song_name}", headers=h).text
     b=json.loads(a)
