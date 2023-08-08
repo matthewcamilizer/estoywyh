@@ -9,6 +9,7 @@ c={
 
 client_id = c['sp_cid']
 client_secret = c['sp_cs']
+h = c['header']
 
 def get_ncm(song_name):
     a=requests.get(f"https://music.163.com/api/search/get/?csrf_token=hlpretag=&hlposttag=&s={song_name}&type=1&offset=0&total=true&limit=20", headers=h).text
@@ -27,7 +28,6 @@ def get_Spotify(song_name):
     results = sp.search(q=song_name, type='track', limit=1)
     return results['tracks']['items'][0]['external_urls']['spotify'], results['tracks']['items'][0]['uri']
 
-h = c['header']
 def get_bilibili(song_name):
     a=requests.get(f"https://api.bilibili.com/x/web-interface/search/all/v2?page=1&keyword={song_name}", headers=h).text
     b=json.loads(a)
