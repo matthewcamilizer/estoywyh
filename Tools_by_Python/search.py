@@ -1,4 +1,4 @@
-import requests, re, sys, json
+import requests, re, sys, json, spotipy
 sys.dont_write_bytecode=True
 from spotipy.oauth2 import SpotifyOAuth, SpotifyClientCredentials
 from dotenv import dotenv_values
