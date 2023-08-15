@@ -3,7 +3,7 @@ import subprocess, base64
 
 #u="https://is1-ssl.mzstatic.com/image/thumb/Music114/v4/8c/64/55/8c645545-fb91-7133-2cd8-a62b909c7f4b/dj.ktfmmnjq.jpg/400x400cc.jpg"
 
-class ffmpeg:
+class base64:
     def b64_convert(i, u):
 
         #args u must be a video or image file, or relative online source 
@@ -24,6 +24,7 @@ class ffmpeg:
         except Exception as e:
             return e
 
+class basic:
     def basic_convert(i,u,f):
         """
         convert anything to .mp3, argument 'u' must be video or image for further a cover image
