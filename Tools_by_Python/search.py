@@ -38,3 +38,11 @@ def get_bilibili(song_name):
     ebili=f"https://player.bilibili.com/player.html?aid={aid}&muted=false&autoplay=false"
 
     return bili, ebili
+
+api=c['yt_api']
+def search_youtube(q):
+    youtube = googleapiclient.discovery.build(serviceN>
+
+    res=youtube.search().list(part='snippet', q=q, max>
+    response=res.execute()
+    return response
