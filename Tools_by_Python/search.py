@@ -41,10 +41,8 @@ def get_bilibili(song_name):
     return bili, ebili
 
 yt_api=c['yt_api']
-def search_youtube(q):
-    youtube = googleapiclient.discovery.build(serviceName='youtube', version='v3', developerKey=yt_api)
-
-    res=youtube.search().list(part='snippet', q=q, maxResults=1, type='video')
+def search_youtube(song):
+    youtube = googleapiclient.discovery.build(serviceName='youtube', version='v3', developerKey=api)
+    res=youtube.search().list(part='snippet', q=f"{song} (audio)", maxResults=1, type='video')
     response=res.execute()
-
     return response
