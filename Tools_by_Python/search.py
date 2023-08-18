@@ -47,5 +47,5 @@ def search_youtube(song):
 <<<<<<< HEAD
 =======
     response=res.execute()
-    return return f"https://youtu.be/{response['items'][0]['id']['videoId']}"
+    return f"https://youtu.be/{response['items'][0]['id']['videoId']}"
 >>>>>>> 6abd1081ce4b0010de4b342d2fe821bcc5c58e56
