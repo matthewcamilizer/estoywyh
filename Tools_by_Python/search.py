@@ -2,6 +2,7 @@ import requests, re, sys, json, spotipy
 sys.dont_write_bytecode=True
 from spotipy.oauth2 import SpotifyOAuth, SpotifyClientCredentials
 from dotenv import dotenv_values
+import googleapiclient.discovery
 
 c={
     **dotenv_values(".env.zzyily")
@@ -39,10 +40,11 @@ def get_bilibili(song_name):
 
     return bili, ebili
 
-api=c['yt_api']
+yt_api=c['yt_api']
 def search_youtube(q):
-    youtube = googleapiclient.discovery.build(serviceN>
+    youtube = googleapiclient.discovery.build(serviceName='youtube', version='v3', developerKey=yt_api)
 
-    res=youtube.search().list(part='snippet', q=q, max>
+    res=youtube.search().list(part='snippet', q=q, maxResults=1, type='video')
     response=res.execute()
+
     return response
