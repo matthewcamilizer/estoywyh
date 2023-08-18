@@ -44,8 +44,5 @@ yt_api=c['yt_api']
 def search_youtube(song):
     youtube = googleapiclient.discovery.build(serviceName='youtube', version='v3', developerKey=yt_api)
     res=youtube.search().list(part='snippet', q=f"{song} (audio)", maxResults=1, type='video')
-<<<<<<< HEAD
-=======
     response=res.execute()
     return f"https://youtu.be/{response['items'][0]['id']['videoId']}"
->>>>>>> 6abd1081ce4b0010de4b342d2fe821bcc5c58e56
