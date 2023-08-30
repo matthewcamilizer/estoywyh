@@ -77,3 +77,75 @@ async def recognize_song(f):
     shazam = Shazam()
     out = await shazam.recognize_song(f)
     return out
+
+
+"""
+def get_Spotify(song_name):
+    translator = str.maketrans('', '', string.punctuation + string.whitespace)
+    cleaned_song_name = song_name.translate(translator).lower()
+
+    credentials = SpotifyClientCredentials(client_id=client_id,client_secret=client_secret,)
+    sp = spotipy.Spotify(client_credentials_manager=credentials)
+    tracks_in_album={}
+    input_exists = False
+
+    path = os.path.dirname(__file__)
+    cache_file_path = os.path.join(path, 'cache.py')
+
+    c=''
+    # Read the existing content and check if the input value exists
+    if os.path.exists(cache_file_path):
+        with open(cache_file_path, 'r') as f:
+            lines = f.readlines()
+            for line in lines:
+                line=eval(line)
+                if cleaned_song_name in line['input'].translate(translator).lower():
+                    input_exists = True
+                    results=line['values']
+                    artist = results[0]
+                    artist_url=results[1]
+                    album_url=results[2]
+                    album_name=results[3]
+                    cover_url=results[4]
+                    release_date=results[5]
+                    total_tracks=results[6]
+                    a=results[7]
+                    for t in a.items():
+                        tracks_in_album[t[0]]={"song": f"{t[1]['song']}", "number":f"{t[1]['number']}", "url": f'{t[1]["url"]}', "duration": f"{t[1]['duration']}"}
+                    
+
+                    return artist, artist_url, album_url, album_name, cover_url, release_date, total_tracks, tracks_in_album
+
+
+    results = sp.search(q=song_name, type='album', limit=1)
+    album_id = results['albums']['items'][0]['uri']
+    results = sp.album(album_id=album_id)
+
+    artist = results['artists'][0]['name']
+    artist_url=results['artists'][0]['external_urls']['spotify']
+    album_url=results['external_urls']['spotify']
+    album_name=results['name']
+    cover_url=results['images'][0]['url']
+    release_date=results['release_date']
+    total_tracks=results['total_tracks']
+    a=results['tracks']['items']
+
+    for t in a:
+        minutes=t['duration_ms']//60000
+        seconds=int(int(t['duration_ms']%60000)/1000)
+        seconds = f"0{seconds}" if seconds < 10 else seconds
+        song=f"{t['name']}" if "'" not in t['name'] else f'{t["name"]}'
+
+        tracks_in_album[f"{t['track_number']}"]={'song': song, 'number':f'{t["track_number"]}', 'url': f'{t["external_urls"]["spotify"]}', 'duration': f'{minutes}:{seconds}'}
+
+    entry = {"input": f"{song_name}", "values": (f"{artist}", f'{artist_url}', f'{album_url}', f"{album_name}", f'{cover_url}', f"{release_date}", f"{total_tracks}", tracks_in_album)}
+
+
+    # If the input value doesn't exist, add the entry to the cache file
+    if not input_exists:
+        with open(cache_file_path, 'a') as f:
+            f.write(f"{entry}\n")
+
+    return artist, artist_url, album_url, album_name, cover_url, release_date, total_tracks, tracks_in_album
+
+"""
