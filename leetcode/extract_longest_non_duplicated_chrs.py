@@ -14,7 +14,7 @@ def non_repeat(a,l):
     if len(a) not in l:
         l.append(len(a))
 
-    print(l)
+
     difs=[]
     if len(l)==1:
         difs.append(l[0])
@@ -25,7 +25,7 @@ def non_repeat(a,l):
             dif=l[i]-l[i-2]
             if dif not in difs:
                 difs.append(dif)
-    print(difs)
+
     return max(difs), a[l[i-2]:l[i]]
 
 o=non_repeat(a,l)
