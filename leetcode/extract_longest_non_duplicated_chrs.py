@@ -2,7 +2,7 @@ a=input("enter a string:")
 l=[]
 s={}
 
-def non_repeat(a,l):
+def non_duplicated(a,l):
     for i in range(len(a)):
         for j in range(i):
             if a[j]==a[i]:
@@ -28,5 +28,5 @@ def non_repeat(a,l):
 
     return max(difs), a[l[i-2]:l[i]]
 
-o=non_repeat(a,l)
+o=non_duplicated(a,l)
 print(f"the longest chrs without duplication is {o[1]}, length: {o[0]}")
