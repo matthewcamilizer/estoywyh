@@ -16,6 +16,7 @@ else:
     if all(x==a[0] for x in a):
         gl.append(1)
     else:
+        # add 0 if first two are the same
         if a[0]==a[1]:
             start.insert(0,0)
         for i in range(1,len(a)-1):
@@ -33,12 +34,10 @@ else:
         for i in range(len(start)):
             s[i]=[start[i],end[i]]
 
-print(start)
-print(end)
-print(s)
+print(f"dict for index of repeating chrs: {s}")
 for i in range(len(start)):
     print(f"the {i} repeated: {a[s[i][0]:s[i][1]+1]}")
 for i in range(len(start)-1):
     print(f"the {i} unrepeated: {a[end[i]:start[i+1]+1]}")
 
-print(max(gl))
+print(f"length of the longest unrepeated chrs: {max(gl)}")
