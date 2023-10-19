@@ -37,14 +37,10 @@ else:
             gl.append(end[0])
         for i in range(len(start)):
             s[i]=[start[i],end[i]]
-print(start)
-print(end)
-print(gl)
 
 print(f"dict for index of adjacent chrs: {s}")
 for i in range(len(start)):
     print(f"the {int(i+1)} adjacent: {a[s[i][0]:s[i][1]+1]}")
-
 
 cl=[]
 if len(start)>1:
