@@ -47,7 +47,13 @@ if len(start)>1:
     for i in range(len(start)-1):
         print(f"the {int(i+1)} non-adjacent: {a[end[i]:start[i+1]+1]}")
         cl.append(len(a[end[i]:start[i+1]+1]))
+
+    # get the last one
+    if end[-1] != len(a):
+        print(f"the {len(start)} non-adjacent: {a[end[-1]:]}")
+
     print(f"length of the longest non-adjacent chrs: {max(cl)}")
+
 else:
     print(f"the 1 non-adjacent: {a[:min(gl)+1]}, the 2 non-adjacent: {a[max(gl):]}")
     cl.append(len(a[:min(gl)+1]))
