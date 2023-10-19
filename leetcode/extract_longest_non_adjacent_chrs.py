@@ -29,15 +29,31 @@ else:
         if a[len(a)-1]==a[len(a)-2]:
             end.append(len(a)-1)
 
-        for i in range(len(start)-1):
-            gl.append(start[i+1]-end[i]+1)
+        if len(start)>1:
+            for i in range(len(start)-1):
+                gl.append(start[i+1]-end[i]+1)
+        else:
+            gl.append(start[0])
+            gl.append(end[0])
         for i in range(len(start)):
             s[i]=[start[i],end[i]]
+print(start)
+print(end)
+print(gl)
 
 print(f"dict for index of adjacent chrs: {s}")
 for i in range(len(start)):
-    print(f"the {i} adjacent: {a[s[i][0]:s[i][1]+1]}")
-for i in range(len(start)-1):
-    print(f"the {i} non-adjacent: {a[end[i]:start[i+1]+1]}")
+    print(f"the {int(i+1)} adjacent: {a[s[i][0]:s[i][1]+1]}")
 
-print(f"length of the longest non-adjacent chrs: {max(gl)}")
+
+cl=[]
+if len(start)>1:
+    for i in range(len(start)-1):
+        print(f"the {int(i+1)} non-adjacent: {a[end[i]:start[i+1]+1]}")
+        cl.append(len(a[end[i]:start[i+1]+1]))
+    print(f"length of the longest non-adjacent chrs: {max(cl)}")
+else:
+    print(f"the 1 non-adjacent: {a[:min(gl)+1]}, the 2 non-adjacent: {a[max(gl):]}")
+    cl.append(len(a[:min(gl)+1]))
+    cl.append(len(a[max(gl):]))
+    print(f"length of the longest non-adjacent chrs: {max(cl)}")
